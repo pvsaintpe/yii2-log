@@ -4,6 +4,7 @@ namespace pvsaintpe\log;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use yii\db\Connection;
 
 /**
  * ~~~
@@ -42,6 +43,10 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     public $newDirMode = 0777;
 
+    /**
+     * @var Connection
+     */
+    public $db;
 
     /**
      * @inheritdoc
