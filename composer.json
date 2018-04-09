@@ -23,7 +23,6 @@
       "pvsaintpe\\log\\": ""
     }
   },
-  "minimum-stability": "stable",
   "extra": {
     "bootstrap": "pvsaintpe\\log\\Bootstrap",
     "asset-installer-paths": {
