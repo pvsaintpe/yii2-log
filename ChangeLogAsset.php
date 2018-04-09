@@ -1,6 +1,6 @@
 <?php
 
-namespace pvsaintpe\log\assets;
+namespace pvsaintpe\log;
 
 use yii\web\AssetBundle;
 
@@ -10,7 +10,7 @@ use yii\web\AssetBundle;
  */
 class ChangeLogAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__ . '/dist';
+    public $sourcePath = '@vendor/pvsaintpe/log/assets';
 
     public $css = [
         'css/log.css',

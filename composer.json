@@ -1,6 +1,6 @@
 {
   "name": "pvsaintpe/yii2-log",
-  "description": "Yii 2 Log Extension",
+  "description": "Package",
   "keywords": [
     "yii2",
     "gii",
@@ -23,7 +23,9 @@
       "pvsaintpe\\log\\": ""
     }
   },
+  "minimum-stability": "stable",
   "extra": {
+    "bootstrap": "pvsaintpe\\log\\Bootstrap",
     "asset-installer-paths": {
       "npm-asset-library": "vendor/npm",
       "bower-asset-library": "vendor/bower"
