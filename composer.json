@@ -1,0 +1,32 @@
+{
+  "name": "pvsaintpe/yii2-log",
+  "description": "Yii 2 Log Extension",
+  "keywords": [
+    "yii2",
+    "gii",
+    "code generator"
+  ],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pavel Veselov",
+      "email": "pvsaintpe@icloud.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": ">=2.0.4",
+    "yiisoft/yii2-gii": "2.0.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "pvsaintpe\\log\\": ""
+    }
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "npm-asset-library": "vendor/npm",
+      "bower-asset-library": "vendor/bower"
+    }
+  }
+}
