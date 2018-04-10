@@ -2,7 +2,7 @@
 
 namespace pvsaintpe\log\console;
 
-use yii\db\ActiveRecord;
+use pvsaintpe\log\components\ActiveRecord;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
 use Yii;
 use yii\console\Controller;
@@ -55,7 +55,7 @@ class GenerateController extends Controller
                 $className = $this->parseClassFile($filename);
                 if ($className && class_exists($className)) {
                     $reflectionClass = new ReflectionClass($className);
-                    if ($reflectionClass->isSubclassOf('pvsaintpe\search\components\ActiveRecord')
+                    if ($reflectionClass->isSubclassOf('pvsaintpe\log\components\ActiveRecord')
                         && $reflectionClass->isSubclassOf('pvsaintpe\log\interfaces\ChangeLogInterface')
                     ) {
                         $this->classNames[] = $className;
