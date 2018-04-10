@@ -1,6 +1,6 @@
 <?php
 
-namespace pvsaintpe\logs\models;
+namespace pvsaintpe\log\models;
 
 use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\interfaces\PerformanceInterface;
@@ -14,7 +14,7 @@ use Yii;
  * Class ChangeLogSearch
  * @package pvsaintpe\logs\models
  */
-class ChangeLogSearch extends ActiveRecord implements SearchInterface, PerformanceInterface
+abstract class ChangeLogSearch extends ActiveRecord implements SearchInterface, PerformanceInterface
 {
     /** @var string */
     public $attribute;
@@ -34,7 +34,7 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface, Performan
     /**
      * @return int
      */
-    protected function getPaginationSize()
+    public function getPaginationSize()
     {
         return 10;
     }
@@ -55,17 +55,17 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface, Performan
     {
         return [
             'log_id' => [
-                'class' => 'backend\components\grid\IdColumn',
+                'class' => 'pvsaintpe\log\components\grid\IdColumn',
                 'attribute' => 'log_id',
                 'label' => 'ID',
             ],
             'value' => [
-                'class' => 'backend\components\grid\DataColumn',
+                'class' => 'pvsaintpe\log\components\grid\DataColumn',
                 'attribute' => $this->attribute,
                 'label' => $this->getAttributeLabel('value')
             ],
             'updated_by' => [
-                'class' => 'backend\components\grid\UpdatedByColumn',
+                'class' => 'pvsaintpe\log\components\grid\UpdatedByColumn',
                 'customFilters' => $this->getFilter('updated_by'),
                 'allowNotSet' => true,
                 'value' => function($model) {
@@ -73,10 +73,10 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface, Performan
                 }
             ],
             'timestamp' => [
-                'class' => 'backend\components\grid\TimestampColumn',
+                'class' => 'pvsaintpe\log\components\grid\TimestampColumn',
             ],
             'actions' => [
-                'class' => 'backend\components\grid\DataColumn',
+                'class' => 'pvsaintpe\log\components\grid\DataColumn',
                 'header' => Yii::t('payment','Действия'),
                 'vAlign' => 'middle',
                 'format' => 'raw',

@@ -5,8 +5,8 @@ namespace pvsaintpe\log\controllers;
 use pvsaintpe\search\components\Controller;
 
 /**
- * DefaultController implements the CRUD actions for Log model.
- *
+ * Class DefaultController
+ * @package pvsaintpe\log\controllers
  */
 class DefaultController extends Controller
 {

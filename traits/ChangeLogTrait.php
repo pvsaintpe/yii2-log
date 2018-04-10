@@ -28,7 +28,7 @@ trait ChangeLogTrait
      */
     private function getChangeLogDb()
     {
-        return Yii::$app->changelog->db;
+        return Yii::$app->dbLog;
     }
 
     /**

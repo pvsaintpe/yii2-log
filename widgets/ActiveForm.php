@@ -2,58 +2,20 @@
 
 namespace pvsaintpe\log\widgets;
 
-use pvsaintpe\search\helpers\Html;
-use pvsaintpe\log\models\ChangeLogSearch;
-use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use pvsaintpe\search\components\ActiveRecord;
+use pvsaintpe\log\models\ChangeLogSearch;
+use pvsaintpe\search\helpers\Html;
 use kartik\form\ActiveField;
-use Yii;
 use yii\helpers\Url;
+use Yii;
 
 /**
  * Class ActiveForm
  * @package pvsaintpe\log\widgets
  */
-class ActiveForm extends \kartik\form\ActiveForm
+class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
 {
-    /**
-     * @var string
-     */
-    public $content;
-
-    public $enableClientValidation = false;
-
-    public $options = [
-        'class' => 'active-form'
-    ];
-
-    public function init()
-    {
-        parent::init();
-        echo $this->content;
-
-        $js = <<<JS
-$('form.active-form').on('submit', function(e){
-        var form = $(this);
-        var submit = form.find(':submit');
-        form.on('beforeValidate', function () {
-            submit.prop('disabled', true);
-        });
-        form.on('afterValidate', function () {
-            submit.prop('disabled', false);
-        });
-        form.on('beforeSubmit', function () {
-            submit.prop('disabled', true);
-        });
-        submit.click(function () {
-            form.trigger('submit');
-        });
-    });
-JS;
-        $this->getView()->registerJs($js);
-
-    }
-
     /**
      * @inheritdoc
      * @return ActiveField|\yii\widgets\ActiveField
@@ -62,7 +24,7 @@ JS;
     {
         /** @var ActiveRecord $model */
         $field = parent::field($model, $attribute, $options);
-        if ($model instanceof LogInterface && $model->logEnabled()) {
+        if ($model instanceof ChangeLogInterface && $model->logEnabled()) {
             $keys = [];
             foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
                 $keys[] = $index.'='.$key;

@@ -14,7 +14,7 @@
 echo "<?php\n";
 ?>
 
-use console\components\Migration;
+use pvsaintpe\log\components\Migration;
 
 /**
  * @author Veselov Pavel

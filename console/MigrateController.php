@@ -17,6 +17,6 @@ class MigrateController extends BaseMigrateController
      */
     public function getDb()
     {
-        return Yii::$app->changelog->db;
+        return Yii::$app->dbLog;
     }
 }

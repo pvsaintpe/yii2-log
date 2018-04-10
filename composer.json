@@ -36,7 +36,7 @@
     "kartik-v/yii2-grid": "3.1.x-dev",
     "kartik-v/yii2-detail-view": "1.7.6",
     "kartik-v/yii2-mpdf": "@dev",
-    "pvsaintpe/search": "v1.0.*"
+    "pvsaintpe/yii2-search": "v1.0.8"
   },
   "autoload": {
     "psr-4": {

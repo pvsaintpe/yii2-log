@@ -1,6 +1,6 @@
 <?php
 
-namespace pvsaintpe\log;
+namespace pvsaintpe\log\assets;
 
 use yii\web\AssetBundle;
 
