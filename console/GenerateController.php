@@ -16,7 +16,11 @@ use ReflectionClass;
  */
 class GenerateController extends Controller
 {
-    public $pathToMigrations;
+    /**
+     * @var
+     */
+    public $migrationPath;
+
     /**
      * @var array
      */
@@ -51,7 +55,7 @@ class GenerateController extends Controller
                 $className = $this->parseClassFile($filename);
                 if ($className && class_exists($className)) {
                     $reflectionClass = new ReflectionClass($className);
-                    if ($reflectionClass->isSubclassOf('yii\db\ActiveRecord')
+                    if ($reflectionClass->isSubclassOf('pvsaintpe\search\components\ActiveRecord')
                         && $reflectionClass->isSubclassOf('pvsaintpe\log\interfaces\ChangeLogInterface')
                     ) {
                         $this->classNames[] = $className;
@@ -72,7 +76,7 @@ class GenerateController extends Controller
             if ($params = $class->createLogTable()) {
                 $fileName = 'm' . date('ymd_his', time()) . '_'. $params['migration_prefix'] . '_' . $params['logTableName'];
                 if (@file_put_contents(
-                    Yii::getAlias($this->pathToMigrations . '/' . $fileName . '.php'),
+                    Yii::getAlias($this->migrationPath . '/' . $fileName . '.php'),
                     $view->render(
                         $params['view'],
                         array_merge(

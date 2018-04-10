@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8bd1bfa4fd826b95ae5634c1f962412",
+    "content-hash": "04d47a0c42f796bcd6d759f11e417616",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -3149,16 +3149,16 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "v1.0.8",
+            "version": "v1.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "fd83b6965d997f1b4836eaa2a08027c96be471f9"
+                "reference": "a8fa571cda1112e013db3be19e3d872055b3b1ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/fd83b6965d997f1b4836eaa2a08027c96be471f9",
-                "reference": "fd83b6965d997f1b4836eaa2a08027c96be471f9",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/a8fa571cda1112e013db3be19e3d872055b3b1ff",
+                "reference": "a8fa571cda1112e013db3be19e3d872055b3b1ff",
                 "shasum": ""
             },
             "require": {
@@ -3213,7 +3213,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-04-10T21:32:39+00:00"
+            "time": "2018-04-10T22:12:09+00:00"
         },
         {
             "name": "scrivo/highlight.php",
