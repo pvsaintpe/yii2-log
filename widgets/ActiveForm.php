@@ -2,10 +2,10 @@
 
 namespace pvsaintpe\log\widgets;
 
-use backend\helpers\Html;
-use backend\modules\changelog\models\LogSearch;
-use common\components\ActiveRecord;
-use common\interfaces\LogInterface;
+use pvsaintpe\search\helpers\Html;
+use pvsaintpe\log\models\ChangeLogSearch;
+use pvsaintpe\search\components\ActiveRecord;
+use pvsaintpe\log\interfaces\ChangeLogInterface;
 use kartik\form\ActiveField;
 use Yii;
 use yii\helpers\Url;
@@ -74,11 +74,11 @@ JS;
                     Yii::t('log', 'История изменений'),
                     Url::toRoute([
                         '/changelog/default/index',
-                        LogSearch::getFormName() . '[attribute]' => $attribute,
-                        LogSearch::getFormName() . '[route]' => Yii::$app->urlManager->parseRequest(Yii::$app->request)[0],
-                        LogSearch::getFormName() . '[hash]' => $hash,
-                        LogSearch::getFormName() . '[search_class_name]' => $model->getLogClassName(),
-                        LogSearch::getFormName() . '[where]' => serialize(
+                        ChangeLogSearch::getFormName() . '[attribute]' => $attribute,
+                        ChangeLogSearch::getFormName() . '[route]' => Yii::$app->urlManager->parseRequest(Yii::$app->request)[0],
+                        ChangeLogSearch::getFormName() . '[hash]' => $hash,
+                        ChangeLogSearch::getFormName() . '[search_class_name]' => $model->getLogClassName(),
+                        ChangeLogSearch::getFormName() . '[where]' => serialize(
                             array_intersect_key(
                                 $model->getAttributes(),
                                 array_flip(

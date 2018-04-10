@@ -1,10 +1,10 @@
 <?php
 
-use backend\helpers\Html;
-use backend\widgets\GridView;
+use pvsaintpe\search\helpers\Html;
+use pvsaintpe\search\widgets\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel \backend\components\SearchInterface|\backend\traits\SearchTrait */
+/* @var $searchModel \pvsaintpe\search\interfaces\SearchInterface */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $permissionPrefix */
 

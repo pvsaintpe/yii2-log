@@ -2,7 +2,7 @@
 
 namespace pvsaintpe\log\controllers;
 
-use yii\web\Controller;
+use pvsaintpe\search\components\Controller;
 
 /**
  * DefaultController implements the CRUD actions for Log model.

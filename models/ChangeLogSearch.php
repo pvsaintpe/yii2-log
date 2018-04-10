@@ -1,27 +1,21 @@
 <?php
 
-namespace backend\modules\changelog\models;
+namespace pvsaintpe\logs\models;
 
-use backend\helpers\Html;
-use backend\traits\PerformanceTrait;
-use backend\traits\SearchTrait;
-use backend\components\SearchInterface;
-use backend\components\PerformanceInterface;
-use common\components\ActiveQuery;
-use common\components\ActiveRecord;
-use common\models\log\StorePaymentSystemMethodCurrencySettingsLog;
-use Yii;
+use pvsaintpe\search\helpers\Html;
+use pvsaintpe\search\interfaces\PerformanceInterface;
+use pvsaintpe\search\interfaces\SearchInterface;
+use pvsaintpe\search\components\ActiveQuery;
+use pvsaintpe\search\components\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use Yii;
 
 /**
- * Class LogSearch
- * @package backend\modules\changelog\models\base
+ * Class ChangeLogSearch
+ * @package pvsaintpe\logs\models
  */
-class LogSearch extends ActiveRecord implements SearchInterface, PerformanceInterface
+class ChangeLogSearch extends ActiveRecord implements SearchInterface, PerformanceInterface
 {
-    use SearchTrait;
-    use PerformanceTrait;
-
     /** @var string */
     public $attribute;
 
@@ -146,7 +140,7 @@ class LogSearch extends ActiveRecord implements SearchInterface, PerformanceInte
             $this->load($params);
         }
 
-        /** @var ActiveRecord|SearchTrait $searchClass */
+        /** @var ActiveRecord|SearchInterface $searchClass */
         $searchClass = $this->search_class_name;
 
         /** @var ActiveQuery query */
