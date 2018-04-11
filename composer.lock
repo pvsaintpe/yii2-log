@@ -568,6 +568,42 @@
             "time": "2018-02-23T01:58:20+00:00"
         },
         {
+            "name": "firephp/firephp-core",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firephp/firephp-core.git",
+                "reference": "fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firephp/firephp-core/zipball/fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf",
+                "reference": "fabad0f2503f9577fe8dd2cb1d1c7cd73ed2aacf",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/FirePHPCore/FirePHP.class.php",
+                    "lib/FirePHPCore/fb.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Dorn",
+                    "email": "christoph@christophdorn.com",
+                    "homepage": "http://christophdorn.com"
+                }
+            ],
+            "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
+            "homepage": "https://github.com/firephp/firephp-core",
+            "time": "2013-04-23T15:28:20+00:00"
+        },
+        {
             "name": "fortawesome/font-awesome",
             "version": "v4.7.0",
             "source": {
@@ -666,6 +702,57 @@
                 "image processing"
             ],
             "time": "2013-07-10T17:25:36+00:00"
+        },
+        {
+            "name": "ivan-chkv/yii2-boost",
+            "version": "1.0.41",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ivan-chkv/yii2-boost.git",
+                "reference": "5bab22e91eb5900230732d9fd4783a140e45f4ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ivan-chkv/yii2-boost/zipball/5bab22e91eb5900230732d9fd4783a140e45f4ed",
+                "reference": "5bab22e91eb5900230732d9fd4783a140e45f4ed",
+                "shasum": ""
+            },
+            "require": {
+                "firephp/firephp-core": "*",
+                "psr/log": "*",
+                "yiisoft/yii2": ">=2.0.4"
+            },
+            "require-dev": {
+                "ivan-chkv/yii2-phpunit": "2.*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\boost\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Chistyakov",
+                    "email": "ivan.chkv@gmail.com"
+                }
+            ],
+            "description": "Yii 2 Boost Extension",
+            "keywords": [
+                "boost",
+                "yii2"
+            ],
+            "time": "2016-10-12T13:40:44+00:00"
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
@@ -3149,19 +3236,20 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "v1.0.12",
+            "version": "v1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "a8fa571cda1112e013db3be19e3d872055b3b1ff"
+                "reference": "d40ef952b33a475a940008e316e4d63ea2c43df6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/a8fa571cda1112e013db3be19e3d872055b3b1ff",
-                "reference": "a8fa571cda1112e013db3be19e3d872055b3b1ff",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/d40ef952b33a475a940008e316e4d63ea2c43df6",
+                "reference": "d40ef952b33a475a940008e316e4d63ea2c43df6",
                 "shasum": ""
             },
             "require": {
+                "ivan-chkv/yii2-boost": "1.0.41",
                 "kartik-v/yii2-date-range": "1.6.7",
                 "kartik-v/yii2-datecontrol": "1.9.4",
                 "kartik-v/yii2-detail-view": "1.7.6",
@@ -3213,7 +3301,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-04-10T22:12:09+00:00"
+            "time": "2018-04-10T23:57:36+00:00"
         },
         {
             "name": "scrivo/highlight.php",
