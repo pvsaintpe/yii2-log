@@ -3,8 +3,6 @@
 namespace pvsaintpe\log\models;
 
 use pvsaintpe\search\helpers\Html;
-use pvsaintpe\search\interfaces\PerformanceInterface;
-use pvsaintpe\search\interfaces\SearchInterface;
 use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
 use yii\data\ActiveDataProvider;
@@ -14,7 +12,7 @@ use Yii;
  * Class ChangeLogSearch
  * @package pvsaintpe\logs\models
  */
-abstract class ChangeLogSearch extends ActiveRecord implements SearchInterface, PerformanceInterface
+class ChangeLogSearch extends ActiveRecord
 {
     /** @var string */
     public $attribute;

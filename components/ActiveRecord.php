@@ -10,7 +10,7 @@ use pvsaintpe\search\interfaces\MessageInterface;
  * Class ActiveRecord
  * @package pvsaintpe\log\components
  */
-abstract class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements ChangeLogInterface, MessageInterface
+class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements ChangeLogInterface
 {
     use ChangeLogTrait;
 
