@@ -10,8 +10,4 @@ use yii\base\Module as BaseModule;
  */
 class Module extends BaseModule
 {
-    /**
-     * @var string
-     */
-    public $controllerNamespace = 'pvsaintpe\log\controllers';
 }

@@ -10,7 +10,7 @@ use pvsaintpe\search\components\Controller;
  */
 class DefaultController extends Controller
 {
-    protected $searchClass = 'pvsaintpe\log\models\LogSearch';
+    protected $searchClass = 'pvsaintpe\log\models\ChangeLogSearch';
 
     /**
      * Lists all Mail models.
