@@ -38,6 +38,17 @@ class ChangeLogSearch extends ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public function getLogStatusAttributes()
+    {
+        $searchClass = $this->search_class_name;
+        /** @var ActiveRecord $logModel */
+        $logModel = new $searchClass();
+        return $logModel::booleanAttributes();
+    }
+
+    /**
      * Заголовок GridView
      * @return mixed
      */

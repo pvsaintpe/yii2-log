@@ -4,7 +4,7 @@ use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\widgets\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel \pvsaintpe\search\interfaces\SearchInterface */
+/* @var $searchModel \pvsaintpe\search\interfaces\SearchInterface|\pvsaintpe\log\models\ChangeLogSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $permissionPrefix */
 
@@ -29,7 +29,31 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-    $this->registerJs(<<<JS
+if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
+    $jsCode = <<<JS
+(function ($) {
+    $('.rollback-button').click(function (e) {
+        e.preventDefault();
+        var labelId = 'label-' + $(this).attr('id');
+        var dataVal = $(this).attr('data-value');
+        $('#' + labelId).parent().parent().parent().find('input').each(function(index, element) {
+            if ($(element).attr('type') === 'checkbox') {
+                if (dataVal == 0) {
+                    $(element).removeAttr('checked');
+                    $(element).trigger('change');
+                } else {
+                    $(element).attr('checked', 'checked');
+                    $(element).trigger('change');
+                } 
+            }
+        });
+        $('#main-modal').modal('hide');
+    })
+})(jQuery);
+JS
+    ;
+} else {
+    $jsCode = <<<JS
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
@@ -39,5 +63,8 @@ $this->params['breadcrumbs'][] = $this->title;
     })
 })(jQuery);
 JS
-);
+    ;
+}
+
+$this->registerJs($jsCode);
 ?>
