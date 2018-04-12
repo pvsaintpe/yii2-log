@@ -35,7 +35,10 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
      */
     public function field($model, $attribute, $options = [])
     {
-        /** @var ActiveRecord|ChangeLogInterface $model */
+        /**
+         * @var ActiveRecord|ChangeLogInterface $model
+         * @var \pvsaintpe\log\widgets\ActiveField $field
+         */
         $field = parent::field($model, $attribute, $options);
         if ($model instanceof ChangeLogInterface && $model->logEnabled() && !in_array($attribute, $model->securityLogAttributes())) {
             $keys = [];
@@ -43,9 +46,10 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 $keys[] = $index.'='.$key;
             }
             $hash = md5($attribute . ':'.join('&', $keys));
-            $field->label(join('&nbsp;', [
-                $model->getAttributeLabel($attribute),
-                '<span class="change-log-area">' . Html::a(
+
+            $field->setHistoryLabel(join('', [
+                '&nbsp;<span class="change-log-area">',
+                Html::a(
                     Yii::t('log', 'История изменений'),
                     Url::toRoute([
                         $this->pathToRoute,
@@ -69,7 +73,8 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                         'data-dismiss' => 'modal',
                         'data-id' => strtolower($this->getId() . '-' . $attribute),
                     ]
-                ) .'</span>'
+                ),
+                '</span>'
             ]));
         }
 

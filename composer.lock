@@ -756,16 +756,16 @@
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
-            "version": "v4.4.7",
+            "version": "v4.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "aebea0804d955af913d3cd5922e6b01be66290c9"
+                "reference": "7a2191d2b7ae65f5ca4ddb090a69d65805eb7edf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/aebea0804d955af913d3cd5922e6b01be66290c9",
-                "reference": "aebea0804d955af913d3cd5922e6b01be66290c9",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/7a2191d2b7ae65f5ca4ddb090a69d65805eb7edf",
+                "reference": "7a2191d2b7ae65f5ca4ddb090a69d65805eb7edf",
                 "shasum": ""
             },
             "type": "library",
@@ -805,7 +805,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2018-01-22T17:05:07+00:00"
+            "time": "2018-04-11T10:34:10+00:00"
         },
         {
             "name": "kartik-v/bootstrap-popover-x",
@@ -3236,16 +3236,16 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "v1.0.17",
+            "version": "v1.0.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "97c91c585103f9536605275a87bbb149b91a1c68"
+                "reference": "10b46349b67af48ac4fa80d17ad8cf680c9f4c37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/97c91c585103f9536605275a87bbb149b91a1c68",
-                "reference": "97c91c585103f9536605275a87bbb149b91a1c68",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/10b46349b67af48ac4fa80d17ad8cf680c9f4c37",
+                "reference": "10b46349b67af48ac4fa80d17ad8cf680c9f4c37",
                 "shasum": ""
             },
             "require": {
@@ -3301,7 +3301,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-04-11T00:49:51+00:00"
+            "time": "2018-04-12T20:54:49+00:00"
         },
         {
             "name": "scrivo/highlight.php",
