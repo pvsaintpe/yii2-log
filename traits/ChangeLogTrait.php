@@ -81,9 +81,16 @@ trait ChangeLogTrait
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function securityLogAttributes()
     {
-        return [];
+        return array_merge(
+            static::primaryKey(),
+            static::dateAttributes(),
+            static::datetimeAttributes()
+        );
     }
 
     /**
