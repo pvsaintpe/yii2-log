@@ -35,9 +35,9 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
      */
     public function field($model, $attribute, $options = [])
     {
-        /** @var ActiveRecord $model */
+        /** @var ActiveRecord|ChangeLogInterface $model */
         $field = parent::field($model, $attribute, $options);
-        if ($model instanceof ChangeLogInterface && $model->logEnabled() && !$model->securityLogAttributes($attribute)) {
+        if ($model instanceof ChangeLogInterface && $model->logEnabled() && !in_array($attribute, $model->securityLogAttributes())) {
             $keys = [];
             foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
                 $keys[] = $index.'='.$key;
