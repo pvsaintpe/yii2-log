@@ -21,7 +21,7 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
      */
     public function setHistoryLabel($label)
     {
-        return $this->historyLabel;
+        return $this->historyLabel = $label;
     }
 
     /**
@@ -51,7 +51,14 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
         if ($content !== null) {
             $options['hint'] = $content;
         }
-        $this->parts['{hint}'] = Html::activeHint($this->model, $this->attribute, $options) . $this->historyLabel;
+
+        $this->parts['{input}'] = str_replace(
+            $this->model->getAttributeLabel($this->attribute),
+            $this->model->getAttributeLabel($this->attribute) . $this->historyLabel,
+            $this->parts['{input}']
+        );
+
+        $this->parts['{hint}'] = Html::activeHint($this->model, $this->attribute, $options);
 
         return $this;
     }
