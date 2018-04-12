@@ -37,7 +37,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
     {
         /** @var ActiveRecord $model */
         $field = parent::field($model, $attribute, $options);
-        if ($model instanceof ChangeLogInterface && $model->logEnabled()) {
+        if ($model instanceof ChangeLogInterface && $model->logEnabled() && !$model->securityLogAttributes($attribute)) {
             $keys = [];
             foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
                 $keys[] = $index.'='.$key;

@@ -27,4 +27,9 @@ interface ChangeLogInterface
      * @return string
      */
     public function getLogClassName();
+
+    /**
+     * @return array
+     */
+    public function securityLogAttributes();
 }

@@ -81,6 +81,11 @@ trait ChangeLogTrait
         return null;
     }
 
+    public function securityLogAttributes()
+    {
+        return [];
+    }
+
     /**
      * @return string
      */
