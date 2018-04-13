@@ -22,6 +22,11 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
     protected $pathToRoute = '/changelog/default/index';
 
     /**
+     * @var string
+     */
+    public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
+
+    /**
      * @return mixed
      */
     protected function getChangeLogFormName()
@@ -46,8 +51,8 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 $keys[] = $index.'='.$key;
             }
             $hash = md5($attribute . ':'.join('&', $keys));
-
-            $field->setHistoryLabel(join('', [
+            $label = join('', [
+                $model->getAttributeLabel($attribute),
                 '&nbsp;<span class="change-log-area">',
                 Html::a(
                     Yii::t('log', 'История изменений'),
@@ -75,7 +80,9 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                     ]
                 ),
                 '</span>'
-            ]));
+            ]);
+            $field->label($label);
+            $field->setHistoryLabel($label);
         }
 
         return $field;

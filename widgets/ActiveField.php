@@ -3,6 +3,7 @@
 namespace pvsaintpe\log\widgets;
 
 use pvsaintpe\search\helpers\Html;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class ActiveField
@@ -21,7 +22,7 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
      */
     public function setHistoryLabel($label)
     {
-        return $this->historyLabel;
+        return $this->historyLabel = $label;
     }
 
     /**
@@ -51,7 +52,8 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
         if ($content !== null) {
             $options['hint'] = $content;
         }
-        $this->parts['{hint}'] = Html::activeHint($this->model, $this->attribute, $options) . $this->historyLabel;
+
+        $this->parts['{hint}'] = Html::activeHint($this->model, $this->attribute, $options);
 
         return $this;
     }
@@ -87,8 +89,56 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
             $options['for'] = null;
         }
 
-        $this->parts['{label}'] = Html::activeLabel($this->model, $this->attribute, $options) . $this->historyLabel;
+        $this->parts['{label}'] = Html::activeLabel($this->model, $this->attribute, $options);
 
+        return $this;
+    }
+
+    /**
+     * Generates a toggle field (checkbox or radio)
+     *
+     * @param string $type the toggle input type 'checkbox' or 'radio'.
+     * @param array $options options (name => config) for the toggle input list container tag.
+     * @param boolean $enclosedByLabel whether the input is enclosed by the label tag
+     *
+     * @return ActiveField object
+     */
+    protected function getToggleField($type = self::TYPE_CHECKBOX, $options = [], $enclosedByLabel = true)
+    {
+        $this->initDisability($options);
+        $inputType = 'active' . ucfirst($type);
+        $disabled = ArrayHelper::getValue($options, 'disabled', false);
+        $css = $disabled ? $type . ' disabled' : $type;
+        $container = ArrayHelper::remove($options, 'container', ['class' => $css]);
+        if ($enclosedByLabel) {
+            $this->_offset = true;
+            $this->parts['{label}'] = '';
+            $showLabels = $this->hasLabels();
+            if ($showLabels === false) {
+                $options['label'] = '';
+                $this->showLabels = true;
+            }
+        } else {
+            $this->_offset = false;
+            if (isset($options['label']) && !isset($this->parts['{label}'])) {
+                $this->parts['label'] = $options['label'];
+                if (!empty($options['labelOptions'])) {
+                    $this->labelOptions = $options['labelOptions'];
+                }
+            }
+            $options['label'] = null;
+            $container = false;
+            unset($options['labelOptions']);
+        }
+        $options['label'] = $this->historyLabel;
+        $input = Html::$inputType($this->model, $this->attribute, $options);
+        if (is_array($container)) {
+            $tag = ArrayHelper::remove($container, 'tag', 'div');
+            $input = Html::tag($tag, $input, $container);
+        }
+
+        $this->parts['{input}'] = $input;
+        $this->adjustLabelFor($options);
         return $this;
     }
 }
