@@ -58,11 +58,11 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                     Yii::t('log', 'История изменений'),
                     Url::toRoute([
                         $this->pathToRoute,
-                        $this->getChangeLogFormName() . '[attribute]' => $attribute,
-                        $this->getChangeLogFormName() . '[route]' => Yii::$app->urlManager->parseRequest(Yii::$app->request)[0],
-                        $this->getChangeLogFormName() . '[hash]' => $hash,
-                        $this->getChangeLogFormName() . '[search_class_name]' => $model->getLogClassName(),
-                        $this->getChangeLogFormName() . '[where]' => serialize(
+                        static::getChangeLogFormName() . '[attribute]' => $attribute,
+                        static::getChangeLogFormName() . '[route]' => Yii::$app->urlManager->parseRequest(Yii::$app->request)[0],
+                        static::getChangeLogFormName() . '[hash]' => $hash,
+                        static::getChangeLogFormName() . '[search_class_name]' => $model->getLogClassName(),
+                        static::getChangeLogFormName() . '[where]' => serialize(
                             array_intersect_key(
                                 $model->getAttributes(),
                                 array_flip(

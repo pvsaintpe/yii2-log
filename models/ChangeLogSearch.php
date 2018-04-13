@@ -38,6 +38,22 @@ class ChangeLogSearch extends ActiveRecord
     }
 
     /**
+     * @return string
+     */
+    public function formName()
+    {
+        return static::getFormName();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getFormName()
+    {
+        return 't';
+    }
+
+    /**
      * @return array
      */
     public function getLogStatusAttributes()
