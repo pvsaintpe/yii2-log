@@ -8,9 +8,5 @@
 }
 
 .change-log-link::before {
-    content: " (";
-}
-
-.change-log-link::after {
-    content: ")";
+    content: " ";
 }

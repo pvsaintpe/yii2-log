@@ -53,9 +53,9 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
             $hash = md5($attribute . ':'.join('&', $keys));
             $label = join('', [
                 $model->getAttributeLabel($attribute),
-                '&nbsp;<span class="change-log-area">',
+                '&nbsp;<span class="glyphicon glyphicon-eye-open change-log-area">',
                 Html::a(
-                    Yii::t('log', 'История изменений'),
+                    '',
                     Url::toRoute([
                         $this->pathToRoute,
                         static::getChangeLogFormName() . '[attribute]' => $attribute,
