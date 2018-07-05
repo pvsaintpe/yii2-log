@@ -91,7 +91,6 @@ class ChangeLogSearch extends ActiveRecord
             ],
             'updated_by' => [
                 'class' => 'pvsaintpe\log\components\grid\UpdatedByColumn',
-                'customFilters' => $this->getFilter('updated_by'),
                 'allowNotSet' => true,
                 'value' => function($model) {
                     return $model->updatedBy ? $model->updatedBy->username : null;
