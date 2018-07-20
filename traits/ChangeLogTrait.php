@@ -94,6 +94,14 @@ trait ChangeLogTrait
     }
 
     /**
+     * @return array
+     */
+    public function skipLogAttributes()
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     public function getLogClassName()
@@ -383,21 +391,29 @@ trait ChangeLogTrait
     public function saveToLog()
     {
         if ($this->existLogTable()) {
-            $logAttributes = array_merge(
-                array_intersect_key(
-                    $this->getAttributes(),
-                    array_flip(static::primaryKey())
-                ),
-                $this->getDirtyAttributes()
+            $dirtyAttributes = array_diff_key(
+                $this->getDirtyAttributes(),
+                array_flip(static::skipLogAttributes())
             );
 
-            $logClassName = $this->getLogClassName();
-            $log = new $logClassName();
-            $log->setAttributes($logAttributes);
-            $log->hardSave();
+            if (count($dirtyAttributes) > 0) {
+                $logAttributes = array_merge(
+                    array_intersect_key(
+                        $this->getAttributes(),
+                        array_flip(static::primaryKey())
+                    ),
+                    $dirtyAttributes
+                );
 
-            return $log;
+                $logClassName = $this->getLogClassName();
+                $log = new $logClassName();
+                $log->setAttributes($logAttributes);
+                $log->hardSave();
+                return $log;
+            }
         }
+
+        return false;
     }
 
     /**
