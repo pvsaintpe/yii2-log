@@ -21,7 +21,7 @@
     "yiisoft/yii2-swiftmailer": "~2.0.0",
     "yiisoft/yii2-imagine": "2.0.3",
     "yiisoft/yii2-authclient": "^2.1",
-    "forex-formula/yii2-gii-plus": "2.0.3.5",
+    "pvsaintpe/yii2-gii": "2.0.1",
     "yiisoft/yii2-debug": "2.0.6",
     "yiisoft/yii2-apidoc": "2.1.0",
     "kartik-v/yii2-editable": "1.7.4",
@@ -49,11 +49,5 @@
       "npm-asset-library": "vendor/npm",
       "bower-asset-library": "vendor/bower"
     }
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/forex-formula/yii2-gii.git"
-    }
-  ]
+  }
 }
