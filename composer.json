@@ -22,6 +22,7 @@
     "yiisoft/yii2-imagine": "2.0.3",
     "yiisoft/yii2-authclient": "^2.1",
     "pvsaintpe/yii2-gii": "2.0.1",
+    "pvsaintpe/yii2-search": "2.0.1",
     "yiisoft/yii2-debug": "2.0.6",
     "yiisoft/yii2-apidoc": "2.1.0",
     "kartik-v/yii2-editable": "1.7.4",
@@ -35,8 +36,7 @@
     "kartik-v/yii2-export": "1.2.5",
     "kartik-v/yii2-grid": "3.1.x-dev",
     "kartik-v/yii2-detail-view": "1.7.6",
-    "kartik-v/yii2-mpdf": "@dev",
-    "pvsaintpe/yii2-search": "v1.*"
+    "kartik-v/yii2-mpdf": "@dev"
   },
   "autoload": {
     "psr-4": {
