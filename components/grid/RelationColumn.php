@@ -57,7 +57,7 @@ class RelationColumn extends Select2Column
                     if (isset($relationData['link']['id']) && $this->attribute == $relationData['link']['id']) {
                         /* @var $relationClass \yii\db\ActiveRecordInterface|string */
                         $relationClass = $relationData['class'];
-                        if (is_subclass_of($relationClass, ActiveRecord::className())) {
+                        if (is_subclass_of($relationClass, ActiveRecord::class)) {
                             $this->query = $relationClass::find();
                             $this->relationClass = $relationClass;
                         }
@@ -70,7 +70,7 @@ class RelationColumn extends Select2Column
                         if (in_array($this->attribute, $relationData['link']) && count($relationData['link']) == 1) {
                             /* @var $relationClass \yii\db\ActiveRecordInterface|string */
                             $relationClass = $relationData['class'];
-                            if (is_subclass_of($relationClass, ActiveRecord::className())) {
+                            if (is_subclass_of($relationClass, ActiveRecord::class)) {
                                 $this->query = $relationClass::find();
                                 $this->relationClass = $relationClass;
                             }
