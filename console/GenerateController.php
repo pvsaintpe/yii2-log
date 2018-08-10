@@ -16,8 +16,8 @@ use ReflectionClass;
  */
 class GenerateController extends Controller
 {
-    const CREATE_TEMPLATE_FILE_PATH = '@app/views/migration-create-log.php';
-    const UPDATE_TEMPLATE_FILE_PATH = '@app/views/migration-update-log.php';
+    const CREATE_TEMPLATE_FILE_PATH = '@vendor/pvsaintpe/yii2-log/generators/views/migration-create-log.php';
+    const UPDATE_TEMPLATE_FILE_PATH = '@vendor/pvsaintpe/yii2-log/generators/views/migration-update-log.php';
 
     /**
      * @var
