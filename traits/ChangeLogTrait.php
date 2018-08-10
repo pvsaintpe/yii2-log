@@ -365,15 +365,15 @@ trait ChangeLogTrait
         }
         $names = array_flip($names);
         $attributes = [];
-        if ($this->_oldAttributes === null) {
-            foreach ($this->_attributes as $name => $value) {
+        if (parent::getOldAttributes() === null) {
+            foreach (parent::getAttributes() as $name => $value) {
                 if (isset($names[$name])) {
                     $attributes[$name] = $value;
                 }
             }
         } else {
-            foreach ($this->_attributes as $name => $value) {
-                if (isset($names[$name]) && (!array_key_exists($name, $this->_oldAttributes) || $value != $this->_oldAttributes[$name])) {
+            foreach (parent::getAttributes() as $name => $value) {
+                if (isset($names[$name]) && (!array_key_exists($name, parent::getOldAttributes()) || $value != parent::getOldAttribute($name))) {
                     $attributes[$name] = $value;
                 }
             }
