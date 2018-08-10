@@ -3,6 +3,7 @@
 namespace pvsaintpe\log\traits;
 
 use pvsaintpe\log\components\Connection;
+use pvsaintpe\log\console\GenerateController;
 use Yii;
 use yii\base\Exception;
 use yii\db\TableSchema;
@@ -108,7 +109,7 @@ trait ChangeLogTrait
         }
 
         return [
-            'view' => '@app/views/migration-create-log.php',
+            'view' => GenerateController::CREATE_TEMPLATE_FILE_PATH,
             'migration_prefix' => 'create_table',
             'tableName' => static::tableName(),
             'logTableName' => $this->getLogTableName(),
@@ -291,7 +292,7 @@ trait ChangeLogTrait
         }
 
         return [
-            'view' => '@app/views/migration-update-log.php',
+            'view' => GenerateController::UPDATE_TEMPLATE_FILE_PATH,
             'migration_prefix' => $prefix,
             'tableName' => static::tableName(),
             'logTableName' => $this->getLogTableName(),

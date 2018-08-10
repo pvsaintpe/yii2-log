@@ -8,5 +8,4 @@ namespace pvsaintpe\log\components;
  */
 class ActiveQuery extends \pvsaintpe\search\components\ActiveQuery
 {
-
 }

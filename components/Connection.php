@@ -31,5 +31,4 @@ class Connection extends \yii\db\Connection
         }
         return $this->dbName;
     }
-
 }
