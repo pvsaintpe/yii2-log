@@ -21,33 +21,11 @@ use pvsaintpe\log\components\Migration;
  */
 class <?= $className ?> extends Migration
 {
-    /** @var string */
-    protected $dbName;
-
-    /**
-     * @return bool|string
-     * @throws
-     */
-    private function getDbOrigName()
-    {
-        if (!$this->dbName) {
-            $db = Yii::$app->db;
-            parse_str(str_replace(';', '&', substr(strstr($db->dsn, ':'), 1)), $dsn);
-            if (!array_key_exists('host', $dsn) || !array_key_exists('port', $dsn) || !array_key_exists('dbname', $dsn)) {
-                throw new Exception('Log Database not found');
-            }
-
-            $this->dbName = $dsn['dbname'];
-        }
-
-        return $this->dbName;
-    }
-
     public function safeUp()
     {
         $this->db->createCommand("
             CREATE TABLE `<?= $logTableName?>`
-            LIKE `". $this->getDbOrigName() . "`.`<?= $tableName?>`
+            LIKE `". Yii::$app->db->getName() . "`.`<?= $tableName?>`
 
         ")->execute();
 
@@ -97,7 +75,7 @@ class <?= $className ?> extends Migration
             'fk-reference-<?= $tableName?>',
             '<?= $logTableName?>',
             ['<?= join("','", $primaryKeys)?>'],
-            $this->getDbOrigName() . '.<?= $tableName?>',
+            Yii::$app->db->getName() . '.<?= $tableName?>',
             ['<?= join("','", $primaryKeys)?>']
         );
     }

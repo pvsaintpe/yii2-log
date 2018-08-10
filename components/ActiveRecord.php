@@ -20,7 +20,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     public function beforeSave($insert)
     {
-        if ($insert != static::EVENT_BEFORE_INSERT) {
+        if (!$insert) {
             static::saveToLog();
         }
         return parent::beforeSave($insert);

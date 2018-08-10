@@ -30,28 +30,6 @@ use pvsaintpe\log\components\Migration;
  */
 class <?= $className ?> extends Migration
 {
-    /** @var string */
-    protected $dbName;
-
-    /**
-     * @return bool|string
-     * @throws
-     */
-    private function getDbOrigName()
-    {
-        if (!$this->dbName) {
-            $db = Yii::$app->db;
-            parse_str(str_replace(';', '&', substr(strstr($db->dsn, ':'), 1)), $dsn);
-            if (!array_key_exists('host', $dsn) || !array_key_exists('port', $dsn) || !array_key_exists('dbname', $dsn)) {
-                throw new Exception('Log Database not found');
-            }
-
-            $this->dbName = $dsn['dbname'];
-        }
-
-        return $this->dbName;
-    }
-
     public function safeUp()
     {
 <?php
@@ -142,7 +120,7 @@ class <?= $className ?> extends Migration
             echo "\n\t\t\t'{$key['name']}',";
             echo "\n\t\t\t'{$logTableName}',";
             echo "\n\t\t\t['{$column}'],";
-            echo "\n\t\t\t\$this->getDbOrigName() . '.{$key['relation_table']}',";
+            echo "\n\t\t\t\Yii::\$app->db->getName() . '.{$key['relation_table']}',";
             echo "\n\t\t\t'{$key['relation_column']}'";
             echo "\n\t\t);\n";
         }

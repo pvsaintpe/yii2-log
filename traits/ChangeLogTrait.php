@@ -2,6 +2,7 @@
 
 namespace pvsaintpe\log\traits;
 
+use pvsaintpe\log\components\Connection;
 use Yii;
 use yii\base\Exception;
 use yii\db\TableSchema;
@@ -24,7 +25,7 @@ trait ChangeLogTrait
     private $dbName;
 
     /**
-     * @return mixed
+     * @return Connection
      */
     private function getChangeLogDb()
     {
@@ -32,49 +33,11 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return bool|string
-     * @throws
-     */
-    private function getDbLogName()
-    {
-        if (!$this->dbLogName) {
-            $db = $this->getChangeLogDb();
-            parse_str(str_replace(';', '&', substr(strstr($db->dsn, ':'), 1)), $dsn);
-            if (!array_key_exists('host', $dsn) || !array_key_exists('port', $dsn) || !array_key_exists('dbname', $dsn)) {
-                throw new Exception('Log Database not found');
-            }
-
-            $this->dbLogName = $dsn['dbname'];
-        }
-
-        return $this->dbLogName;
-    }
-
-    /**
-     * @return bool|string
-     * @throws
-     */
-    private function getDbName()
-    {
-        if (!$this->dbName) {
-            $db = Yii::$app->db;
-            parse_str(str_replace(';', '&', substr(strstr($db->dsn, ':'), 1)), $dsn);
-            if (!array_key_exists('host', $dsn) || !array_key_exists('port', $dsn) || !array_key_exists('dbname', $dsn)) {
-                throw new Exception('Log Database not found');
-            }
-
-            $this->dbName = $dsn['dbname'];
-        }
-
-        return $this->dbName;
-    }
-
-    /**
      * @return null|string
      */
     public function getLogTableName()
     {
-        if ($dbName = $this->getDbLogName()) {
+        if ($dbName = $this->getChangeLogDb()->getName()) {
             return static::tableName() . '_log';
         }
 
@@ -386,13 +349,46 @@ trait ChangeLogTrait
     }
 
     /**
+     * Returns the attribute values that have been modified since they are loaded or saved most recently.
+     *
+     * The comparison of new and old values is made for identical values using `===`.
+     *
+     * @param string[]|null $names the names of the attributes whose values may be returned if they are
+     * changed recently. If null, [[attributes()]] will be used.
+     * @return array the changed attribute values (name-value pairs)
+     */
+    public function getRealDirtyAttributes($names = null)
+    {
+        if ($names === null) {
+            $names = $this->attributes();
+        }
+        $names = array_flip($names);
+        $attributes = [];
+        if ($this->_oldAttributes === null) {
+            foreach ($this->_attributes as $name => $value) {
+                if (isset($names[$name])) {
+                    $attributes[$name] = $value;
+                }
+            }
+        } else {
+            foreach ($this->_attributes as $name => $value) {
+                if (isset($names[$name]) && (!array_key_exists($name, $this->_oldAttributes) || $value != $this->_oldAttributes[$name])) {
+                    $attributes[$name] = $value;
+                }
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
      * @return bool
      */
     public function saveToLog()
     {
         if ($this->existLogTable()) {
             $dirtyAttributes = array_diff_key(
-                $this->getDirtyAttributes(),
+                static::getRealDirtyAttributes(),
                 array_flip(static::skipLogAttributes())
             );
 
