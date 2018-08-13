@@ -24,7 +24,6 @@
     "pvsaintpe/yii2-gii": "*",
     "pvsaintpe/yii2-search": "*",
     "yiisoft/yii2-debug": "2.0.6",
-    "yiisoft/yii2-apidoc": "2.1.0",
     "kartik-v/yii2-editable": "1.7.4",
     "kartik-v/yii2-datecontrol": "1.9.4",
     "kartik-v/yii2-date-range": "1.6.7",
