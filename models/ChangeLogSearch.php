@@ -185,8 +185,12 @@ class ChangeLogSearch extends ActiveRecord
             ],
         ]);
 
-        if ($this->where) {
-            $this->query->andWhere(@unserialize($this->where));
+        if ($this->where && $conditions = @unserialize($this->where)) {
+            foreach ((array)$conditions as $attribute => $value) {
+                $this->query->andWhere([
+                    $this->query->a($attribute) => $value,
+                ]);
+            }
         }
 
         return $this->getDataProvider();
