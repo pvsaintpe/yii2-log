@@ -80,27 +80,28 @@ class ChangeLogSearch extends ActiveRecord
     {
         return [
             'log_id' => [
-                'class' => 'pvsaintpe\log\components\grid\IdColumn',
+                'class' => 'kartik\grid\DataColumn',
                 'attribute' => 'log_id',
                 'label' => 'ID',
             ],
             'value' => [
-                'class' => 'pvsaintpe\log\components\grid\DataColumn',
+                'class' => 'kartik\grid\DataColumn',
                 'attribute' => $this->attribute,
                 'label' => $this->getAttributeLabel('value')
             ],
             'updated_by' => [
-                'class' => 'pvsaintpe\log\components\grid\UpdatedByColumn',
-                'allowNotSet' => true,
+                'class' => 'kartik\grid\DataColumn',
+                'attribute' => 'updated_by',
                 'value' => function($model) {
                     return $model->updatedBy ? $model->updatedBy->username : null;
                 }
             ],
             'timestamp' => [
-                'class' => 'pvsaintpe\log\components\grid\TimestampColumn',
+                'class' => 'kartik\grid\DataColumn',
+                'attribute' => 'timestamp'
             ],
             'actions' => [
-                'class' => 'pvsaintpe\log\components\grid\DataColumn',
+                'class' => 'kartik\grid\DataColumn',
                 'header' => Yii::t('payment','Действия'),
                 'vAlign' => 'middle',
                 'format' => 'raw',

@@ -226,25 +226,6 @@ trait ChangeLogTrait
             }
         }
 
-//        $indexes = [];
-//        $keyNames = [];
-//        foreach (Yii::$app->db
-//            ->createCommand("SHOW KEYS FROM " . static::tableName() . " WHERE Key_name NOT LIKE 'PRIMARY' AND Non_unique LIKE 1")
-//            ->queryAll() as $index) {
-//            $indexes[] = $index['Column_name'];
-//            $keyNames[$index['Column_name']] = $index['Key_name'];
-//        }
-//
-//        $logIndexes = [];
-//        foreach ($this->getChangeLogDb()
-//             ->createCommand("SHOW KEYS FROM " . $this->getLogTableName() . " WHERE Key_name NOT LIKE 'PRIMARY'")
-//             ->queryAll() as $index) {
-//            $logIndexes[] = $index['Column_name'];
-//        }
-
-//        $createIndexes = array_diff($indexes, $logIndexes);
-//        $dropIndexes = array_diff($logIndexes, $indexes);
-
         $createForeignKeys = array_diff($foreignKeys, $logForeignKeys);
         $removeForeignKeys = array_diff($logForeignKeys, $foreignKeys);
 
@@ -255,9 +236,7 @@ trait ChangeLogTrait
             empty($addColumns)
             && empty($removeColumns)
             && empty($updateColumns)
-//            && empty($dropIndexes)
             && empty($dropForeignKeys)
-//            && empty($createIndexes)
             && empty($addForeignKeys)
         ) {
             return false;
