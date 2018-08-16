@@ -388,9 +388,12 @@ trait ChangeLogTrait
     public function saveToLog()
     {
         if ($this->existLogTable()) {
-            $dirtyAttributes = array_diff_key(
-                static::getRealDirtyAttributes(),
-                array_flip(static::skipLogAttributes())
+            $dirtyAttributes = array_intersect_key(
+                parent::getOldAttributes(),
+                array_diff_key(
+                    static::getRealDirtyAttributes(),
+                    array_flip(static::skipLogAttributes())
+                )
             );
 
             if (count($dirtyAttributes) > 0) {
