@@ -4,8 +4,11 @@ namespace pvsaintpe\log\traits;
 
 use pvsaintpe\log\components\Connection;
 use pvsaintpe\log\console\GenerateController;
+use pvsaintpe\log\components\Exception;
 use Yii;
-use yii\base\Exception;
+use yii\db\ActiveRecord;
+use yii\db\ActiveRecordInterface;
+use yii\db\BaseActiveRecord;
 use yii\db\TableSchema;
 use yii\helpers\Inflector;
 
@@ -21,11 +24,6 @@ trait ChangeLogTrait
     private $dbLogName;
 
     /**
-     * @var string
-     */
-    private $dbName;
-
-    /**
      * @return Connection
      */
     private function getChangeLogDb()
@@ -34,26 +32,24 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function getLogTableName()
     {
-        if ($dbName = $this->getChangeLogDb()->getName()) {
-            return static::tableName() . '_log';
-        }
-
-        return null;
+        return static::tableName() . '_log';
     }
 
     /**
+     * @todo доработать методы date...
      * @return array
      */
     public function securityLogAttributes()
     {
+        $model = $this->getModel();
         return array_merge(
-            static::primaryKey(),
-            static::dateAttributes(),
-            static::datetimeAttributes()
+            $model::primaryKey(),
+            $model::dateAttributes(),
+            $model::datetimeAttributes()
         );
     }
 
@@ -78,10 +74,12 @@ trait ChangeLogTrait
      */
     private function existLogTable()
     {
-        if ($exist = $this->getChangeLogDb()->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")->queryScalar()) {
+        if ($this->getChangeLogDb()
+            ->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")
+            ->queryScalar()
+        ) {
             return true;
         }
-
         return false;
     }
 
@@ -90,14 +88,15 @@ trait ChangeLogTrait
      */
     private function getCreateParams()
     {
-        $columns = Yii::$app->db
-            ->createCommand("SHOW FULL COLUMNS FROM `" . static::tableName() . "`")
+        $model = $this->getModel();
+        $columns = $model::getDb()
+            ->createCommand("SHOW FULL COLUMNS FROM `" . $model::tableName() . "`")
             ->queryAll();
 
         $keys = [];
-        if ($uniqueKeys = Yii::$app->db
+        if ($uniqueKeys = $model::getDb()
             ->createCommand("
-                SHOW KEYS FROM `" . static::tableName() . "`
+                SHOW KEYS FROM `" . $model::tableName() . "`
                 WHERE Key_name NOT LIKE 'PRIMARY' 
                 AND Non_unique LIKE 0
             ")
@@ -111,11 +110,11 @@ trait ChangeLogTrait
         return [
             'view' => GenerateController::CREATE_TEMPLATE_FILE_PATH,
             'migration_prefix' => 'create_table',
-            'tableName' => static::tableName(),
+            'tableName' => $model::tableName(),
             'logTableName' => $this->getLogTableName(),
             'columns' => $columns,
             'uniqueKeys' => $keys,
-            'primaryKeys' => static::primaryKey(),
+            'primaryKeys' => $model::primaryKey(),
         ];
     }
 
@@ -220,7 +219,7 @@ trait ChangeLogTrait
                 continue;
             }
             array_shift($logForeignParams);
-            foreach ($logForeignParams as $logColumn => $logRelationColumn) {
+            foreach (array_keys($logForeignParams) as $logColumn) {
                 $dropForeignKeys[$logColumn] = $logForeignKey;
                 $logForeignKeys[] = $logColumn;
             }
@@ -228,12 +227,10 @@ trait ChangeLogTrait
 
         $createForeignKeys = array_diff($foreignKeys, $logForeignKeys);
         $removeForeignKeys = array_diff($logForeignKeys, $foreignKeys);
-
         $addForeignKeys = array_intersect_key($addForeignKeys, array_flip($createForeignKeys));
         $dropForeignKeys = array_intersect_key($dropForeignKeys, array_flip($removeForeignKeys));
 
-        if (
-            empty($addColumns)
+        if (empty($addColumns)
             && empty($removeColumns)
             && empty($updateColumns)
             && empty($dropForeignKeys)
@@ -279,17 +276,14 @@ trait ChangeLogTrait
             'addColumns' => $addColumns,
             'removeColumns' => $removeColumns,
             'updateColumns' => $updateColumns,
-//            'dropIndexes' => $dropIndexes,
             'dropForeignKeys' => $dropForeignKeys,
-//            'createIndexes' => $createIndexes,
             'addForeignKeys' => $addForeignKeys,
-//            'keyNames' => $keyNames,
         ];
     }
 
     /**
-     * @param $table
-     * @param $column
+     * @param string $table
+     * @param string $column
      * @return string
      */
     private function generateForeignKeyName($table, $column)
@@ -297,35 +291,30 @@ trait ChangeLogTrait
         $foreignKey = join('-', [$table, $column]);
         if (strlen($foreignKey) >= 64) {
             $shortTableName = '';
-            foreach (explode('_', $table) as $table_part) {
-                $shortTableName .= substr($table_part, 0, 1);
+            foreach (explode('_', $table) as $tablePart) {
+                $shortTableName .= substr($tablePart, 0, 1);
             }
 
             $foreignKey = join('-', [$shortTableName, $column]);
             if (strlen($foreignKey) >= 64) {
                 $shortColumnName = '';
-                foreach (explode('_', $column) as $column_part) {
-                    $shortColumnName .= substr($column_part, 0, 1);
+                foreach (explode('_', $column) as $columnPart) {
+                    $shortColumnName .= substr($columnPart, 0, 1);
                 }
                 $foreignKey = join('-', [$shortTableName, $shortColumnName]);
             }
         }
-
         return $foreignKey;
     }
 
     /**
+     * @param ActiveRecord $model
      * @return mixed
      */
-    public function createLogTable()
+    public function createLogTable(ActiveRecord $model)
     {
-        if (!$this->existLogTable()) {
-            // create log table
-            return $this->getCreateParams();
-        } else {
-            // update for appeared a new columns
-            return $this->getUpdateParams();
-        }
+        $this->setModel($model);
+        return !$this->existLogTable() ? $this->getCreateParams() : $this->getUpdateParams();
     }
 
     /**
@@ -339,20 +328,25 @@ trait ChangeLogTrait
      */
     public function getRealDirtyAttributes($names = null)
     {
+        $model = $this->getModel();
         if ($names === null) {
-            $names = $this->attributes();
+            $names = $model->attributes();
         }
         $names = array_flip($names);
         $attributes = [];
-        if (parent::getOldAttributes() === null) {
-            foreach (parent::getAttributes() as $name => $value) {
+        if ($model->getOldAttributes() === null) {
+            foreach ($model->getAttributes() as $name => $value) {
                 if (isset($names[$name])) {
                     $attributes[$name] = $value;
                 }
             }
         } else {
-            foreach (parent::getAttributes() as $name => $value) {
-                if (isset($names[$name]) && (!array_key_exists($name, parent::getOldAttributes()) || $value != parent::getOldAttribute($name))) {
+            foreach ($model->getAttributes() as $name => $value) {
+                if (isset($names[$name])
+                    && (!array_key_exists($name, $model->getOldAttributes())
+                        || $value != $model->getOldAttribute($name)
+                    )
+                ) {
                     $attributes[$name] = $value;
                 }
             }
@@ -362,34 +356,65 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return bool
+     * @var ActiveRecord
      */
-    public function saveToLog()
+    private $model;
+
+    /**
+     * @param ActiveRecord $model
+     * @return bool
+     * @throws
+     */
+    public function saveToLog(ActiveRecord $model)
     {
+        $this->setModel($model);
         if ($this->existLogTable()) {
             $dirtyAttributes = array_diff_key(
-                static::getRealDirtyAttributes(),
-                array_flip(static::skipLogAttributes())
+                $this->getRealDirtyAttributes(),
+                array_flip($this->skipLogAttributes())
             );
 
             if (count($dirtyAttributes) > 0) {
                 $logAttributes = array_merge(
                     array_intersect_key(
-                        $this->getAttributes(),
-                        array_flip(static::primaryKey())
+                        $this->getModel()->getAttributes(),
+                        array_flip($this->getModel()::primaryKey())
                     ),
                     $dirtyAttributes
                 );
 
                 $logClassName = $this->getLogClassName();
+                /** @var ActiveRecord $log */
                 $log = new $logClassName();
                 $log->setAttributes($logAttributes);
-                $log->hardSave();
-                return $log;
+                if (!$log->save()) {
+                    throw new Exception(Yii::t('changelog', 'Не удалось сохранить в лог: {summary}', [
+                        'summary' => json_encode($log->getErrors())
+                    ]));
+                }
+                return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * @param ActiveRecord $model
+     * @return $this
+     */
+    public function setModel(ActiveRecord $model)
+    {
+        $this->model = clone $model;
+        return $this;
+    }
+
+    /**
+     * @return ActiveRecord
+     */
+    protected function getModel()
+    {
+        return $this->model;
     }
 
     /**

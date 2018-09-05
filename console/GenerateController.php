@@ -4,11 +4,13 @@ namespace pvsaintpe\log\console;
 
 use pvsaintpe\log\components\ActiveRecord;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use pvsaintpe\log\traits\ChangeLogTrait;
 use Yii;
 use yii\console\Controller;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
+use yii\db\BaseActiveRecord;
 
 /**
  * Class GenerateController
@@ -58,8 +60,8 @@ class GenerateController extends Controller
                 $className = $this->parseClassFile($filename);
                 if ($className && class_exists($className)) {
                     $reflectionClass = new ReflectionClass($className);
-                    if ($reflectionClass->isSubclassOf('pvsaintpe\log\components\ActiveRecord')
-                        && $reflectionClass->isSubclassOf('pvsaintpe\log\interfaces\ChangeLogInterface')
+                    if ($reflectionClass->isSubclassOf('yii\db\ActiveRecord')
+                        && $reflectionClass->isSubclassOf('pvsaintpe\log\traits\ChangeLogTrait')
                     ) {
                         $this->classNames[] = $className;
                     }
@@ -70,13 +72,13 @@ class GenerateController extends Controller
         $view = $this->getView();
         $migrations = 0;
         foreach ($this->classNames as $className) {
-            /* @var $class ActiveRecord|ChangeLogInterface */
+            /* @var $class BaseActiveRecord|ChangeLogTrait */
             $class = new $className;
             if (!$class->logEnabled()) {
                 continue;
             }
 
-            if ($params = $class->createLogTable()) {
+            if ($params = $class->createLogTable($class)) {
                 $fileName = 'm' . date('ymd_his', time()) . '_'. $params['migration_prefix'] . '_' . $params['logTableName'];
                 if (@file_put_contents(
                     Yii::getAlias($this->migrationPath . '/' . $fileName . '.php'),
