@@ -27,8 +27,11 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
     public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
 
     protected $revisionSpanStyle = 'background-color: #FF9999; padding: 5px; padding-left: 10px;';
+
     protected $revisionLabelStyle = 'padding-left:5px;font-weight:normal;';
+
     protected $revisionActiveStyle = 'color:black';
+    
     protected $revisionStyle = 'color:ligthgray';
 
     /**
