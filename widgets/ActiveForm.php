@@ -26,6 +26,11 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
      */
     public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
 
+    protected $revisionSpanStyle = 'background-color: #FF9999; padding: 5px; padding-left: 10px;';
+    protected $revisionLabelStyle = 'padding-left:5px;font-weight:normal;';
+    protected $revisionActiveStyle = 'color:black';
+    protected $revisionStyle = 'color:ligthgray';
+
     /**
      * @return mixed
      */
@@ -45,12 +50,29 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
          * @var \pvsaintpe\log\widgets\ActiveField $field
          */
         $field = parent::field($model, $attribute, $options);
-        if ($model instanceof ChangeLogInterface && $model->logEnabled() && !in_array($attribute, $model->securityLogAttributes())) {
+        if ($model instanceof ChangeLogInterface
+            && $model->logEnabled()
+            && !in_array($attribute, $model->securityLogAttributes())
+        ) {
             $keys = [];
             foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
                 $keys[] = $index.'='.$key;
             }
             $hash = md5($attribute . ':'.join('&', $keys));
+            $where = array_intersect_key(
+                $model->getAttributes(),
+                array_flip(
+                    $model::primaryKey()
+                )
+            );
+            if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
+                $afterCode = '<span style="' . $this->revisionLabelStyle . '">' .  $cnt . '</span>';
+                $field->options['style'] = $this->revisionSpanStyle;
+                $color = $this->revisionActiveStyle;
+            } else {
+                $afterCode = '';
+                $color = $this->revisionStyle;
+            }
             $label = join('', [
                 $model->getAttributeLabel($attribute),
                 '&nbsp;<span class="change-log-area">',
@@ -58,22 +80,17 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                     '<span 
                         title="' . Yii::t('log', 'История изменений') . '" 
                         alt="' . Yii::t('log', 'История изменений') . '" 
-                        class="glyphicon glyphicon-eye-open" style="color:lightgray"
+                        class="glyphicon glyphicon-eye-open" style="' . $color . '"
                     />',
                     Url::toRoute([
                         $this->pathToRoute,
                         static::getChangeLogFormName() . '[attribute]' => $attribute,
-                        static::getChangeLogFormName() . '[route]' => Yii::$app->urlManager->parseRequest(Yii::$app->request)[0],
+                        static::getChangeLogFormName() . '[route]' => Yii::$app->urlManager->parseRequest(
+                            Yii::$app->request
+                        )[0],
                         static::getChangeLogFormName() . '[hash]' => $hash,
                         static::getChangeLogFormName() . '[search_class_name]' => $model->getLogClassName(),
-                        static::getChangeLogFormName() . '[where]' => serialize(
-                            array_intersect_key(
-                                $model->getAttributes(),
-                                array_flip(
-                                    $model::primaryKey()
-                                )
-                            )
-                        ),
+                        static::getChangeLogFormName() . '[where]' => serialize($where),
                     ]),
                     [
                         'class' => 'change-log-link btn-main-modal',
@@ -83,7 +100,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                         'data-id' => strtolower($this->getId() . '-' . $attribute),
                     ]
                 ),
-                '</span>'
+                '</span>' . $afterCode
             ]);
             $field->label($label);
             $field->setHistoryLabel($label);
