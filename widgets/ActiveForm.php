@@ -69,16 +69,15 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 )
             );
             if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
-                $afterCode = '<span style="' . $this->revisionLabelStyle . '">' .  $cnt . '</span>';
-                $field->options['style'] = $this->revisionSpanStyle;
+                $afterCode = '<small class="label pull-right bg-red" style="margin-left:5px;">' .  $cnt . '</small>';
                 $color = $this->revisionActiveStyle;
             } else {
                 $afterCode = '';
                 $color = $this->revisionStyle;
             }
             $label = join('', [
-                $model->getAttributeLabel($attribute),
-                '&nbsp;<span class="change-log-area">',
+                '<span>' . $model->getAttributeLabel($attribute) . '</span>',
+                '<span class="pull-right-container">' . $afterCode . '<span class="change-log-area pull-right" style="margin-left:5px;">',
                 Html::a(
                     '<span 
                         title="' . Yii::t('log', 'История изменений') . '" 
@@ -103,7 +102,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                         'data-id' => strtolower($this->getId() . '-' . $attribute),
                     ]
                 ),
-                '</span>' . $afterCode
+                '</span></span>'
             ]);
             $field->label($label);
             $field->setHistoryLabel($label);
