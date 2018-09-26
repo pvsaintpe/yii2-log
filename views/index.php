@@ -36,7 +36,7 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
         var dataVal = $(this).attr('data-value');
-        $('#' + labelId).parent().parent().parent().find('input').each(function(index, element) {
+        $('#' + labelId).parent().parent().parent().parent().find('input').each(function(index, element) {
             if ($(element).attr('type') === 'checkbox') {
                 if (dataVal == 0) {
                     $(element).removeAttr('checked');
@@ -58,7 +58,7 @@ JS
     $('.rollback-button').click(function (e) {
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
-        $('#' + labelId).parent().parent().parent().find('input').val($(this).attr('data-value'));
+        $('#' + labelId).parent().parent().parent().parent().find('input').val($(this).attr('data-value'));
         $('#main-modal').modal('hide');
     })
 })(jQuery);
