@@ -56,6 +56,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
         if ($model instanceof ChangeLogInterface
             && $model->logEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
+            && Yii::$app->user->can('changelog')
         ) {
             $keys = [];
             foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
