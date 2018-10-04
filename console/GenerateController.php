@@ -47,7 +47,8 @@ class GenerateController extends Controller
     }
 
     /**
-     * Generate migrations for log-tables
+     * @return int
+     * @throws \ReflectionException
      */
     public function actionIndex()
     {

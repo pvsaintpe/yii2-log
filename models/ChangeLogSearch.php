@@ -6,6 +6,7 @@ use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use pvsaintpe\search\interfaces\SearchInterface;
 use Yii;
 
 /**

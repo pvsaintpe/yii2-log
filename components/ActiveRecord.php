@@ -4,7 +4,6 @@ namespace pvsaintpe\log\components;
 
 use pvsaintpe\log\interfaces\ChangeLogInterface;
 use pvsaintpe\log\traits\ChangeLogTrait;
-use pvsaintpe\search\interfaces\MessageInterface;
 
 /**
  * Class ActiveRecord

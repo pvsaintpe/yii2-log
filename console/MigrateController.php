@@ -2,7 +2,7 @@
 
 namespace pvsaintpe\log\console;
 
-use pvsaintpe\log\components\Connection;
+use pvsaintpe\db\components\Connection;
 use yii\console\controllers\MigrateController as BaseMigrateController;
 use Yii;
 
@@ -17,6 +17,6 @@ class MigrateController extends BaseMigrateController
      */
     public function getDb()
     {
-        return Yii::$app->dbLog;
+        return $this->db;
     }
 }
