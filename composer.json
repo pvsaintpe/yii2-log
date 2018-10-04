@@ -21,8 +21,10 @@
     "yiisoft/yii2-swiftmailer": "~2.0.0",
     "yiisoft/yii2-imagine": "2.0.3",
     "yiisoft/yii2-authclient": "^2.1",
-    "pvsaintpe/yii2-gii": "*",
-    "pvsaintpe/yii2-search": "*",
+    "pvsaintpe/yii2-gii-plus": "2.*",
+    "pvsaintpe/yii2-grid": "*",
+    "pvsaintpe/yii2-db-plus": "*",
+    "pvsaintpe/yii2-search": "2.*",
     "yiisoft/yii2-debug": "2.0.6",
     "kartik-v/yii2-editable": "1.7.4",
     "kartik-v/yii2-datecontrol": "1.9.4",
@@ -32,9 +34,6 @@
     "kartik-v/yii2-widgets": "3.4.0",
     "kartik-v/yii2-icons": "1.4.1",
     "kartik-v/yii2-dropdown-x": "*",
-    "kartik-v/yii2-export": "1.2.5",
-    "kartik-v/yii2-grid": "3.1.x-dev",
-    "kartik-v/yii2-detail-view": "1.7.6",
     "kartik-v/yii2-mpdf": "@dev"
   },
   "autoload": {

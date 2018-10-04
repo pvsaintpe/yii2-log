@@ -23,7 +23,7 @@
 echo "<?php\n";
 ?>
 
-use pvsaintpe\log\components\Migration;
+use pvsaintpe\db\components\Migration;
 
 /**
  * @author Veselov Pavel
