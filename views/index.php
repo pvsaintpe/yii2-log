@@ -1,7 +1,7 @@
 <?php
 
 use pvsaintpe\search\helpers\Html;
-use pvsaintpe\search\widgets\GridView;
+use pvsaintpe\grid\widgets\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel \pvsaintpe\search\interfaces\SearchInterface|\pvsaintpe\log\models\ChangeLogSearch */

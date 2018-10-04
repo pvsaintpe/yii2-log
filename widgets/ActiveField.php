@@ -12,20 +12,6 @@ use yii\helpers\ArrayHelper;
 class ActiveField extends \pvsaintpe\search\widgets\ActiveField
 {
     /**
-     * @var string
-     */
-    protected $historyLabel;
-
-    /**
-     * @param $label
-     * @return string
-     */
-    public function setHistoryLabel($label)
-    {
-        return $this->historyLabel = $label;
-    }
-
-    /**
      * Renders the hint tag.
      * @param string|bool $content the hint content.
      * If `null`, the hint will be generated via [[Model::getAttributeHint()]].
@@ -130,7 +116,6 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
             $container = false;
             unset($options['labelOptions']);
         }
-        $options['label'] = $this->historyLabel;
         $input = Html::$inputType($this->model, $this->attribute, $options);
         if (is_array($container)) {
             $tag = ArrayHelper::remove($container, 'tag', 'div');
@@ -138,6 +123,9 @@ class ActiveField extends \pvsaintpe\search\widgets\ActiveField
         }
 
         $this->parts['{input}'] = $input;
+        if ($type == self::TYPE_CHECKBOX) {
+            $this->parts['{input}'] = '<br>' . $input;
+        }
         $this->adjustLabelFor($options);
         return $this;
     }

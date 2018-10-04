@@ -2,7 +2,7 @@
 
 namespace pvsaintpe\log\components\grid;
 
-use pvsaintpe\search\widgets\GridView;
+use pvsaintpe\grid\widgets\GridView;
 use DateTime;
 
 /**

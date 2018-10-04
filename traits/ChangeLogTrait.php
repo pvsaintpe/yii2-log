@@ -2,10 +2,9 @@
 
 namespace pvsaintpe\log\traits;
 
-use pvsaintpe\log\components\Connection;
+use pvsaintpe\db\components\Connection;
 use pvsaintpe\log\console\GenerateController;
 use Yii;
-use yii\base\Exception;
 use yii\db\TableSchema;
 use yii\helpers\Inflector;
 

@@ -106,11 +106,9 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 '</span></span>'
             ]);
             $field->label($label);
-            $field->setHistoryLabel($label);
         } else {
             $label = '<span>' . $model->getAttributeLabel($attribute) . '</span>';
             $field->label($label);
-            $field->setHistoryLabel($label);
         }
         return $field;
     }

@@ -2,7 +2,7 @@
 
 namespace pvsaintpe\log\components\grid;
 
-use pvsaintpe\search\widgets\GridView;
+use pvsaintpe\grid\widgets\GridView;
 use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\search\components\ActiveQuery;
 use yii\helpers\ArrayHelper;
