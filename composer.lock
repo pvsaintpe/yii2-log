@@ -3110,16 +3110,16 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "ac7189d7bf9f9679ab1e6288b1458145b72db52e"
+                "reference": "c5b2022d4259883c174d97876a53e5a2ee0e053b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/ac7189d7bf9f9679ab1e6288b1458145b72db52e",
-                "reference": "ac7189d7bf9f9679ab1e6288b1458145b72db52e",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/c5b2022d4259883c174d97876a53e5a2ee0e053b",
+                "reference": "c5b2022d4259883c174d97876a53e5a2ee0e053b",
                 "shasum": ""
             },
             "require": {
@@ -3155,7 +3155,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-05T17:15:02+00:00"
+            "time": "2018-10-05T17:28:51+00:00"
         },
         {
             "name": "setasign/fpdi",
