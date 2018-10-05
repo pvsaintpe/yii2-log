@@ -2906,16 +2906,16 @@
         },
         {
             "name": "pvsaintpe/yii2-db-plus",
-            "version": "1.0.4",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-db-plus.git",
-                "reference": "74e0836baafa546acdd4f000b2c4a6390307ffd6"
+                "reference": "8aa156a5a61a371b8bcfccca00b039ac2e84bd38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/74e0836baafa546acdd4f000b2c4a6390307ffd6",
-                "reference": "74e0836baafa546acdd4f000b2c4a6390307ffd6",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/8aa156a5a61a371b8bcfccca00b039ac2e84bd38",
+                "reference": "8aa156a5a61a371b8bcfccca00b039ac2e84bd38",
                 "shasum": ""
             },
             "require": {
@@ -2951,20 +2951,20 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-02T22:39:46+00:00"
+            "time": "2018-10-05T17:17:30+00:00"
         },
         {
             "name": "pvsaintpe/yii2-gii",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-gii.git",
-                "reference": "2de7992b2c8faec20ac62ea052e66f606c07546e"
+                "reference": "a09c6c988c7db976c4ad13e4535a780a5a1a15a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-gii/zipball/2de7992b2c8faec20ac62ea052e66f606c07546e",
-                "reference": "2de7992b2c8faec20ac62ea052e66f606c07546e",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-gii/zipball/a09c6c988c7db976c4ad13e4535a780a5a1a15a8",
+                "reference": "a09c6c988c7db976c4ad13e4535a780a5a1a15a8",
                 "shasum": ""
             },
             "require": {
@@ -3001,20 +3001,20 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-05T13:35:10+00:00"
+            "time": "2018-10-05T17:21:58+00:00"
         },
         {
             "name": "pvsaintpe/yii2-gii-plus",
-            "version": "2.1.7",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-gii-plus.git",
-                "reference": "ced7d9bb12344c68784b40905e77d8dcfeebf1d9"
+                "reference": "51ea17f3981aa48b506d3e5616a1ffa4e3368a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-gii-plus/zipball/ced7d9bb12344c68784b40905e77d8dcfeebf1d9",
-                "reference": "ced7d9bb12344c68784b40905e77d8dcfeebf1d9",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-gii-plus/zipball/51ea17f3981aa48b506d3e5616a1ffa4e3368a10",
+                "reference": "51ea17f3981aa48b506d3e5616a1ffa4e3368a10",
                 "shasum": ""
             },
             "require": {
@@ -3054,7 +3054,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-05T13:34:28+00:00"
+            "time": "2018-10-05T17:25:57+00:00"
         },
         {
             "name": "pvsaintpe/yii2-grid",
@@ -3110,16 +3110,16 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "2.1.5",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "3d0f8f48486cc1bbb3e72a22ccc54f37577de0c5"
+                "reference": "ac7189d7bf9f9679ab1e6288b1458145b72db52e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/3d0f8f48486cc1bbb3e72a22ccc54f37577de0c5",
-                "reference": "3d0f8f48486cc1bbb3e72a22ccc54f37577de0c5",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/ac7189d7bf9f9679ab1e6288b1458145b72db52e",
+                "reference": "ac7189d7bf9f9679ab1e6288b1458145b72db52e",
                 "shasum": ""
             },
             "require": {
@@ -3155,7 +3155,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-05T06:54:52+00:00"
+            "time": "2018-10-05T17:15:02+00:00"
         },
         {
             "name": "setasign/fpdi",
