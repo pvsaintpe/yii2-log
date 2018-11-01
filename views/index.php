@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="box box-danger log-index">
     <div class="box-body">
         <?= GridView::widget([
+            'id' => 'wlog',
             'dataProvider' => $dataProvider,
             'filterModel' => null, //$searchModel,
             'disableColumns' => $searchModel->getDisableColumns(),
