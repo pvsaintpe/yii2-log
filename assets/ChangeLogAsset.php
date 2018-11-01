@@ -10,8 +10,14 @@ use yii\web\AssetBundle;
  */
 class ChangeLogAsset extends AssetBundle
 {
+    /**
+     * @var string
+     */
     public $sourcePath = '@vendor/pvsaintpe/yii2-log/assets';
 
+    /**
+     * @var array
+     */
     public $css = [
         'css/log.css',
     ];
