@@ -3,6 +3,7 @@
 namespace pvsaintpe\log\console;
 
 use pvsaintpe\log\components\ActiveRecord;
+use pvsaintpe\log\components\Configs;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
 use Yii;
 use yii\console\Controller;
@@ -16,9 +17,6 @@ use ReflectionClass;
  */
 class GenerateController extends Controller
 {
-    const CREATE_TEMPLATE_FILE_PATH = '@vendor/pvsaintpe/yii2-log/generators/views/migration-create-log.php';
-    const UPDATE_TEMPLATE_FILE_PATH = '@vendor/pvsaintpe/yii2-log/generators/views/migration-update-log.php';
-
     /**
      * @var
      */
@@ -49,10 +47,12 @@ class GenerateController extends Controller
     /**
      * @return int
      * @throws \ReflectionException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function actionIndex()
     {
-        $iterator = new RecursiveDirectoryIterator(Yii::getAlias('@common/models'));
+        $iterator = new RecursiveDirectoryIterator(Yii::getAlias(Configs::instance()->modelsPath));
         $iterator = new RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $filename => $file) {
             if ($file->isFile() && preg_match('~.php$~', $file->getFilename())) {

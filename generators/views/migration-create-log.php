@@ -15,17 +15,20 @@ echo "<?php\n";
 ?>
 
 use pvsaintpe\db\components\Migration;
+use pvsaintpe\log\traits\MigrationTrait;
 
 /**
  * @author Veselov Pavel
  */
 class <?= $className ?> extends Migration
 {
+    use MigrationTrait;
+
     public function safeUp()
     {
         $this->db->createCommand("
             CREATE TABLE `<?= $logTableName?>`
-            LIKE `". Yii::$app->db->getName() . "`.`<?= $tableName?>`
+            LIKE `". $this->getStorageDb->getName() . "`.`<?= $tableName?>`
 
         ")->execute();
 
@@ -75,7 +78,7 @@ class <?= $className ?> extends Migration
             'fk-reference-<?= $tableName?>',
             '<?= $logTableName?>',
             ['<?= join("','", $primaryKeys)?>'],
-            Yii::$app->db->getName() . '.<?= $tableName?>',
+$this->getStorageDb->getName() . '.<?= $tableName?>',
             ['<?= join("','", $primaryKeys)?>']
         );
     }

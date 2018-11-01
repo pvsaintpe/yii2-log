@@ -3,7 +3,7 @@
 namespace pvsaintpe\log\traits;
 
 use pvsaintpe\db\components\Connection;
-use pvsaintpe\log\console\GenerateController;
+use pvsaintpe\log\components\Configs;
 use Yii;
 use yii\db\TableSchema;
 use yii\helpers\Inflector;
@@ -25,20 +25,33 @@ trait ChangeLogTrait
     private $dbName;
 
     /**
-     * @return Connection
+     * @return Connection|object
+     * @throws \yii\base\InvalidConfigException
      */
-    private function getChangeLogDb()
+    private function getLogDb()
     {
-        return Yii::$app->dbLog;
+        return Yii::$app->get(Configs::instance()->db);
+    }
+
+    /**
+     * @return Connection|object
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function getStorageDb()
+    {
+        return Yii::$app->get(Configs::instance()->storageDb);
     }
 
     /**
      * @return null|string
+     * @throws \yii\base\InvalidConfigException
+     *
+     * @todo tableName()
      */
     public function getLogTableName()
     {
-        if ($dbName = $this->getChangeLogDb()->getName()) {
-            return static::tableName() . '_log';
+        if ($dbName = $this->getLogDb()->getName()) {
+            return Configs::instance()->tablePrefix . static::tableName() . Configs::instance()->tableSuffix;
         }
 
         return null;
@@ -46,6 +59,8 @@ trait ChangeLogTrait
 
     /**
      * @return array
+     *
+     * @todo primaryKey(), dateAttributes(), datetimeAttributes()
      */
     public function securityLogAttributes()
     {
@@ -66,18 +81,28 @@ trait ChangeLogTrait
 
     /**
      * @return string
+     * @throws \yii\base\InvalidConfigException
+     * @todo Create namespace (config) for Log Classes
      */
     public function getLogClassName()
     {
-        return '\\common\\models\\log\\' . Inflector::singularize(Inflector::id2camel($this->getLogTableName(), '_'));
+        return join('\\', [
+            addslashes(Configs::instance()->classNamespace),
+            Inflector::singularize(Inflector::id2camel($this->getLogTableName(), '_'))
+        ]);
     }
 
     /**
      * @return bool
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     private function existLogTable()
     {
-        if ($exist = $this->getChangeLogDb()->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")->queryScalar()) {
+        if (($exist = $this->getLogDb()
+                ->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")
+            ->queryScalar())
+        ) {
             return true;
         }
 
@@ -85,17 +110,20 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     *
+     * @todo tableName(), primaryKey()
      */
     private function getCreateParams()
     {
-        $columns = Yii::$app->db
+        $columns = $this->getStorageDb()
             ->createCommand("SHOW FULL COLUMNS FROM `" . static::tableName() . "`")
             ->queryAll();
 
         $keys = [];
-        if ($uniqueKeys = Yii::$app->db
-            ->createCommand("
+        if ($uniqueKeys = $this->getStorageDb()->createCommand("
                 SHOW KEYS FROM `" . static::tableName() . "`
                 WHERE Key_name NOT LIKE 'PRIMARY' 
                 AND Non_unique LIKE 0
@@ -108,7 +136,7 @@ trait ChangeLogTrait
         }
 
         return [
-            'view' => GenerateController::CREATE_TEMPLATE_FILE_PATH,
+            'view' => Configs::instance()->createTemplatePath,
             'migration_prefix' => 'create_table',
             'tableName' => static::tableName(),
             'logTableName' => $this->getLogTableName(),
@@ -119,7 +147,11 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     *
+     * @todo tableName(), primaryKey()
      */
     private function getUpdateParams()
     {
@@ -150,9 +182,12 @@ trait ChangeLogTrait
         $tableColumns = [];
         $comments = [];
         $columns = [];
-        foreach (Yii::$app->db
-             ->createCommand("SHOW FULL COLUMNS FROM " . static::tableName() . " WHERE Field NOT IN ('created_at', 'updated_at', 'timestamp')")
-             ->queryAll() as $tableColumn) {
+        $sql = join(' ', [
+            "SHOW FULL COLUMNS FROM",
+            static::tableName(),
+            "WHERE Field NOT IN ('created_at', 'updated_at', 'timestamp')"
+        ]);
+        foreach ($this->getStorageDb()->createCommand($sql)->queryAll() as $tableColumn) {
             $tableColumns[$tableColumn['Field']] = $tableColumn['Type'];
             $comments[$tableColumn['Field']] = $tableColumn['Comment'];
             $columns[] = $tableColumn['Field'];
@@ -161,9 +196,12 @@ trait ChangeLogTrait
         $logTableColumns = [];
         $logComments = [];
         $logColumns = [];
-        foreach ($this->getChangeLogDb()
-             ->createCommand("SHOW FULL COLUMNS FROM " . $this->getLogTableName() . " WHERE Field NOT IN ('log_id', 'timestamp')")
-             ->queryAll() as $logTableColumn) {
+        $sql = join(' ', [
+            "SHOW FULL COLUMNS FROM",
+            $this->getLogTableName(),
+            "WHERE Field NOT IN ('log_id', 'timestamp')"
+        ]);
+        foreach ($this->getLogDb()->createCommand($sql)->queryAll() as $logTableColumn) {
             $logTableColumns[$logTableColumn['Field']] = $logTableColumn['Type'];
             $logComments[$logTableColumn['Field']] = $logTableColumn['Comment'];
             $logColumns[] = $logTableColumn['Field'];
@@ -197,7 +235,7 @@ trait ChangeLogTrait
         $addForeignKeys = [];
         $foreignKeys = [];
         /** @var TableSchema $tableSchema */
-        $tableSchema = Yii::$app->db->getTableSchema(static::tableName());
+        $tableSchema = $this->getStorageDb()->getTableSchema(static::tableName());
         foreach ($tableSchema->foreignKeys as $foreignParams) {
             $relationTable = array_shift($foreignParams);
             foreach ($foreignParams as $column => $relationColumn) {
@@ -213,7 +251,7 @@ trait ChangeLogTrait
         $dropForeignKeys = [];
         $logForeignKeys = [];
         /** @var TableSchema $logTableSchema */
-        $logTableSchema = $this->getChangeLogDb()->getTableSchema($this->getLogTableName());
+        $logTableSchema = $this->getLogDb()->getTableSchema($this->getLogTableName());
         foreach ($logTableSchema->foreignKeys as $logForeignKey => $logForeignParams) {
             if ($logForeignKey === 'fk-reference-' . static::tableName()) {
                 continue;
@@ -225,25 +263,6 @@ trait ChangeLogTrait
             }
         }
 
-//        $indexes = [];
-//        $keyNames = [];
-//        foreach (Yii::$app->db
-//            ->createCommand("SHOW KEYS FROM " . static::tableName() . " WHERE Key_name NOT LIKE 'PRIMARY' AND Non_unique LIKE 1")
-//            ->queryAll() as $index) {
-//            $indexes[] = $index['Column_name'];
-//            $keyNames[$index['Column_name']] = $index['Key_name'];
-//        }
-//
-//        $logIndexes = [];
-//        foreach ($this->getChangeLogDb()
-//             ->createCommand("SHOW KEYS FROM " . $this->getLogTableName() . " WHERE Key_name NOT LIKE 'PRIMARY'")
-//             ->queryAll() as $index) {
-//            $logIndexes[] = $index['Column_name'];
-//        }
-
-//        $createIndexes = array_diff($indexes, $logIndexes);
-//        $dropIndexes = array_diff($logIndexes, $indexes);
-
         $createForeignKeys = array_diff($foreignKeys, $logForeignKeys);
         $removeForeignKeys = array_diff($logForeignKeys, $foreignKeys);
 
@@ -254,9 +273,7 @@ trait ChangeLogTrait
             empty($addColumns)
             && empty($removeColumns)
             && empty($updateColumns)
-//            && empty($dropIndexes)
             && empty($dropForeignKeys)
-//            && empty($createIndexes)
             && empty($addForeignKeys)
         ) {
             return false;
@@ -291,7 +308,7 @@ trait ChangeLogTrait
         }
 
         return [
-            'view' => GenerateController::UPDATE_TEMPLATE_FILE_PATH,
+            'view' => Configs::instance()->updateTemplatePath,
             'migration_prefix' => $prefix,
             'tableName' => static::tableName(),
             'logTableName' => $this->getLogTableName(),
@@ -299,11 +316,8 @@ trait ChangeLogTrait
             'addColumns' => $addColumns,
             'removeColumns' => $removeColumns,
             'updateColumns' => $updateColumns,
-//            'dropIndexes' => $dropIndexes,
             'dropForeignKeys' => $dropForeignKeys,
-//            'createIndexes' => $createIndexes,
             'addForeignKeys' => $addForeignKeys,
-//            'keyNames' => $keyNames,
         ];
     }
 
@@ -335,7 +349,9 @@ trait ChangeLogTrait
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public function createLogTable()
     {
@@ -356,6 +372,8 @@ trait ChangeLogTrait
      * @param string[]|null $names the names of the attributes whose values may be returned if they are
      * changed recently. If null, [[attributes()]] will be used.
      * @return array the changed attribute values (name-value pairs)
+     *
+     * @todo attributes(), getAttributes(), getOldAttributes(), getOldAttribute()
      */
     public function getRealDirtyAttributes($names = null)
     {
@@ -383,6 +401,8 @@ trait ChangeLogTrait
 
     /**
      * @return bool
+     * @throws \yii\base\InvalidConfigException
+     * @todo getOldAttributes(), getAttributes(), primaryKey()
      */
     public function saveToLog()
     {

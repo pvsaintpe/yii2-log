@@ -2,10 +2,10 @@
 
 namespace pvsaintpe\log\models;
 
+use pvsaintpe\log\components\Configs;
 use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
-use yii\data\ActiveDataProvider;
 use pvsaintpe\search\interfaces\SearchInterface;
 use Yii;
 
@@ -29,14 +29,6 @@ class ChangeLogSearch extends ActiveRecord
 
     /** @var string */
     public $search_class_name;
-
-    /**
-     * @return int
-     */
-    public function getPaginationSize()
-    {
-        return 10;
-    }
 
     /**
      * @return string
@@ -153,11 +145,9 @@ class ChangeLogSearch extends ActiveRecord
     }
 
     /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
+     * @param null $params
+     * @return mixed
+     * @throws \yii\base\InvalidConfigException
      */
     public function search($params = null)
     {
@@ -170,7 +160,10 @@ class ChangeLogSearch extends ActiveRecord
 
         /** @var ActiveQuery query */
         $this->query = $searchClass::find();
-        $this->query->innerJoin('admin admin', 'admin.id = ' . $this->query->a('updated_by'));
+        $this->query->innerJoin(
+            Configs::instance()->adminTable . ' admin',
+            'admin.id = ' . $this->query->a('updated_by')
+        );
 
         $this->query->select([
             $this->query->a('log_id'),
@@ -193,7 +186,6 @@ class ChangeLogSearch extends ActiveRecord
                 ]);
             }
         }
-
         return $this->getDataProvider();
     }
 }

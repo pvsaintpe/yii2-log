@@ -16,6 +16,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
     /**
      * @param bool $insert
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
     public function beforeSave($insert)
     {

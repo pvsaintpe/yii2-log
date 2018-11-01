@@ -24,12 +24,15 @@ echo "<?php\n";
 ?>
 
 use pvsaintpe\db\components\Migration;
+use pvsaintpe\log\traits\MigrationTrait;
 
 /**
  * @author Veselov Pavel
  */
 class <?= $className ?> extends Migration
 {
+    use MigrationTrait;
+
     public function safeUp()
     {
 <?php
@@ -41,17 +44,6 @@ class <?= $className ?> extends Migration
 
         echo "\n";
     }
-
-    /*
-    if (!empty($dropIndexes)) {
-        // удаляем индексы кроме (primary)
-        foreach ($dropIndexes as $index) {
-            echo "\t\t\$this->dropIndex('{$index}', '{$logTableName}');\n";
-        }
-
-        echo "\n";
-    }
-    */
 
     if (!empty($addColumns)) {
         // добавляем колонки
@@ -98,21 +90,6 @@ class <?= $className ?> extends Migration
         echo "\n";
     }
 
-    /*
-    if (!empty($createIndexes)) {
-        // добавляем индексы
-        foreach ($createIndexes as $index) {
-            echo "\t\t\$this->createIndex(";
-            echo "\n\t\t\t'{$keyNames[$index]}',";
-            echo "\n\t\t\t'{$logTableName}',";
-            echo "\n\t\t\t'{$index}'";
-            echo "\n\t\t);\n";
-        }
-
-        echo "\n";
-    }
-    */
-
     if (!empty($addForeignKeys)) {
         // добавляем внешние ключи
         foreach ($addForeignKeys as $column => $key) {
@@ -120,7 +97,7 @@ class <?= $className ?> extends Migration
             echo "\n\t\t\t'{$key['name']}',";
             echo "\n\t\t\t'{$logTableName}',";
             echo "\n\t\t\t['{$column}'],";
-            echo "\n\t\t\t\Yii::\$app->db->getName() . '.{$key['relation_table']}',";
+            echo "\n\t\t\t" . '$this->getStorageDb()->getName()' . " . '{$key['relation_table']}',";
             echo "\n\t\t\t'{$key['relation_column']}'";
             echo "\n\t\t);\n";
         }
