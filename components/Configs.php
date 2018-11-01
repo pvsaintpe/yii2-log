@@ -17,9 +17,9 @@ use yii\rbac\ManagerInterface;
  * ```
  * return [
  *
- *     'mdm.admin.configs' => [
+ *     'changelog.configs' => [
  *         'db' => 'customDb',
- *         'menuTable' => '{{%admin_menu}}',
+ *         'storageDb' => 'customDb',
  *         'cache' => [
  *             'class' => 'yii\caching\DbCache',
  *             'db' => ['dsn' => 'sqlite:@runtime/admin-cache.db'],
@@ -31,14 +31,15 @@ use yii\rbac\ManagerInterface;
  * or use [[\Yii::$container]]
  *
  * ```
- * Yii::$container->set('mdm\admin\components\Configs',[
+ * Yii::$container->set('pvsaintpe\log\components\Configs',[
  *     'db' => 'customDb',
- *     'menuTable' => 'admin_menu',
+ *     'storageDb' => 'customDb',
+ *     ...
  * ]);
  * ```
  *
- * @author Misbahul D Munir <misbahuldmunir@gmail.com>
- * @since 1.0
+ * @author Pavel Veselov <pvsaintpe@icloud.com>
+ * @since 3.0
  */
 
 class Configs extends BaseObject
@@ -119,8 +120,6 @@ class Configs extends BaseObject
      * @var array
      */
     private static $_classes = [
-        'db' => 'pvsaintpe\db\components\Connection',
-        'storageDb' => 'pvsaintpe\db\components\Connection',
         'cache' => 'yii\caching\Cache',
     ];
 
