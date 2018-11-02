@@ -31,6 +31,34 @@ class ChangeLogSearch extends ActiveRecord
     public $search_class_name;
 
     /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'attribute',
+            'route',
+            'hash',
+            'where',
+            'search_class_name'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function safeAttributes()
+    {
+        return [
+            'attribute',
+            'route',
+            'hash',
+            'where',
+            'search_class_name'
+        ];
+    }
+
+    /**
      * @return string
      */
     public function formName()
