@@ -87,7 +87,7 @@ trait ChangeLogTrait
     public function getLogClassName()
     {
         return join('\\', [
-            addslashes(Configs::instance()->classNamespace),
+            Configs::instance()->classNamespace,
             Inflector::singularize(Inflector::id2camel($this->getLogTableName(), '_'))
         ]);
     }
