@@ -97,7 +97,7 @@ class <?= $className ?> extends Migration
             echo "\n\t\t\t'{$key['name']}',";
             echo "\n\t\t\t'{$logTableName}',";
             echo "\n\t\t\t['{$column}'],";
-            echo "\n\t\t\t" . '$this->getStorageDb()->getName()' . " . '{$key['relation_table']}',";
+            echo "\n\t\t\t" . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
             echo "\n\t\t\t'{$key['relation_column']}'";
             echo "\n\t\t);\n";
         }

@@ -14,6 +14,16 @@ use Yii;
 class MigrateController extends BaseMigrateController
 {
     /**
+     * @inheritdoc
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function init()
+    {
+        parent::init();
+        $this->db = Yii::$app->get(Configs::instance()->db);
+    }
+
+    /**
      * @return array|string|yii\db\Connection|Connection
      * @throws \yii\base\InvalidConfigException
      */

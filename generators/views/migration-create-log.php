@@ -28,7 +28,7 @@ class <?= $className ?> extends Migration
     {
         $this->db->createCommand("
             CREATE TABLE `<?= $logTableName?>`
-            LIKE `". $this->getStorageDb->getName() . "`.`<?= $tableName?>`
+            LIKE `". $this->getStorageDb()->getName() . "`.`<?= $tableName?>`
 
         ")->execute();
 
@@ -78,7 +78,7 @@ class <?= $className ?> extends Migration
             'fk-reference-<?= $tableName?>',
             '<?= $logTableName?>',
             ['<?= join("','", $primaryKeys)?>'],
-$this->getStorageDb->getName() . '.<?= $tableName?>',
+            $this->getStorageDb()->getName() . '.<?= $tableName?>',
             ['<?= join("','", $primaryKeys)?>']
         );
     }
