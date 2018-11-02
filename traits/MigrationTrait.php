@@ -11,7 +11,7 @@ use yii\di\Instance;
  * Class MigrationTrait
  * @package pvsaintpe\log\traits
  */
-class MigrationTrait
+trait MigrationTrait
 {
     /**
      * @var Connection

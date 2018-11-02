@@ -84,12 +84,12 @@ class Configs extends BaseObject
     /**
      * @var string
      */
-    public $createTemplatePath = __DIR__ . '/../generators/views/migration-create-log.php';
+    public $createTemplatePath = '/../generators/views/migration-create-log.php';
 
     /**
      * @var string
      */
-    public $updateTemplatePath = __DIR__ . '/../generators/views/migration-update-log.php';
+    public $updateTemplatePath = '/../generators/views/migration-update-log.php';
 
     /**
      * @var integer Cache duration. Default to a hour.
