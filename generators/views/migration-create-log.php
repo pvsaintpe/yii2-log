@@ -54,7 +54,7 @@ class <?= $className ?> extends Migration
 
 <?php
     foreach ($uniqueKeys as $uniqueKey) {
-        echo "\t\t\$this->dropIndex('{$uniqueKey}', '{$logTableName}');\n\n";
+        echo "        \$this->dropIndex('{$uniqueKey}', '{$logTableName}');\n\n";
     }
 ?>
         $this->db->createCommand("
