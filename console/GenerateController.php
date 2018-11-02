@@ -52,6 +52,7 @@ class GenerateController extends Controller
      */
     public function actionIndex()
     {
+        $parents = [];
         $iterator = new RecursiveDirectoryIterator(Yii::getAlias(Configs::instance()->modelsPath));
         $iterator = new RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $filename => $file) {
@@ -62,9 +63,17 @@ class GenerateController extends Controller
                     if ($reflectionClass->isSubclassOf('pvsaintpe\log\components\ActiveRecord')
                         && $reflectionClass->isSubclassOf('pvsaintpe\log\interfaces\ChangeLogInterface')
                     ) {
-                        $this->classNames[] = $className;
+                        $this->classNames[$className] = $className;
+                        $parents[$className] = $reflectionClass->getParentClass()->getName();
                     }
                 }
+            }
+        }
+
+        // исключаем классы двойники (Васю наказать!!!)
+        foreach ($parents as $className => $parentClassName) {
+            if (in_array($parentClassName, $this->classNames)) {
+                unset($this->classNames[$className]);
             }
         }
 
