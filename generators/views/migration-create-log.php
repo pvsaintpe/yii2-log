@@ -46,10 +46,11 @@ class <?= $className ?> extends Migration
         echo "\n\t\t);\n\n";
     }
 ?>
-        $this->db->createCommand("
-            ALTER TABLE `<?= $logTableName?>`
-            DROP PRIMARY KEY
-        ")->execute();
+        if (($primaryExists = $this->selectScalar(
+            "SHOW KEYS FROM `" . $this->getLogTableName() . "` WHERE Key_name LIKE 'PRIMARY'"
+        ))) {
+            $this->execute("ALTER TABLE `<?= $logTableName?>` DROP PRIMARY KEY");
+        }
 
 <?php
     foreach ($uniqueKeys as $uniqueKey) {
