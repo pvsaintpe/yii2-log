@@ -47,7 +47,7 @@ class <?= $className ?> extends Migration
     }
 ?>
         if (($primaryExists = $this->selectScalar(
-            "SHOW KEYS FROM `" . $this->getLogTableName() . "` WHERE Key_name LIKE 'PRIMARY'"
+            "SHOW KEYS FROM `<?= $logTableName?>` WHERE Key_name LIKE 'PRIMARY'"
         ))) {
             $this->execute("ALTER TABLE `<?= $logTableName?>` DROP PRIMARY KEY");
         }
