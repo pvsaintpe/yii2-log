@@ -2952,16 +2952,16 @@
         },
         {
             "name": "pvsaintpe/yii2-db-plus",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-db-plus.git",
-                "reference": "a389e373179c449fa53c5cb8a1d56e3a9eec5271"
+                "reference": "64bd17d4a4bafb902dce5bb96e7a158e0c3952f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/a389e373179c449fa53c5cb8a1d56e3a9eec5271",
-                "reference": "a389e373179c449fa53c5cb8a1d56e3a9eec5271",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/64bd17d4a4bafb902dce5bb96e7a158e0c3952f1",
+                "reference": "64bd17d4a4bafb902dce5bb96e7a158e0c3952f1",
                 "shasum": ""
             },
             "require": {
@@ -2997,7 +2997,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-06T13:29:30+00:00"
+            "time": "2018-11-06T13:56:43+00:00"
         },
         {
             "name": "pvsaintpe/yii2-gii",

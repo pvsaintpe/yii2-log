@@ -28,11 +28,7 @@ class <?= $className ?> extends Migration
 
     public function safeUp()
     {
-        $this->db->createCommand("
-            CREATE TABLE `<?= $logTableName?>`
-            LIKE `". $this->getStorageDb()->getName() . "`.`<?= $tableName?>`
-
-        ")->execute();
+        $this->cloneTable('<?= $logTableName?>', '<?= $tableName?>', $this->getStorageDb()->getName());
 
 <?php
     foreach ($columns as $column) {
@@ -70,7 +66,7 @@ class <?= $className ?> extends Migration
             'created_by',
             'updated_at',
             'updated_by',
-            'timestamp',
+            'timestamp'
         ]);
 
         $this->addColumn(
