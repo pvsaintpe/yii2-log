@@ -19,6 +19,7 @@ use pvsaintpe\log\traits\MigrationTrait;
 
 /**
  * @author Veselov Pavel
+ * @since 3.1.*
  */
 class <?= $className ?> extends Migration
 {
@@ -39,11 +40,11 @@ class <?= $className ?> extends Migration
         } else {
             $nullExp = 'NOT NULL';
         }
-        echo "\t\t\$this->alterColumn(";
-        echo "\n\t\t\t'{$logTableName}',";
-        echo "\n\t\t\t'{$column['Field']}',";
-        echo "\n\t\t\t\"{$column['Type']} {$nullExp} COMMENT '{$column['Comment']}'\"";
-        echo "\n\t\t);\n\n";
+        echo "        \$this->alterColumn(";
+        echo "\n            '{$logTableName}',";
+        echo "\n            '{$column['Field']}',";
+        echo "\n            \"{$column['Type']} {$nullExp} COMMENT '{$column['Comment']}'\"";
+        echo "\n        );\n\n";
     }
 ?>
         if (($primaryExists = $this->selectScalar(

@@ -28,6 +28,7 @@ use pvsaintpe\log\traits\MigrationTrait;
 
 /**
  * @author Veselov Pavel
+ * @since 3.1.*
  */
 class <?= $className ?> extends Migration
 {
@@ -36,70 +37,70 @@ class <?= $className ?> extends Migration
     public function safeUp()
     {
 <?php
+    // удаляем внешние ключи
     if (!empty($dropForeignKeys)) {
-        // удаляем внешние ключи
         foreach ($dropForeignKeys as $key) {
-            echo "\t\t\$this->dropForeignKey('{$key}', '{$logTableName}');\n";
+            echo "        \$this->dropForeignKey('{$key}', '{$logTableName}');\n";
         }
 
         echo "\n";
     }
 
+    // добавляем колонки
     if (!empty($addColumns)) {
-        // добавляем колонки
         foreach ($addColumns as $column) {
             if (!in_array($column['name'], $primaryKeys)) {
                 $nullExp = 'NULL default null';
             } else {
                 $nullExp = 'NOT NULL';
             }
-            echo "\t\t\$this->addColumn(";
-            echo "\n\t\t\t'{$logTableName}',";
-            echo "\n\t\t\t'{$column['name']}',";
-            echo "\n\t\t\t\"{$column['type']} {$nullExp} COMMENT '{$column['comment']}'\"";
-            echo "\n\t\t);\n";
+            echo "        \$this->addColumn(";
+            echo "\n            '{$logTableName}',";
+            echo "\n            '{$column['name']}',";
+            echo "\n            \"{$column['type']} {$nullExp} COMMENT '{$column['comment']}'\"";
+            echo "\n        );\n";
         }
 
         echo "\n";
     }
 
+    // обновляем колонки
     if (!empty($updateColumns)) {
-        // обновляем колонки
         foreach ($updateColumns as $column) {
             if (!in_array($column['name'], $primaryKeys)) {
                 $nullExp = 'NULL default null';
             } else {
                 $nullExp = 'NOT NULL';
             }
-            echo "\t\t\$this->alterColumn(";
-            echo "\n\t\t\t'{$logTableName}',";
-            echo "\n\t\t\t'{$column['name']}',";
-            echo "\n\t\t\t\"{$column['type']} {$nullExp} COMMENT '{$column['comment']}'\"";
-            echo "\n\t\t);\n";
+            echo "        \$this->alterColumn(";
+            echo "\n            '{$logTableName}',";
+            echo "\n            '{$column['name']}',";
+            echo "\n            \"{$column['type']} {$nullExp} COMMENT '{$column['comment']}'\"";
+            echo "\n        );\n";
         }
 
         echo "\n";
     }
 
+    // удаляем колонки
     if (!empty($removeColumns)) {
-        // удаляем колонки
         foreach ($removeColumns as $column) {
-            echo "\t\t\$this->dropColumn('{$logTableName}', '{$column}');\n";
+            echo "        \$this->dropColumn('{$logTableName}', '{$column}');\n";
         }
 
         echo "\n";
     }
 
+    // добавляем внешние ключи
     if (!empty($addForeignKeys)) {
-        // добавляем внешние ключи
         foreach ($addForeignKeys as $column => $key) {
-            echo "\t\t\$this->addForeignKey(";
-            echo "\n\t\t\t'{$key['name']}',";
-            echo "\n\t\t\t'{$logTableName}',";
-            echo "\n\t\t\t['{$column}'],";
-            echo "\n\t\t\t" . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
-            echo "\n\t\t\t'{$key['relation_column']}'";
-            echo "\n\t\t);\n";
+            echo "        \$this->addForeignKey(";
+            echo "\n            '{$key['name']}',";
+            echo "\n            '{$logTableName}',";
+            echo "\n            ['{$column}'],";
+            echo "\n            " . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
+            echo "\n            '{$key['relation_column']}'";
+            echo "\n        );\n";
         }
     }
 ?>
