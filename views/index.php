@@ -15,6 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="box-body">
         <?= GridView::widget([
             'id' => 'wlog',
+            'bordered' => false,
+            'clickable' => false,
+            'pager' => [
+                'class' => '\yii\widgets\LinkPager',
+            ],
             'dataProvider' => $dataProvider,
             'filterModel' => null, //$searchModel,
             'disableColumns' => $searchModel->getDisableColumns(),
@@ -35,9 +40,9 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
-        var labelId = 'label-' + $(this).attr('id');
-        var dataVal = $(this).attr('data-value');
         $('#' + labelId).parent().parent().parent().parent().find('input').each(function(index, element) {
+            var labelId = 'label-' + $(this).attr('id');
+            var dataVal = $(this).attr('data-value');
             if ($(element).attr('type') === 'checkbox') {
                 if (dataVal == 0) {
                     $(element).removeAttr('checked');
