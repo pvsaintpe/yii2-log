@@ -94,9 +94,7 @@ class GenerateController extends Controller
                         $params['view'],
                         array_merge(
                             array_diff_key($params, ['view' => 0]),
-                            [
-                                'className' => $fileName,
-                            ]
+                            ['className' => $fileName]
                         )
                     )
                 )) {
