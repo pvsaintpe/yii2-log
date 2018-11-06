@@ -48,9 +48,7 @@ class <?= $className ?> extends Migration
         echo "\n        );\n\n";
     }
 ?>
-        if (($primaryExists = $this->selectScalar(
-            "SHOW KEYS FROM `<?= $logTableName?>` WHERE Key_name LIKE 'PRIMARY'"
-        ))) {
+        if ($this->existKey('<?= $logTableName?>', 'PRIMARY')) {
             $this->execute("ALTER TABLE `<?= $logTableName?>` DROP PRIMARY KEY");
         }
 
@@ -67,11 +65,13 @@ class <?= $className ?> extends Migration
             ADD PRIMARY KEY (`log_id`)
         ")->execute();
 
-        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `created_at`")->execute();
-        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `created_by`")->execute();
-        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_at`")->execute();
-        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `timestamp`")->execute();
-        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_by`")->execute();
+        $this->dropColumns('<?= $logTableName?>', [
+            'created_at',
+            'created_by',
+            'updated_at',
+            'updated_by',
+            'timestamp',
+        ]);
 
         $this->addColumn(
             '<?= $logTableName?>',

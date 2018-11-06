@@ -106,15 +106,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     private function existLogTable()
     {
-        // @todo $this->getLogDb()->existTable($tableName])
-        if (($exist = $this->getLogDb()
-            ->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")
-            ->queryScalar())
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->getLogDb()->existTable($this->getLogTableName());
     }
 
     /**
@@ -124,19 +116,8 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     private function getCreateParams()
     {
-        // @todo $this->getStorageDb()->getColumnsOnTable($tableName])
-        $columns = $this->getStorageDb()
-            ->createCommand("SHOW FULL COLUMNS FROM `" . static::tableName() . "`")
-            ->queryAll();
-
         $keys = [];
-        // @todo $this->getStorageDb()->getKeys($tableName, 0)
-        if ($uniqueKeys = $this->getStorageDb()->createCommand("
-                SHOW KEYS FROM `" . static::tableName() . "`
-                WHERE Key_name NOT LIKE 'PRIMARY' 
-                AND Non_unique LIKE 0
-            ")
-            ->queryAll()) {
+        if (($uniqueKeys = $this->getStorageDb()->getUniqueKeys(static::tableName()))) {
             foreach ($uniqueKeys as $uniqueKey) {
                 $keys[] = $uniqueKey['Key_name'];
             }
@@ -148,7 +129,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
             'migration_prefix' => 'create_table',
             'tableName' => static::tableName(),
             'logTableName' => $this->getLogTableName(),
-            'columns' => $columns,
+            'columns' => $this->getStorageDb()->getColumns(static::tableName()),
             'uniqueKeys' => $keys,
             'primaryKeys' => static::primaryKey(),
         ];
@@ -189,13 +170,13 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $comments = [];
         $columns = [];
 
-        // @todo $this->getLogDb()->getColumnsOnTable($tableName, ['created_at', 'updated_at', 'timestamp', 'updated_by', 'created_by'])
-        $sql = join(' ', [
-            "SHOW FULL COLUMNS FROM",
-            static::tableName(),
-            "WHERE Field NOT IN ('created_at', 'updated_at', 'timestamp', 'updated_by', 'created_by')"
-        ]);
-        foreach ($this->getStorageDb()->createCommand($sql)->queryAll() as $tableColumn) {
+        foreach ($this->getStorageDb()->getColumns(static::tableName(), [
+            'created_at',
+            'updated_at',
+            'timestamp',
+            'updated_by',
+            'created_by'
+        ]) as $tableColumn) {
             $tableColumns[$tableColumn['Field']] = $tableColumn['Type'];
             $comments[$tableColumn['Field']] = $tableColumn['Comment'];
             $columns[] = $tableColumn['Field'];
@@ -205,13 +186,11 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $logComments = [];
         $logColumns = [];
 
-        // @todo $this->getLogDb()->getColumnsOnTable($tableName, ['log_id', 'timestamp', 'updated_by'])
-        $sql = join(' ', [
-            "SHOW FULL COLUMNS FROM",
-            $this->getLogTableName(),
-            "WHERE Field NOT IN ('log_id', 'timestamp', 'updated_by')"
-        ]);
-        foreach ($this->getLogDb()->createCommand($sql)->queryAll() as $logTableColumn) {
+        foreach ($this->getLogDb()->getColumns(static::tableName(), [
+            'log_id',
+            'timestamp',
+            'updated_by'
+        ]) as $logTableColumn) {
             $logTableColumns[$logTableColumn['Field']] = $logTableColumn['Type'];
             $logComments[$logTableColumn['Field']] = $logTableColumn['Comment'];
             $logColumns[] = $logTableColumn['Field'];

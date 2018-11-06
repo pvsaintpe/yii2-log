@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2af42fee6d4df6ebdcb591e37c2d917d",
+    "content-hash": "de4e407eacc9c628ee60a90e959189fb",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -1243,16 +1243,16 @@
         },
         {
             "name": "kartik-v/yii2-grid",
-            "version": "v3.2.6",
+            "version": "v3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "3d5a7fe12941992714dcb9c3f4a01c0320f4f057"
+                "reference": "233fcf68fc6197e9451c95117ea45be153db1a8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/3d5a7fe12941992714dcb9c3f4a01c0320f4f057",
-                "reference": "3d5a7fe12941992714dcb9c3f4a01c0320f4f057",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/233fcf68fc6197e9451c95117ea45be153db1a8e",
+                "reference": "233fcf68fc6197e9451c95117ea45be153db1a8e",
                 "shasum": ""
             },
             "require": {
@@ -1291,7 +1291,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2018-10-09T08:12:05+00:00"
+            "time": "2018-11-03T18:08:29+00:00"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -1450,12 +1450,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-mpdf.git",
-                "reference": "fb71e832cc1864578a9a9fe888785039755bf58c"
+                "reference": "beecfa00d5debfef1ccac6ff7b1abe8560b6ffd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-mpdf/zipball/fb71e832cc1864578a9a9fe888785039755bf58c",
-                "reference": "fb71e832cc1864578a9a9fe888785039755bf58c",
+                "url": "https://api.github.com/repos/kartik-v/yii2-mpdf/zipball/beecfa00d5debfef1ccac6ff7b1abe8560b6ffd1",
+                "reference": "beecfa00d5debfef1ccac6ff7b1abe8560b6ffd1",
                 "shasum": ""
             },
             "require": {
@@ -1494,7 +1494,7 @@
                 "utf8",
                 "yii2"
             ],
-            "time": "2018-10-26T19:08:56+00:00"
+            "time": "2018-11-05T12:30:10+00:00"
         },
         {
             "name": "kartik-v/yii2-popover-x",
@@ -2952,16 +2952,16 @@
         },
         {
             "name": "pvsaintpe/yii2-db-plus",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-db-plus.git",
-                "reference": "538a3aebdf6f314da6bbbcc220c3374e43852451"
+                "reference": "a389e373179c449fa53c5cb8a1d56e3a9eec5271"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/538a3aebdf6f314da6bbbcc220c3374e43852451",
-                "reference": "538a3aebdf6f314da6bbbcc220c3374e43852451",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/a389e373179c449fa53c5cb8a1d56e3a9eec5271",
+                "reference": "a389e373179c449fa53c5cb8a1d56e3a9eec5271",
                 "shasum": ""
             },
             "require": {
@@ -2997,7 +2997,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-12T18:54:34+00:00"
+            "time": "2018-11-06T13:29:30+00:00"
         },
         {
             "name": "pvsaintpe/yii2-gii",
