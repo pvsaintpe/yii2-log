@@ -106,6 +106,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     private function existLogTable()
     {
+        // @todo $this->getLogDb()->existTable($tableName])
         if (($exist = $this->getLogDb()
             ->createCommand("SHOW TABLES LIKE '" . $this->getLogTableName() . "'")
             ->queryScalar())
@@ -123,11 +124,13 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     private function getCreateParams()
     {
+        // @todo $this->getStorageDb()->getColumnsOnTable($tableName])
         $columns = $this->getStorageDb()
             ->createCommand("SHOW FULL COLUMNS FROM `" . static::tableName() . "`")
             ->queryAll();
 
         $keys = [];
+        // @todo $this->getStorageDb()->getKeys($tableName, 0)
         if ($uniqueKeys = $this->getStorageDb()->createCommand("
                 SHOW KEYS FROM `" . static::tableName() . "`
                 WHERE Key_name NOT LIKE 'PRIMARY' 
@@ -185,6 +188,8 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $tableColumns = [];
         $comments = [];
         $columns = [];
+
+        // @todo $this->getLogDb()->getColumnsOnTable($tableName, ['created_at', 'updated_at', 'timestamp', 'updated_by', 'created_by'])
         $sql = join(' ', [
             "SHOW FULL COLUMNS FROM",
             static::tableName(),
@@ -199,6 +204,8 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $logTableColumns = [];
         $logComments = [];
         $logColumns = [];
+
+        // @todo $this->getLogDb()->getColumnsOnTable($tableName, ['log_id', 'timestamp', 'updated_by'])
         $sql = join(' ', [
             "SHOW FULL COLUMNS FROM",
             $this->getLogTableName(),
