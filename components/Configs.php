@@ -97,9 +97,19 @@ class Configs extends BaseObject
     public $cacheDuration = 3600;
 
     /**
-     * @var string Menu table name.
+     * @var string Admin table name.
      */
-    public $adminTable = '{{%admin}}';
+    public $adminTable = 'admin';
+
+    /**
+     * @var string Admin Column (Reference) table name.
+     */
+    public $adminColumn = 'updated_by';
+
+    /**
+     * @var string Admin Column (Reference) table name.
+     */
+    public $adminColumnType = "INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'Оператор'";
 
     /**
      * @var array

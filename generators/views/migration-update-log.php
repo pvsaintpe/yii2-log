@@ -25,6 +25,7 @@ echo "<?php\n";
 
 use pvsaintpe\db\components\Migration;
 use pvsaintpe\log\traits\MigrationTrait;
+use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel

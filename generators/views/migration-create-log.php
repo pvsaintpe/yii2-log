@@ -16,6 +16,7 @@ echo "<?php\n";
 
 use pvsaintpe\db\components\Migration;
 use pvsaintpe\log\traits\MigrationTrait;
+use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel
@@ -69,19 +70,36 @@ class <?= $className ?> extends Migration
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `created_at`")->execute();
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_at`")->execute();
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `timestamp`")->execute();
+        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_by`")->execute();
 
-        $this->db->createCommand("
-            ALTER TABLE `<?= $logTableName?>`
-            ADD COLUMN `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-            COMMENT 'Метка времени'
-        ")->execute();
+        $this->addColumn(
+            '<?= $logTableName?>',
+            'timestamp',
+            "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Метка времени'"
+        );
+
+        $this->addColumn(
+            '<?= $logTableName?>',
+            Configs::instance()->adminColumn,
+            Configs::instance()->adminColumnType
+        );
+
+        $this->addForeignKey(
+            'fk-reference-updated_by',
+            '<?= $logTableName?>',
+            Configs::instance()->adminColumn,
+            $this->getStorageDb()->getName() . '.' . Configs::instance()->adminTable,
+            'id',
+            static::SET_NULL
+        );
 
         $this->addForeignKey(
             'fk-reference-<?= $tableName?>',
             '<?= $logTableName?>',
             ['<?= join("','", $primaryKeys)?>'],
             $this->getStorageDb()->getName() . '.<?= $tableName?>',
-            ['<?= join("','", $primaryKeys)?>']
+            ['<?= join("','", $primaryKeys)?>'],
+            static::CASCADE
         );
     }
 
