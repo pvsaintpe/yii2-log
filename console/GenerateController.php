@@ -34,7 +34,7 @@ class GenerateController extends Controller
     public function parseClassFile($filename)
     {
         $data = file_get_contents($filename);
-        if ($data && preg_match('~class\s+(\w+)\s+extends\s+\w+\s*(implements\s+\w+\s*)?[,\s+]?\{~i', $data, $classMatch)) {
+        if ($data && preg_match('~class\s+(\w+)\s+extends\s+\w+\s*(implements\s+[A-Za-z_,\s\\\\]+)?\{~i', $data, $classMatch)) {
             $namespace = '';
             if (preg_match('~namespace\s+([^\s;]+)\s*;~i', $data, $namespaceMatch)) {
                 $namespace = $namespaceMatch[1] . '\\';
