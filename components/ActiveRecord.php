@@ -188,7 +188,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $sql = join(' ', [
             "SHOW FULL COLUMNS FROM",
             static::tableName(),
-            "WHERE Field NOT IN ('created_at', 'updated_at', 'timestamp')"
+            "WHERE Field NOT IN ('created_at', 'updated_at', 'timestamp', 'updated_by', 'created_by')"
         ]);
         foreach ($this->getStorageDb()->createCommand($sql)->queryAll() as $tableColumn) {
             $tableColumns[$tableColumn['Field']] = $tableColumn['Type'];
@@ -202,7 +202,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $sql = join(' ', [
             "SHOW FULL COLUMNS FROM",
             $this->getLogTableName(),
-            "WHERE Field NOT IN ('log_id', 'timestamp')"
+            "WHERE Field NOT IN ('log_id', 'timestamp', 'updated_by')"
         ]);
         foreach ($this->getLogDb()->createCommand($sql)->queryAll() as $logTableColumn) {
             $logTableColumns[$logTableColumn['Field']] = $logTableColumn['Type'];

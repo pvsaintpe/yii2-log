@@ -68,6 +68,7 @@ class <?= $className ?> extends Migration
         ")->execute();
 
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `created_at`")->execute();
+        $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `created_by`")->execute();
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_at`")->execute();
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `timestamp`")->execute();
         $this->db->createCommand("ALTER TABLE `<?= $logTableName?>` DROP IF EXISTS `updated_by`")->execute();
