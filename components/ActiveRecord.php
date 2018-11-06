@@ -186,7 +186,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $logComments = [];
         $logColumns = [];
 
-        foreach ($this->getLogDb()->getColumns(static::tableName(), [
+        foreach ($this->getLogDb()->getColumns($this->getLogTableName(), [
             'log_id',
             'timestamp',
             'updated_by'
