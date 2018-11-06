@@ -228,6 +228,9 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         foreach ($tableSchema->foreignKeys as $foreignParams) {
             $relationTable = array_shift($foreignParams);
             foreach ($foreignParams as $column => $relationColumn) {
+                if (!in_array($column, $columns)) {
+                    continue;
+                }
                 $addForeignKeys[$column] = [
                     'name' => $this->generateForeignKeyName($this->getLogTableName(), $column),
                     'relation_table' => $relationTable,
@@ -247,6 +250,9 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
             }
             array_shift($logForeignParams);
             foreach ($logForeignParams as $logColumn => $logRelationColumn) {
+                if ($logColumn == Configs::instance()->adminColumn) {
+                    continue;
+                }
                 $dropForeignKeys[$logColumn] = $logForeignKey;
                 $logForeignKeys[] = $logColumn;
             }
