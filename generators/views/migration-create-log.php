@@ -86,7 +86,7 @@ class <?= $className ?> extends Migration
         );
 
         $this->addForeignKey(
-            'fk-reference-' . Configs::instance()->adminColumn . '-column',
+            null,
             '<?= $logTableName?>',
             Configs::instance()->adminColumn,
             $this->getStorageDb()->getName() . '.' . Configs::instance()->adminTable,
