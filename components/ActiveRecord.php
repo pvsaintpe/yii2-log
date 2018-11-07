@@ -415,7 +415,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                 /** @var ActiveRecord $log */
                 $log = new $logClassName();
                 $log->setAttributes($logAttributes);
-                $log->hardSave();
+                $log->save(false);
                 return $log;
             }
         }
