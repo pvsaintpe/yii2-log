@@ -66,7 +66,8 @@ class <?= $className ?> extends Migration
             'created_by',
             'updated_at',
             'updated_by',
-            'timestamp'
+            'timestamp',
+            Configs::instance()->adminColumn,
         ]);
 
         $this->addColumn(
@@ -82,7 +83,7 @@ class <?= $className ?> extends Migration
         );
 
         $this->addForeignKey(
-            null,
+            'fk-changed_by-<?= $logTableName?>',
             '<?= $logTableName?>',
             Configs::instance()->adminColumn,
             $this->getStorageDb()->getName() . '.' . Configs::instance()->adminTable,
