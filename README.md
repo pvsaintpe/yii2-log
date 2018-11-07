@@ -23,6 +23,7 @@ class ActiveQueryLog extends ActiveQuery
 namespace common\components;
 
 use common\models\Admin;
+use pvsaintpe\log\components\Configs;
 
 /**
  * Class ActiveRecordLog
@@ -43,7 +44,7 @@ class ActiveRecordLog extends ActiveRecord
      */
     public function getUpdatedBy()
     {
-        return $this->hasOne(Admin::class, ['id' => 'updated_by']);
+        return $this->hasOne(Admin::class, ['id' => Configs::instance()->adminColumn]);
     }
 
     /**
@@ -150,7 +151,6 @@ DIR=$(dirname $0)
 ### models-log (log) ##############################
 
 MODELS_LOG_BASE_OPTIONS='
-    --includeFilter=(?:\w+\.)?(?:\w+_log)
     --ns=common\models\log\base
     --tableName=payproc_log.*
     --baseClass=common\components\ActiveRecordLog
@@ -187,7 +187,9 @@ return [
     'changelog.configs' => [
         'db' => 'dbLog', // DB Storage for Log-tables
         'storageDb' => 'db', // DB Storage for Data-tables
-        'adminTable' => 'admin' // Table Name for Admin's
+        'adminTable' => 'admin', // Table Name for Admin's
+        'tablePrefix' => '_log',
+        'adminColumn => 'updated_by',
     ],
 ];
 ```
