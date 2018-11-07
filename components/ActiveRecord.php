@@ -19,7 +19,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return Connection|object
      * @throws \yii\base\InvalidConfigException
      */
-    private function getLogDb()
+    public function getLogDb()
     {
         return Yii::$app->get(Configs::instance()->db);
     }
@@ -28,7 +28,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return Connection|object
      * @throws \yii\base\InvalidConfigException
      */
-    private function getStorageDb()
+    public function getStorageDb()
     {
         return Yii::$app->get(Configs::instance()->storageDb);
     }
