@@ -91,7 +91,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
     {
         return join('\\', [
             Configs::instance()->classNamespace,
-            Inflector::singularize(Inflector::id2camel($this->getLogTableName(), '_'))
+            Inflector::camelize(Inflector::id2camel($this->getLogTableName(), '_'))
         ]);
     }
 
