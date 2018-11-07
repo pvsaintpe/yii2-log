@@ -7,12 +7,13 @@ use pvsaintpe\gii\plus\db\TableSchema;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
 use yii\helpers\Inflector;
 use Yii;
+use pvsaintpe\search\components\ActiveRecord as ActiveRecordBase;
 
 /**
  * Class ActiveRecord
  * @package pvsaintpe\log\components
  */
-class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements ChangeLogInterface
+class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 {
     /**
      * @return Connection|object
