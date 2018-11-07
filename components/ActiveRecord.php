@@ -68,11 +68,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
      */
     public function getLogTableName()
     {
-        if ($dbName = $this->getLogDb()->getName()) {
-            return Configs::instance()->tablePrefix . static::tableName() . Configs::instance()->tableSuffix;
-        }
-
-        return null;
+        return Configs::instance()->tablePrefix . static::tableName() . Configs::instance()->tableSuffix;
     }
 
     /**
@@ -162,8 +158,6 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
          * @var array $dropForeignKeys Список внешних ключей, которые нужно удалить
          * @var array $createIndexes Список индексов, которые нужно добавить
          * @var array $addForeignKeys Список внешних ключей, которые нужно добавить
-         *
-         * @todo Доделать генерацию индексов (возникают проблемы с составными ключами)
          */
 
         $tableColumns = [];
@@ -174,7 +168,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
             'created_at',
             'updated_at',
             'timestamp',
-            'updated_by',
+            Configs::instance()->adminColumn,
             'created_by'
         ]) as $tableColumn) {
             $tableColumns[$tableColumn['Field']] = $tableColumn['Type'];
@@ -189,7 +183,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         foreach ($this->getLogDb()->getColumns($this->getLogTableName(), [
             'log_id',
             'timestamp',
-            'updated_by'
+            Configs::instance()->adminColumn
         ]) as $logTableColumn) {
             $logTableColumns[$logTableColumn['Field']] = $logTableColumn['Type'];
             $logComments[$logTableColumn['Field']] = $logTableColumn['Comment'];
@@ -264,8 +258,7 @@ class ActiveRecord extends \pvsaintpe\search\components\ActiveRecord implements 
         $addForeignKeys = array_intersect_key($addForeignKeys, array_flip($createForeignKeys));
         $dropForeignKeys = array_intersect_key($dropForeignKeys, array_flip($removeForeignKeys));
 
-        if (
-            empty($addColumns)
+        if (empty($addColumns)
             && empty($removeColumns)
             && empty($updateColumns)
             && empty($dropForeignKeys)

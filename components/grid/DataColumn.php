@@ -2,13 +2,13 @@
 
 namespace pvsaintpe\log\components\grid;
 
-use kartik\grid\DataColumn as KartikDataColumn;
+use pvsaintpe\grid\components\DataColumn as DataColumnBase;
 
 /**
  * Class DataColumn
  * @package pvsaintpe\log\components\grid
  */
-class DataColumn extends KartikDataColumn
+class DataColumn extends DataColumnBase
 {
     /**
      * @var string

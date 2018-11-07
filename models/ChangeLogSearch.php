@@ -8,6 +8,7 @@ use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\search\interfaces\SearchInterface;
 use Yii;
+use yii\helpers\Inflector;
 
 /**
  * Class ChangeLogSearch
@@ -110,11 +111,13 @@ class ChangeLogSearch extends ActiveRecord
                 'attribute' => $this->attribute,
                 'label' => $this->getAttributeLabel('value')
             ],
-            'updated_by' => [
-                'class' => 'pvsaintpe\log\components\grid\UpdatedByColumn',
+            Configs::instance()->adminColumn => [
+                'class' => 'pvsaintpe\log\components\grid\DataColumn',
+                'attribute' => Configs::instance()->adminColumn,
                 'allowNotSet' => true,
-                'value' => function($model) {
-                    return $model->updatedBy ? $model->updatedBy->username : null;
+                'value' => function ($model) {
+                    $relation = lcfirst(Inflector::camelize(Configs::instance()->adminColumn));
+                    return $model->{$relation} ? $model->{$relation}->getTitleText() : null;
                 }
             ],
             'timestamp' => [
@@ -122,11 +125,11 @@ class ChangeLogSearch extends ActiveRecord
             ],
             'actions' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
-                'header' => Yii::t('payment','Действия'),
+                'header' => Yii::t('payment', 'Действия'),
                 'vAlign' => 'middle',
                 'format' => 'raw',
                 'width' => '100px',
-                'value' => function (ActiveRecord $model, $index, $key, $widget) {
+                'value' => function (ActiveRecord $model) {
                     $buttons[] = Html::button(
                         Yii::t('models', 'Вернуть значение'),
                         [
@@ -167,7 +170,7 @@ class ChangeLogSearch extends ActiveRecord
                 'attribute' => Yii::t('log', 'Настройка'),
                 'value' => Yii::t('log', 'Значение'),
                 'timestamp' => Yii::t('log', 'Метка времени'),
-                'updated_by' => Yii::t('log', 'Кем обновлено'),
+                Configs::instance()->adminColumn => Yii::t('log', 'Кем обновлено'),
             ]
         );
     }
@@ -190,12 +193,12 @@ class ChangeLogSearch extends ActiveRecord
         $this->query = $searchClass::find();
         $this->query->innerJoin(
             Configs::instance()->adminTable . ' admin',
-            'admin.id = ' . $this->query->a('updated_by')
+             'admin.id = ' . $this->query->a(Configs::instance()->adminColumn)
         );
 
         $this->query->select([
             $this->query->a('log_id'),
-            $this->query->a('updated_by'),
+            $this->query->a(Configs::instance()->adminColumn),
             $this->query->a('timestamp'),
             $this->query->a($this->attribute),
         ]);
