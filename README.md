@@ -46,6 +46,22 @@ class ActiveRecordLog extends ActiveRecord
     {
         return $this->hasOne(Admin::class, ['id' => Configs::instance()->adminColumn]);
     }
+    
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function customBehaviors()
+    {
+        $behaviors = [];
+        if (Yii::$app->id == 'app-backend' && Yii::$app->getUser() instanceof \backend\components\WebUser) {
+            $behaviors['blameable'] = [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => Configs::instance()->adminColumn
+            ];
+        }
+        return $behaviors;
+    }
 
     /**
      * @param array $conditions
