@@ -169,8 +169,9 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
             'created_at',
             'updated_at',
             'timestamp',
+            'created_by',
+            'updated_by',
             Configs::instance()->adminColumn,
-            'created_by'
         ]) as $tableColumn) {
             $tableColumns[$tableColumn['Field']] = $tableColumn['Type'];
             $comments[$tableColumn['Field']] = $tableColumn['Comment'];
