@@ -122,6 +122,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         }
 
         return [
+            'storageDb' => $this->getStorageDb(),
             'view' => Configs::instance()->createTemplatePath,
             'migration_prefix' => 'create_table',
             'tableName' => static::tableName(),

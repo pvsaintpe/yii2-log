@@ -28,7 +28,14 @@ class <?= $className ?> extends Migration
 
     public function safeUp()
     {
-        $this->cloneTable('<?= $logTableName?>', '<?= $tableName?>', $this->getStorageDb()->getName());
+<?php
+        $showTable = $storageDb->selectOne("SHOW CREATE TABLE {$tableName}");
+        $createTable = preg_replace("~(,[\s]+CONSTRAINT.*[\)\s]+ENGINE)~s", ') ENGINE', $showTable['Create Table']);
+?>
+        $this->execute("
+<?= $createTable?>
+
+        ");
 
 <?php
     foreach ($columns as $column) {
