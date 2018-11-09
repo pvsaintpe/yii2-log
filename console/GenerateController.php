@@ -87,7 +87,7 @@ class GenerateController extends Controller
             }
 
             if ($params = $class->createLogTable()) {
-                $fileName = 'm' . date('ymd_his', time()) . '_'. $params['migration_prefix'] . '_' . $params['logTableName'];
+                $fileName = 'm' . date('ymd_His', time()) . '_'. $params['migration_prefix'] . '_' . $params['logTableName'];
                 if (@file_put_contents(
                     Yii::getAlias($this->migrationPath . '/' . $fileName . '.php'),
                     $view->render(
