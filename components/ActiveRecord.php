@@ -103,7 +103,11 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     private function existLogTable()
     {
-        return $this->getLogDb()->existTable($this->getLogTableName());
+        try {
+            return $this->getLogDb()->existTable($this->getLogTableName());
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
