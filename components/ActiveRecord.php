@@ -98,8 +98,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 
     /**
      * @return bool
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
      */
     private function existLogTable()
     {
