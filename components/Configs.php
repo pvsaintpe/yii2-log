@@ -102,6 +102,11 @@ class Configs extends BaseObject
     public $adminTable = 'admin';
 
     /**
+     * @var string Admin table name.
+     */
+    public $adminClass = '\pvsaintpe\log\models\Admin';
+
+    /**
      * @var string Admin Column (Reference) table name.
      */
     public $adminColumn = 'updated_by';

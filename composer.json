@@ -23,6 +23,7 @@
     "yiisoft/yii2-authclient": "^2.1",
     "pvsaintpe/yii2-db-plus": "*",
     "pvsaintpe/yii2-search": "2.*",
+    "pvsaintpe/yii2-behaviors": "*",
     "yiisoft/yii2-debug": "2.0.6",
     "kartik-v/yii2-editable": "1.7.4",
     "kartik-v/yii2-datecontrol": "1.9.4",

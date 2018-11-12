@@ -2,12 +2,15 @@
 
 namespace pvsaintpe\log\components;
 
+use pvsaintpe\behaviors\BlameableBehavior;
 use pvsaintpe\db\components\Connection;
 use pvsaintpe\gii\plus\db\TableSchema;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use yii\db\Expression;
 use yii\helpers\Inflector;
 use Yii;
 use pvsaintpe\search\components\ActiveRecord as ActiveRecordBase;
+use yii\web\Application;
 
 /**
  * Class ActiveRecord
@@ -47,6 +50,126 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     public function logEnabled()
     {
         return false;
+    }
+
+    /**
+     * @param null $attribute
+     * @param array $where
+     * @return int
+     */
+    public static function getLastRevisionCount($attribute = null, $where = [])
+    {
+        $model = new static();
+        if ($model->logEnabled() && Yii::$app->user->can('changelog')) {
+            $period = Yii::$app->request->get('revisionPeriod', 1);
+            /** @var ActiveRecord $logClassName */
+            $logClassName = $model->getLogClassName();
+            return count($logClassName::getLastChanges(array_merge(
+                [
+                    ['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")],
+                ],
+                $where,
+                !$attribute ? [] : [['NOT', [$attribute => null]]]
+            )));
+        }
+        return 0;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getReferenceBy()
+    {
+        return $this->hasOne(Configs::instance()->adminClass, ['id' => Configs::instance()->adminColumn]);
+    }
+
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            static::customBehaviors()
+        );
+    }
+
+    /**
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function customBehaviors()
+    {
+        $behaviors = [];
+        if (Yii::$app instanceof Application) {
+            $behaviors['blameable'] = [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => Configs::instance()->adminColumn
+            ];
+        }
+        return $behaviors;
+    }
+
+    /**
+     * @param array $conditions
+     * @return array
+     */
+    public static function getLastChanges($conditions = [])
+    {
+        $query = static::find();
+        foreach ($conditions as $attribute => $condition) {
+            if (is_array($condition)) {
+                if ($condition[0] == 'NOT') {
+                    $arrayKeys = array_keys($condition[1]);
+                    $arrayValues = array_values($condition[1]);
+                    $query->andWhere([
+                        $condition[0],
+                        [$query->a($arrayKeys[0]) => $arrayValues[0][1]],
+                    ]);
+                } else {
+                    if (count($condition) === 2) {
+                        $query->andWhere([
+                            $query->a($attribute) => $condition
+                        ]);
+                    } else {
+                        $query->andWhere([
+                            $condition[0],
+                            $query->a($condition[1]),
+                            $condition[2]
+                        ]);
+                    }
+                }
+            } else {
+                $query->andFilterWhere([
+                    $query->a($attribute) => $condition
+                ]);
+            }
+        }
+        return $query->all() ?: [];
+    }
+
+    /**
+     * Проверяет необходимость выхода при отсутствии ревизий (если они включены)
+     * @param $attribute
+     * @return bool
+     */
+    public function isExitWithoutRevisions($attribute)
+    {
+        $revisionEnabled = (bool) Yii::$app->request->get('revisionEnabled', 0);
+        if ($this->logEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
+            return true;
+        }
+        if (!$this->hasAttribute($attribute)) {
+            return false;
+        }
+        $whereConditions = [];
+        foreach (static::primaryKey() as $key) {
+            $whereConditions[$key] = $this->getAttribute($key);
+        }
+        $revisionCount = static::getLastRevisionCount($attribute, $whereConditions);
+        return $this->logEnabled() && $revisionEnabled && !$revisionCount;
     }
 
     /**

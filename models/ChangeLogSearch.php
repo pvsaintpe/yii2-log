@@ -8,7 +8,6 @@ use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\search\interfaces\SearchInterface;
 use Yii;
-use yii\helpers\Inflector;
 
 /**
  * Class ChangeLogSearch
@@ -116,8 +115,7 @@ class ChangeLogSearch extends ActiveRecord
                 'attribute' => Configs::instance()->adminColumn,
                 'allowNotSet' => true,
                 'value' => function ($model) {
-                    $relation = lcfirst(Inflector::camelize(Configs::instance()->adminColumn));
-                    return $model->{$relation} ? $model->{$relation}->getTitleText() : null;
+                    return $model->referenceBy ? $model->referenceBy->getTitleText() : null;
                 }
             ],
             'timestamp' => [
@@ -191,7 +189,7 @@ class ChangeLogSearch extends ActiveRecord
 
         /** @var ActiveQuery query */
         $this->query = $searchClass::find();
-        $this->query->innerJoin(
+        $this->query->join(
             Configs::instance()->adminTable . ' admin',
              'admin.id = ' . $this->query->a(Configs::instance()->adminColumn)
         );
@@ -203,12 +201,7 @@ class ChangeLogSearch extends ActiveRecord
             $this->query->a($this->attribute),
         ]);
 
-        $this->query->andWhere([
-            'NOT',
-            [
-                $this->query->a($this->attribute) => null,
-            ],
-        ]);
+        $this->query->andWhere(['NOT', [$this->query->a($this->attribute) => null]]);
 
         if ($this->where && $conditions = @unserialize($this->where)) {
             foreach ((array)$conditions as $attribute => $value) {
@@ -217,6 +210,7 @@ class ChangeLogSearch extends ActiveRecord
                 ]);
             }
         }
+
         return $this->getDataProvider();
     }
 }

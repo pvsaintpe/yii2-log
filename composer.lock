@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de4e407eacc9c628ee60a90e959189fb",
+    "content-hash": "3a4eab24398cd5aaac5747ac43222a62",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -1243,16 +1243,16 @@
         },
         {
             "name": "kartik-v/yii2-grid",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "233fcf68fc6197e9451c95117ea45be153db1a8e"
+                "reference": "31ccd84cdd3dcb793bde509bcade8b75bfd94c35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/233fcf68fc6197e9451c95117ea45be153db1a8e",
-                "reference": "233fcf68fc6197e9451c95117ea45be153db1a8e",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/31ccd84cdd3dcb793bde509bcade8b75bfd94c35",
+                "reference": "31ccd84cdd3dcb793bde509bcade8b75bfd94c35",
                 "shasum": ""
             },
             "require": {
@@ -1291,7 +1291,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2018-11-03T18:08:29+00:00"
+            "time": "2018-11-09T15:48:59+00:00"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -2902,17 +2902,65 @@
             "time": "2016-10-10T12:19:37+00:00"
         },
         {
-            "name": "pvsaintpe/yii2-boost",
-            "version": "2.0.3",
+            "name": "pvsaintpe/yii2-behaviors",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pvsaintpe/yii2-boost.git",
-                "reference": "2224491a5820669eb6418e52181ca33f0c065089"
+                "url": "https://github.com/pvsaintpe/yii2-behaviors.git",
+                "reference": "60e32a0d95ae26a7527aaf5d26b785d41de09d0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-boost/zipball/2224491a5820669eb6418e52181ca33f0c065089",
-                "reference": "2224491a5820669eb6418e52181ca33f0c065089",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-behaviors/zipball/60e32a0d95ae26a7527aaf5d26b785d41de09d0d",
+                "reference": "60e32a0d95ae26a7527aaf5d26b785d41de09d0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "pvsaintpe/yii2-search": "2.*",
+                "yiisoft/yii2": "2.0.15.1"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "pvsaintpe\\behaviors\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Veselov",
+                    "email": "pvsaintpe@icloud.com"
+                }
+            ],
+            "description": "Package",
+            "keywords": [
+                "Active Record",
+                "yii2"
+            ],
+            "time": "2018-11-12T11:37:48+00:00"
+        },
+        {
+            "name": "pvsaintpe/yii2-boost",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pvsaintpe/yii2-boost.git",
+                "reference": "69395bb11cc771d92a28accf9d3408eb80d9b0c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-boost/zipball/69395bb11cc771d92a28accf9d3408eb80d9b0c6",
+                "reference": "69395bb11cc771d92a28accf9d3408eb80d9b0c6",
                 "shasum": ""
             },
             "require": {
@@ -2948,20 +2996,20 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-10-23T09:54:43+00:00"
+            "time": "2018-11-07T00:08:34+00:00"
         },
         {
             "name": "pvsaintpe/yii2-db-plus",
-            "version": "2.0.6",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-db-plus.git",
-                "reference": "418bd8619cc0989ff1ce23fd273ca68ec8a5bc8e"
+                "reference": "c858adf0c7e538265ed48fed6233a745d4cb0eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/418bd8619cc0989ff1ce23fd273ca68ec8a5bc8e",
-                "reference": "418bd8619cc0989ff1ce23fd273ca68ec8a5bc8e",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/c858adf0c7e538265ed48fed6233a745d4cb0eba",
+                "reference": "c858adf0c7e538265ed48fed6233a745d4cb0eba",
                 "shasum": ""
             },
             "require": {
@@ -2997,7 +3045,55 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-06T15:02:00+00:00"
+            "time": "2018-11-09T07:08:51+00:00"
+        },
+        {
+            "name": "pvsaintpe/yii2-freeze-column",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pvsaintpe/yii2-freeze-column.git",
+                "reference": "8c5bf92481d45498487fb3955899f35c04eb6391"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-freeze-column/zipball/8c5bf92481d45498487fb3955899f35c04eb6391",
+                "reference": "8c5bf92481d45498487fb3955899f35c04eb6391",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "*",
+                "php": ">=7.0.0",
+                "yiisoft/yii2": "2.0.15.1"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "pvsaintpe\\freeze\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Veselov",
+                    "email": "pvsaintpe@icloud.com"
+                }
+            ],
+            "description": "Package",
+            "keywords": [
+                "gridview",
+                "yii2"
+            ],
+            "time": "2018-11-09T11:43:24+00:00"
         },
         {
             "name": "pvsaintpe/yii2-gii",
@@ -3104,16 +3200,16 @@
         },
         {
             "name": "pvsaintpe/yii2-grid",
-            "version": "2.1.10",
+            "version": "2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-grid.git",
-                "reference": "b8ac02044158b6e059b2eef919132eaa655ea6fc"
+                "reference": "8119f44d1d760e641ffbca7f38905409069fd7e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-grid/zipball/b8ac02044158b6e059b2eef919132eaa655ea6fc",
-                "reference": "b8ac02044158b6e059b2eef919132eaa655ea6fc",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-grid/zipball/8119f44d1d760e641ffbca7f38905409069fd7e4",
+                "reference": "8119f44d1d760e641ffbca7f38905409069fd7e4",
                 "shasum": ""
             },
             "require": {
@@ -3123,6 +3219,7 @@
                 "kartik-v/yii2-krajee-base": "*",
                 "php": ">=7.0.0",
                 "pvsaintpe/yii2-db-plus": "*",
+                "pvsaintpe/yii2-freeze-column": "*",
                 "pvsaintpe/yii2-pager": "*",
                 "yiisoft/yii2": "2.0.15.1"
             },
@@ -3153,20 +3250,20 @@
                 "gridview",
                 "yii2"
             ],
-            "time": "2018-11-06T14:27:23+00:00"
+            "time": "2018-11-09T11:36:00+00:00"
         },
         {
             "name": "pvsaintpe/yii2-helpers",
-            "version": "1.0.4",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-helpers.git",
-                "reference": "2403f57b4480503623ddb7b54707e44b128b23b3"
+                "reference": "f9ae552e0e234570f7c2933aa653c1bd8295f1ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-helpers/zipball/2403f57b4480503623ddb7b54707e44b128b23b3",
-                "reference": "2403f57b4480503623ddb7b54707e44b128b23b3",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-helpers/zipball/f9ae552e0e234570f7c2933aa653c1bd8295f1ed",
+                "reference": "f9ae552e0e234570f7c2933aa653c1bd8295f1ed",
                 "shasum": ""
             },
             "require": {
@@ -3201,7 +3298,7 @@
                 "gridview",
                 "yii2"
             ],
-            "time": "2018-10-29T14:32:48+00:00"
+            "time": "2018-11-08T08:32:04+00:00"
         },
         {
             "name": "pvsaintpe/yii2-pager",
