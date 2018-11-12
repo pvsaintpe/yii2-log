@@ -2,37 +2,37 @@
 
 namespace pvsaintpe\log\widgets;
 
+use pvsaintpe\grid\widgets\DetailView as BaseDetailView;
 use pvsaintpe\log\components\Configs;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
-use pvsaintpe\search\components\ActiveRecord;
-use pvsaintpe\log\models\ChangeLogSearch;
-use pvsaintpe\search\helpers\Html;
-use kartik\form\ActiveField;
-use yii\helpers\Url;
 use Yii;
+use pvsaintpe\helpers\Html;
 
 /**
- * Class ActiveForm
+ * Class DetailView
  * @package pvsaintpe\log\widgets
  */
-class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
+class DetailView extends BaseDetailView
 {
     /**
-     * @var string
+     * @param array $attribute
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
-    public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
+    protected function renderAttributeItem($attribute)
+    {
+        $attribute['label'] =$this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
+        return parent::renderAttributeItem($attribute);
+    }
 
     /**
-     * @inheritdoc
-     * @return ActiveField|\yii\widgets\ActiveField
+     * @param string $attribute
+     * @param string|null $label
+     * @return string
      */
-    public function field($model, $attribute, $options = [])
+    public function renderAttributeLabel($attribute, $label = null)
     {
-        /**
-         * @var ActiveRecord|ChangeLogInterface $model
-         * @var \pvsaintpe\log\widgets\ActiveField $field
-         */
-        $field = parent::field($model, $attribute, $options);
+        $model = $this->model;
         if ($model instanceof ChangeLogInterface
             && $model->logEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
@@ -57,8 +57,8 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 $color = Configs::instance()->revisionStyle;
             }
             $urlHelper = Configs::instance()->urlHelperClass;
-            $label = join('', [
-                '<span>' . $model->getAttributeLabel($attribute) . '</span>',
+            return join('', [
+                "<span>{$label}</span>",
                 '<span class="pull-right-container">' . $afterCode . '<span class="change-log-area pull-right" style="margin-left:5px;">',
                 Html::a(
                     '<span 
@@ -75,22 +75,18 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                         't[hash]' => $hash,
                         't[search_class_name]' => $model->getLogClassName(),
                         't[where]' => serialize($where),
+                        'readOnly' => 1,
                     ]),
                     [
                         'class' => 'change-log-link btn-main-modal',
                         'id' => 'label-' . $hash,
                         'data-pjax' => 0,
                         'data-dismiss' => 'modal',
-                        'data-id' => strtolower($this->getId() . '-' . $attribute),
                     ]
                 ),
                 '</span></span>'
             ]);
-            $field->label($label);
-        } else {
-            $label = '<span>' . $model->getAttributeLabel($attribute) . '</span>';
-            $field->label($label);
         }
-        return $field;
+        return "<span>{$label}</span>";
     }
 }

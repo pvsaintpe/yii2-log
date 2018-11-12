@@ -72,6 +72,11 @@ class Configs extends BaseObject
     public $modelsPath = '@common/models';
 
     /**
+     * @var string
+     */
+    public $pathToRoute = '/changelog/default/index';
+
+    /**
      * @var Connection Database connection for Data Storage.
      */
     public $storageDb = 'db';
@@ -107,6 +112,11 @@ class Configs extends BaseObject
     public $adminClass = '\pvsaintpe\log\models\Admin';
 
     /**
+     * @var string
+     */
+    public $urlHelperClass = '\pvsaintpe\helpers\Url';
+
+    /**
      * @var string Admin Column (Reference) table name.
      */
     public $adminColumn = 'updated_by';
@@ -115,6 +125,16 @@ class Configs extends BaseObject
      * @var string Admin Column (Reference) table name.
      */
     public $adminColumnType = "INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'Оператор'";
+
+    /**
+     * @var string
+     */
+    public $revisionActiveStyle = 'color:black';
+
+    /**
+     * @var string
+     */
+    public $revisionStyle = 'color:ligthgray';
 
     /**
      * @var array
