@@ -20,7 +20,7 @@ class MigrateController extends BaseMigrateController
     public function init()
     {
         parent::init();
-        $this->db = Yii::$app->get(Configs::instance()->db);
+        $this->db = Configs::db();
     }
 
     /**
@@ -29,6 +29,6 @@ class MigrateController extends BaseMigrateController
      */
     public function getDb()
     {
-        return Yii::$app->get(Configs::instance()->db);
+        return Configs::db();
     }
 }

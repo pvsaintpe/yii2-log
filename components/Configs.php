@@ -84,12 +84,12 @@ class Configs extends BaseObject
     /**
      * @var string
      */
-    public $createTemplatePath = '/../generators/views/migration-create-log.php';
+    public $createTemplatePath = '/../views/migration-create-log.php';
 
     /**
      * @var string
      */
-    public $updateTemplatePath = '/../generators/views/migration-update-log.php';
+    public $updateTemplatePath = '/../views/migration-update-log.php';
 
     /**
      * @var integer Cache duration. Default to a hour.
@@ -197,16 +197,16 @@ class Configs extends BaseObject
      */
     public static function db()
     {
-        return static::instance()->db;
+        return Yii::$app->get(static::instance()->db);
     }
 
     /**
-     * @return mixed
+     * @return Connection
      * @throws \yii\base\InvalidConfigException
      */
     public static function storageDb()
     {
-        return static::instance()->storageDb;
+        return Yii::$app->get(static::instance()->storageDb);
     }
 
     /**
@@ -216,14 +216,5 @@ class Configs extends BaseObject
     public static function cache()
     {
         return static::instance()->cache;
-    }
-
-    /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function adminTable()
-    {
-        return static::instance()->adminTable;
     }
 }

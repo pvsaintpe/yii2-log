@@ -18,7 +18,7 @@ trait MigrationTrait
      */
     protected function getDb()
     {
-        return Yii::$app->get(Configs::instance()->db);
+        return Configs::db();
     }
 
     /**
@@ -27,6 +27,6 @@ trait MigrationTrait
      */
     protected function getStorageDb()
     {
-        return Yii::$app->get(Configs::instance()->storageDb);
+        return Configs::storageDb();
     }
 }

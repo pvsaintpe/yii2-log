@@ -24,7 +24,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public function getLogDb()
     {
-        return Yii::$app->get(Configs::instance()->db);
+        return Configs::db();
     }
 
     /**
@@ -33,7 +33,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public function getStorageDb()
     {
-        return Yii::$app->get(Configs::instance()->storageDb);
+        return Configs::storageDb();
     }
 
     /**
