@@ -190,6 +190,7 @@ class ChangeLogSearch extends ActiveRecord
         /** @var ActiveQuery query */
         $this->query = $searchClass::find();
         $this->query->join(
+            'left join',
             Configs::instance()->adminTable . ' admin',
              'admin.id = ' . $this->query->a(Configs::instance()->adminColumn)
         );
