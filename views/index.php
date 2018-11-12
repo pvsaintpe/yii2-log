@@ -40,9 +40,9 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
+        var labelId = 'label-' + $(this).attr('id');
+        var dataVal = $(this).attr('data-value');
         $('#' + labelId).parent().parent().parent().parent().find('input').each(function(index, element) {
-            var labelId = 'label-' + $(this).attr('id');
-            var dataVal = $(this).attr('data-value');
             if ($(element).attr('type') === 'checkbox') {
                 if (dataVal == 0) {
                     $(element).removeAttr('checked');
@@ -53,6 +53,7 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
                 } 
             }
         });
+        $('#' + labelId).parent().parent().parent().parent().find('select').val($(this).attr('data-value'));
         $('#main-modal').modal('hide');
     })
 })(jQuery);
@@ -65,6 +66,17 @@ JS
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
         $('#' + labelId).parent().parent().parent().parent().find('input').val($(this).attr('data-value'));
+        $('#' + labelId).parent().parent().parent().parent().find('select').val($(this).attr('data-value')).trigger('change');
+        
+        var pattern = /^\d+(,\d+)*$/;
+        if (pattern.test($(this).attr('data-value'))) {
+            var select2 = $('#' + labelId).parent().parent().parent().parent().find('.select2');
+            if (select2) {
+                var selectedValues = $(this).attr('data-value').split(',');
+                select2.select2('val', selectedValues);
+            }
+        }
+        
         $('#main-modal').modal('hide');
     })
 })(jQuery);

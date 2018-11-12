@@ -96,6 +96,7 @@ class ChangeLogSearch extends ActiveRecord
 
     /**
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public function getGridColumns()
     {
@@ -108,7 +109,13 @@ class ChangeLogSearch extends ActiveRecord
             'value' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
                 'attribute' => $this->attribute,
-                'label' => $this->getAttributeLabel('value')
+                'label' => $this->getAttributeLabel('value'),
+                'value' => function (ActiveRecord $model) {
+                    if (in_array($this->attribute, $model::booleanAttributes())) {
+                        return Yii::$app->formatter->asBoolean($model->{$this->attribute});
+                    }
+                    return $model->{$this->attribute};
+                }
             ],
             Configs::instance()->adminColumn => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
