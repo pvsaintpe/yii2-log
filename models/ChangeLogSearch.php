@@ -194,12 +194,14 @@ class ChangeLogSearch extends ActiveRecord
         /** @var ActiveRecord|SearchInterface $searchClass */
         $searchClass = $this->search_class_name;
 
+        $alias = uniqid('admin');
+
         /** @var ActiveQuery query */
         $this->query = $searchClass::find();
         $this->query->join(
             'left join',
-            Configs::instance()->adminTable . ' admin',
-             'admin.id = ' . $this->query->a(Configs::instance()->adminColumn)
+            Configs::instance()->adminTable . ' ' . $alias,
+            $alias . '.id = ' . $this->query->a(Configs::instance()->adminColumn)
         );
 
         $this->query->select([
