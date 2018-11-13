@@ -103,7 +103,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     protected function customBehaviors()
     {
         $behaviors = [];
-        if (Yii::$app instanceof Application) {
+        if (Yii::$app->id == 'app-backend') {
             $behaviors['blameable'] = [
                 'class' => BlameableBehavior::class,
                 'createdByAttribute' => Configs::instance()->adminColumn
