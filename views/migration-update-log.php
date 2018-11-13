@@ -40,8 +40,8 @@ class <?= $className ?> extends Migration
 <?php
     // удаляем внешние ключи
     if (!empty($dropForeignKeys)) {
-        foreach ($dropForeignKeys as $key) {
-            echo "        \$this->dropForeignKey('{$key}', '{$logTableName}');\n";
+        foreach ($dropForeignKeys as $column => $key) {
+            echo "        \$this->dropColumnForeignKey('{$logTableName}', '{$column}');\n";
         }
 
         echo "\n";
