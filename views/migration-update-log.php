@@ -96,7 +96,7 @@ class <?= $className ?> extends Migration
     if (!empty($addForeignKeys)) {
         foreach ($addForeignKeys as $column => $key) {
             echo "        \$this->addForeignKey(";
-            echo "\n            '{$key['name']}',";
+            echo "\n            null,";
             echo "\n            '{$logTableName}',";
             echo "\n            ['{$column}'],";
             echo "\n            " . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
