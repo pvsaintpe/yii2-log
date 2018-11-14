@@ -59,6 +59,41 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
+     * @param array $attributes
+     * @return int
+     */
+    public static function getRevisionCountByAttr($attributes = [])
+    {
+        $model = new static();
+        if ($model->logEnabled() && Yii::$app->user->can('changelog')) {
+            $period = Yii::$app->request->get('revisionPeriod', 1);
+            /** @var ActiveRecord $logClassName */
+            $logClassName = $model->getLogClassName();
+
+            $whereConditions = [];
+            /** @var ActiveRecord $logClass */
+            $logClass = new $logClassName();
+            foreach ($attributes as $attribute) {
+                if (!$logClass->hasAttribute($attribute)) {
+                    continue;
+                }
+                $whereConditions[] = '{alias}.' . $attribute . ' IS NOT NULL';
+            }
+
+            $whereCondition = [];
+            if (count($whereConditions) > 0) {
+                $whereCondition[] = join(' OR ', $whereConditions);
+            }
+
+            return count($logClassName::getLastChanges(array_merge(
+                [['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")]],
+                $whereCondition
+            )));
+        }
+        return 0;
+    }
+
+    /**
      * @param null $attribute
      * @param array $where
      * @return int
@@ -148,9 +183,13 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                     }
                 }
             } else {
-                $query->andFilterWhere([
-                    $query->a($attribute) => $condition
-                ]);
+                if (strpos($condition, '{alias}.') !== false) {
+                    $query->andWhere(str_replace('{alias}', $query->getAlias(), $condition));
+                } else {
+                    $query->andFilterWhere([
+                        $query->a($attribute) => $condition
+                    ]);
+                }
             }
         }
         return $query->all() ?: [];
