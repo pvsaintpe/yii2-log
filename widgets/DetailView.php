@@ -14,6 +14,8 @@ use pvsaintpe\helpers\Html;
  */
 class DetailView extends BaseDetailView
 {
+    public $revisionEnabled = true;
+
     /**
      * @param array $attribute
      * @return string
