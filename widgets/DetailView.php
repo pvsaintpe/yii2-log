@@ -21,7 +21,9 @@ class DetailView extends BaseDetailView
      */
     protected function renderAttributeItem($attribute)
     {
-        $attribute['label'] =$this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
+        if (isset($attribute['attribute'])) {
+            $attribute['label'] = $this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
+        }
         return parent::renderAttributeItem($attribute);
     }
 
