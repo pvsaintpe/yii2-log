@@ -41,7 +41,13 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public function skipLogAttributes()
     {
-        return [];
+        return [
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'timestamp',
+        ];
     }
 
     /**
@@ -203,7 +209,11 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         return array_merge(
             static::primaryKey(),
             static::dateAttributes(),
-            static::datetimeAttributes()
+            static::datetimeAttributes(),
+            [
+                'created_by',
+                'updated_by',
+            ]
         );
     }
 
