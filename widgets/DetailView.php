@@ -14,8 +14,6 @@ use pvsaintpe\helpers\Html;
  */
 class DetailView extends BaseDetailView
 {
-    public $revisionEnabled = true;
-
     /**
      * @param array $attribute
      * @return string
@@ -24,7 +22,13 @@ class DetailView extends BaseDetailView
     protected function renderAttributeItem($attribute)
     {
         if (isset($attribute['attribute'])) {
-            $attribute['label'] = $this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
+            if ($this->model instanceof ChangeLogInterface
+                && $this->model->logEnabled()
+                && !in_array($attribute['attribute'], $this->model->securityLogAttributes())
+                && Yii::$app->user->can('changelog')
+            ) {
+                $attribute['label'] = $this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
+            }
         }
         return parent::renderAttributeItem($attribute);
     }
