@@ -105,7 +105,7 @@ class <?= $className ?> extends Migration
             echo "\n            ['{$column}'],";
             echo "\n            " . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
             echo "\n            '{$key['relation_column']}',";
-            echo "\n            static::SET_NULL";
+            echo "\n            static::CASCADE";
             echo "\n        );\n";
         }
     }
