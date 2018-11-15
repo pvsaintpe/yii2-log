@@ -39,14 +39,14 @@ class <?= $className ?> extends Migration
     {
 <?php
     // удаляем внешние ключи
-    echo '        try {';
-    echo "\n";
     if (!empty($dropForeignKeys)) {
+        echo '        try {';
+        echo "\n";
         foreach ($dropForeignKeys as $column => $key) {
             echo "            \$this->dropForeignKey('{$key}', '{$logTableName}');\n";
         }
         echo '        } catch (\Exception $e) {';
-        echo "\n";
+        echo "               // skip error if fk not exists \n";
         echo '        }';
         echo "\n";
     }
