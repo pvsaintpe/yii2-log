@@ -11,7 +11,7 @@ interface ChangeLogInterface
     /**
      * @return bool
      */
-    public function logEnabled();
+    public function isLogEnabled();
 
     /**
      * @return array

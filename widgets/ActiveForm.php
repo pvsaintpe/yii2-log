@@ -34,7 +34,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
          */
         $field = parent::field($model, $attribute, $options);
         if ($model instanceof ChangeLogInterface
-            && $model->logEnabled()
+            && $model->isLogEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
             && Yii::$app->user->can('changelog')
         ) {
@@ -73,7 +73,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                             Yii::$app->request
                         )[0],
                         't[hash]' => $hash,
-                        't[search_class_name]' => $model->getLogClassName(),
+                        't[search_class_name]' => $model::getLogClassName(),
                         't[where]' => serialize($where),
                     ]),
                     [

@@ -10,7 +10,6 @@ use yii\db\Expression;
 use yii\helpers\Inflector;
 use Yii;
 use pvsaintpe\search\components\ActiveRecord as ActiveRecordBase;
-use yii\web\Application;
 
 /**
  * Class ActiveRecord
@@ -22,7 +21,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return Connection|object
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLogDb()
+    public static function getLogDb()
     {
         return Configs::db();
     }
@@ -31,7 +30,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return Connection|object
      * @throws \yii\base\InvalidConfigException
      */
-    public function getStorageDb()
+    public static function getStorageDb()
     {
         return Configs::storageDb();
     }
@@ -53,9 +52,17 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     /**
      * @return bool
      */
-    public function logEnabled()
+    public static function logEnabled()
     {
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLogEnabled()
+    {
+        return static::logEnabled();
     }
 
     /**
@@ -64,11 +71,10 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public static function getRevisionCountByAttr($attributes = [])
     {
-        $model = new static();
-        if ($model->logEnabled() && Yii::$app->user->can('changelog')) {
+        if (static::logEnabled() && Yii::$app->user->can('changelog')) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
             /** @var ActiveRecord $logClassName */
-            $logClassName = $model->getLogClassName();
+            $logClassName = static::getLogClassName();
 
             $whereConditions = [];
             /** @var ActiveRecord $logClass */
@@ -100,11 +106,10 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public static function getLastRevisionCount($attribute = null, $where = [])
     {
-        $model = new static();
-        if ($model->logEnabled() && Yii::$app->user->can('changelog')) {
+        if (static::logEnabled() && Yii::$app->user->can('changelog')) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
             /** @var ActiveRecord $logClassName */
-            $logClassName = $model->getLogClassName();
+            $logClassName = static::getLogClassName();
             return count($logClassName::getLastChanges(array_merge(
                 [
                     ['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")],
@@ -203,7 +208,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     public function isExitWithoutRevisions($attribute)
     {
         $revisionEnabled = (bool) Yii::$app->request->get('revisionEnabled', 0);
-        if ($this->logEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
+        if ($this->isLogEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
             return true;
         }
         if (!$this->hasAttribute($attribute)) {
@@ -214,7 +219,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
             $whereConditions[$key] = $this->getAttribute($key);
         }
         $revisionCount = static::getLastRevisionCount($attribute, $whereConditions);
-        return $this->logEnabled() && $revisionEnabled && !$revisionCount;
+        return $this->isLogEnabled() && $revisionEnabled && !$revisionCount;
     }
 
     /**
@@ -226,7 +231,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     public function beforeSave($insert)
     {
         if (!$this->getIsNewRecord()) {
-            static::saveToLog();
+            $this->saveToLog();
         }
         return parent::beforeSave($insert);
     }
@@ -235,7 +240,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return null|string
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLogTableName()
+    public static function getLogTableName()
     {
         return Configs::instance()->tablePrefix . static::tableName() . Configs::instance()->tableSuffix;
     }
@@ -260,21 +265,21 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function getLogClassName()
+    public static function getLogClassName()
     {
         return join('\\', [
             Configs::instance()->classNamespace,
-            Inflector::camelize(Inflector::id2camel($this->getLogTableName(), '_'))
+            Inflector::camelize(Inflector::id2camel(static::getLogTableName(), '_'))
         ]);
     }
 
     /**
      * @return bool
      */
-    private function existLogTable()
+    public static function existLogTable()
     {
         try {
-            return $this->getLogDb()->existTable($this->getLogTableName());
+            return static::getLogDb()->existTable(static::getLogTableName());
         } catch (\Exception $e) {
             return false;
         }
@@ -285,10 +290,10 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    private function getCreateParams()
+    private static function getCreateParams()
     {
         $keys = [];
-        if (($uniqueKeys = $this->getStorageDb()->getUniqueKeys(static::tableName()))) {
+        if (($uniqueKeys = static::getStorageDb()->getUniqueKeys(static::tableName()))) {
             foreach ($uniqueKeys as $uniqueKey) {
                 $keys[] = $uniqueKey['Key_name'];
             }
@@ -296,12 +301,12 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         }
 
         return [
-            'storageDb' => $this->getStorageDb(),
+            'storageDb' => static::getStorageDb(),
             'view' => Configs::instance()->createTemplatePath,
             'migration_prefix' => 'create_table',
             'tableName' => static::tableName(),
-            'logTableName' => $this->getLogTableName(),
-            'columns' => $this->getStorageDb()->getColumns(static::tableName()),
+            'logTableName' => static::getLogTableName(),
+            'columns' => static::getStorageDb()->getColumns(static::tableName()),
             'uniqueKeys' => $keys,
             'primaryKeys' => static::primaryKey(),
         ];
@@ -340,7 +345,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         $comments = [];
         $columns = [];
 
-        foreach ($this->getStorageDb()->getColumns(static::tableName(), [
+        foreach (static::getStorageDb()->getColumns(static::tableName(), [
             'created_at',
             'updated_at',
             'timestamp',
@@ -357,7 +362,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         $logComments = [];
         $logColumns = [];
 
-        foreach ($this->getLogDb()->getColumns($this->getLogTableName(), [
+        foreach (static::getLogDb()->getColumns(static::getLogTableName(), [
             'log_id',
             'timestamp',
             Configs::instance()->adminColumn
@@ -395,7 +400,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         $addForeignKeys = [];
         $foreignKeys = [];
         /** @var TableSchema $tableSchema */
-        $tableSchema = $this->getStorageDb()->getTableSchema(static::tableName());
+        $tableSchema = static::getStorageDb()->getTableSchema(static::tableName());
         foreach ($tableSchema->foreignKeys as $foreignParams) {
             $relationTable = array_shift($foreignParams);
             foreach ($foreignParams as $column => $relationColumn) {
@@ -403,7 +408,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                     continue;
                 }
                 $addForeignKeys[$column] = [
-                    'name' => $this->generateForeignKeyName($this->getLogTableName(), $column),
+                    'name' => static::generateForeignKeyName(static::getLogTableName(), $column),
                     'relation_table' => $relationTable,
                     'relation_column' => $relationColumn,
                 ];
@@ -414,7 +419,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         $dropForeignKeys = [];
         $logForeignKeys = [];
         /** @var TableSchema $logTableSchema */
-        $logTableSchema = $this->getLogDb()->getTableSchema($this->getLogTableName());
+        $logTableSchema = static::getLogDb()->getTableSchema(static::getLogTableName());
         foreach ($logTableSchema->foreignKeys as $logForeignKey => $logForeignParams) {
             if ($logForeignKey === 'fk-reference-' . static::tableName()) {
                 continue;
@@ -476,7 +481,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
             'view' => Configs::instance()->updateTemplatePath,
             'migration_prefix' => $prefix,
             'tableName' => static::tableName(),
-            'logTableName' => $this->getLogTableName(),
+            'logTableName' => static::getLogTableName(),
             'primaryKeys' => static::primaryKey(),
             'addColumns' => $addColumns,
             'removeColumns' => $removeColumns,
@@ -491,7 +496,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param $column
      * @return string
      */
-    private function generateForeignKeyName($table, $column)
+    private static function generateForeignKeyName($table, $column)
     {
         $foreignKey = join('-', [$table, $column]);
         if (strlen($foreignKey) >= 64) {
@@ -520,12 +525,12 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public function createLogTable()
     {
-        if (!$this->existLogTable()) {
+        if (!static::existLogTable()) {
             // create log table
-            return $this->getCreateParams();
+            return static::getCreateParams();
         } else {
             // update for appeared a new columns
-            return $this->getUpdateParams();
+            return static::getUpdateParams();
         }
     }
 
@@ -563,13 +568,25 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
+     * @param array $attributes
+     * @param string $condition
+     * @param array $params
+     * @return int
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function updateAll($attributes, $condition = '', $params = [])
+    {
+        return parent::updateAll($attributes, $condition, $params);
+    }
+
+    /**
      * @return bool|ActiveRecord
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
     public function saveToLog()
     {
-        if ($this->existLogTable()) {
+        if (static::existLogTable()) {
             $dirtyAttributes = array_intersect_key(
                 parent::getOldAttributes(),
                 array_diff_key(
@@ -587,7 +604,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                     $dirtyAttributes
                 );
 
-                $logClassName = $this->getLogClassName();
+                $logClassName = static::getLogClassName();
                 /** @var ActiveRecord $log */
                 $log = new $logClassName();
                 $log->setAttributes($logAttributes);
