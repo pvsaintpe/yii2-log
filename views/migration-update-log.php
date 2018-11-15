@@ -39,11 +39,15 @@ class <?= $className ?> extends Migration
     {
 <?php
     // удаляем внешние ключи
+    echo '        try {';
+    echo "\n";
     if (!empty($dropForeignKeys)) {
         foreach ($dropForeignKeys as $column => $key) {
-            echo "        \$this->dropForeignKey('{$key}', '{$logTableName}');\n";
+            echo "            \$this->dropForeignKey('{$key}', '{$logTableName}');\n";
         }
-
+        echo '        } catch (\Exception $e) {';
+        echo "\n";
+        echo '        }';
         echo "\n";
     }
 
@@ -101,7 +105,7 @@ class <?= $className ?> extends Migration
             echo "\n            ['{$column}'],";
             echo "\n            " . '$this->getStorageDb()->getName()' . " . '.{$key['relation_table']}',";
             echo "\n            '{$key['relation_column']}',";
-            echo "\n            static::CASCADE";
+            echo "\n            static::SET_NULL";
             echo "\n        );\n";
         }
     }

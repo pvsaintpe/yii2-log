@@ -90,7 +90,7 @@ class <?= $className ?> extends Migration
         );
 
         $this->addForeignKey(
-            null,
+            $this->generateKeyName('<?= $logTableName?>', 'fk-reference-by'),
             '<?= $logTableName?>',
             Configs::instance()->adminColumn,
             $this->getStorageDb()->getName() . '.' . Configs::instance()->adminTable,
@@ -99,7 +99,7 @@ class <?= $className ?> extends Migration
         );
 
         $this->addForeignKey(
-            'ca141442f38dedc5eb7f9984dcce6d548dce6d20e5d81b3a503a243091a73c15',
+            $this->generateKeyName('<?= $logTableName?>', 'fk-reference-to'),
             '<?= $logTableName?>',
             ['<?= join("','", $primaryKeys)?>'],
             $this->getStorageDb()->getName() . '.<?= $tableName?>',

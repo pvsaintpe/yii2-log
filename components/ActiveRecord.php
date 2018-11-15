@@ -421,7 +421,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         /** @var TableSchema $logTableSchema */
         $logTableSchema = static::getLogDb()->getTableSchema(static::getLogTableName());
         foreach ($logTableSchema->foreignKeys as $logForeignKey => $logForeignParams) {
-            if ($logForeignKey === 'fk-reference-' . static::tableName()) {
+            if (preg_match('/fk-reference-/i', $logForeignKey)) {
                 continue;
             }
             array_shift($logForeignParams);
