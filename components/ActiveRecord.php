@@ -620,33 +620,30 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param array $attributes
      * @param string|array $condition
      * @param int|null $updatedBy
-     * @return int
-     * @throws \yii\base\InvalidConfigException
      */
     public static function saveToLogBatchUpdate($attributes, $condition = '',  $updatedBy = null)
     {
         if (static::logEnabled() && static::existLogTable()) {
-            $affectedRows = static::find()->where(null)->andWhere($condition, $params)->all();
-            /** @var ActiveRecord $affectedRow */
-            foreach ($affectedRows as $affectedRow) {
-                $logAttributes = array_merge(
-                    array_intersect_key(
-                        $affectedRow->getAttributes(),
-                        array_flip(static::primaryKey())
-                    ),
-                    $attributes
-                );
-                $logClassName = static::getLogClassName();
-                /** @var ActiveRecord $log */
-                $log = new $logClassName();
-                $log->setAttributes($logAttributes);
-                if ($updatedBy) {
-                    $log->setAttribute(Configs::instance()->adminColumn, $updatedBy);
-                }
-                $log->save(false);
-            }
+//            $affectedRows = static::find()->where(null)->andWhere($condition, $params)->all();
+//            /** @var ActiveRecord $affectedRow */
+//            foreach ($affectedRows as $affectedRow) {
+//                $logAttributes = array_merge(
+//                    array_intersect_key(
+//                        $affectedRow->getAttributes(),
+//                        array_flip(static::primaryKey())
+//                    ),
+//                    $attributes
+//                );
+//                $logClassName = static::getLogClassName();
+//                /** @var ActiveRecord $log */
+//                $log = new $logClassName();
+//                $log->setAttributes($logAttributes);
+//                if ($updatedBy) {
+//                    $log->setAttribute(Configs::instance()->adminColumn, $updatedBy);
+//                }
+//                $log->save(false);
+//            }
         }
-        return parent::updateAll($attributes, $condition, $params);
     }
 
     /**
@@ -667,7 +664,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param string|array $condition
      * @param array $params
      * @param int|null $updatedBy
-     * @return int
      * @throws \yii\base\InvalidConfigException
      */
     public static function saveToLogUpdateAll($attributes, $condition = '', $params = [], $updatedBy = null)
@@ -693,7 +689,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                 $log->save(false);
             }
         }
-        return parent::updateAll($attributes, $condition, $params);
     }
 
     /**
