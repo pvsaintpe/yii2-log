@@ -222,19 +222,19 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         return $this->isLogEnabled() && $revisionEnabled && !$revisionCount;
     }
 
-    /**
-     * @param bool $insert
-     * @return bool
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
-     */
-    public function beforeSave($insert)
-    {
-        if (!$this->getIsNewRecord()) {
-            $this->saveToLog();
-        }
-        return parent::beforeSave($insert);
-    }
+//    /**
+//     * @param bool $insert
+//     * @return bool
+//     * @throws \yii\base\InvalidConfigException
+//     * @throws \yii\db\Exception
+//     */
+//    public function beforeSave($insert)
+//    {
+//        if (!$this->getIsNewRecord()) {
+//            $this->saveToLog();
+//        }
+//        return parent::beforeSave($insert);
+//    }
 
     /**
      * @return null|string
@@ -630,7 +630,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     public static function updateAll($attributes, $condition = '', $params = [])
     {
-        static::saveToLogUpdateAll($attributes, $condition, $params);
+        static::saveToLog($attributes, $condition, $params);
         return parent::updateAll($attributes, $condition, $params);
     }
 
@@ -641,65 +641,76 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param int|null $updatedBy
      * @throws \yii\base\InvalidConfigException
      */
-    public static function saveToLogUpdateAll($attributes, $condition = '', $params = [], $updatedBy = null)
+    public static function saveToLog($attributes, $condition = '', $params = [], $updatedBy = null)
     {
         if (static::logEnabled() && static::existLogTable()) {
             $affectedRows = static::find()->where(null)->andWhere($condition, $params)->all();
             /** @var ActiveRecord $affectedRow */
             foreach ($affectedRows as $affectedRow) {
-                $logAttributes = array_merge(
-                    array_intersect_key(
-                        $affectedRow->getAttributes(),
-                        array_flip(static::primaryKey())
-                    ),
-                    $attributes
-                );
-                $logClassName = static::getLogClassName();
-                /** @var ActiveRecord $log */
-                $log = new $logClassName();
-                $log->setAttributes($logAttributes);
-                if ($updatedBy) {
-                    $log->setAttribute(Configs::instance()->adminColumn, $updatedBy);
+                $affectedAttributes = [];
+                foreach ($attributes as $attribute => $value) {
+                    if ($affectedRow->getAttribute($attribute) != $value) {
+                        $affectedAttributes[$attribute] = $affectedRow->getAttribute($attribute);
+                    }
                 }
-                $log->save(false);
+
+                if (count($affectedAttributes) > 0) {
+                    $affectedAttributes = array_merge(
+                        $affectedAttributes,
+                        array_intersect_key(
+                            $affectedRow->getAttributes(),
+                            array_flip(static::primaryKey())
+                        )
+                    );
+
+                    if ($updatedBy) {
+                        $affectedAttributes[Configs::instance()->adminColumn] = $updatedBy;
+                    }
+
+                    $logClassName = static::getLogClassName();
+                    /** @var ActiveRecord $log */
+                    $log = new $logClassName();
+                    $log->setAttributes($affectedAttributes);
+                    $log->save(false);
+                }
             }
         }
     }
 
-    /**
-     * @return bool|ActiveRecord
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\Exception
-     */
-    public function saveToLog()
-    {
-        if (static::existLogTable()) {
-            $dirtyAttributes = array_intersect_key(
-                parent::getOldAttributes(),
-                array_diff_key(
-                    static::getRealDirtyAttributes(),
-                    array_flip(static::skipLogAttributes())
-                )
-            );
-
-            if (count($dirtyAttributes) > 0) {
-                $logAttributes = array_merge(
-                    array_intersect_key(
-                        $this->getAttributes(),
-                        array_flip(static::primaryKey())
-                    ),
-                    $dirtyAttributes
-                );
-
-                $logClassName = static::getLogClassName();
-                /** @var ActiveRecord $log */
-                $log = new $logClassName();
-                $log->setAttributes($logAttributes);
-                $log->save(false);
-                return $log;
-            }
-        }
-
-        return false;
-    }
+//    /**
+//     * @return bool|ActiveRecord
+//     * @throws \yii\base\InvalidConfigException
+//     * @throws \yii\db\Exception
+//     */
+//    public function saveToLog()
+//    {
+//        if (static::existLogTable()) {
+//            $dirtyAttributes = array_intersect_key(
+//                parent::getOldAttributes(),
+//                array_diff_key(
+//                    static::getRealDirtyAttributes(),
+//                    array_flip(static::skipLogAttributes())
+//                )
+//            );
+//
+//            if (count($dirtyAttributes) > 0) {
+//                $logAttributes = array_merge(
+//                    array_intersect_key(
+//                        $this->getAttributes(),
+//                        array_flip(static::primaryKey())
+//                    ),
+//                    $dirtyAttributes
+//                );
+//
+//                $logClassName = static::getLogClassName();
+//                /** @var ActiveRecord $log */
+//                $log = new $logClassName();
+//                $log->setAttributes($logAttributes);
+//                $log->save(false);
+//                return $log;
+//            }
+//        }
+//
+//        return false;
+//    }
 }
