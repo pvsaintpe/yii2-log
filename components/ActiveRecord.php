@@ -588,10 +588,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     public static function batchUpdate(array $columns, $condition)
     {
         static::saveToLogBatchUpdate($columns, $condition);
-
-        $command = static::getDb()->createCommand();
-        $command->batchUpdate(static::tableName(), $columns, $condition);
-        return $command->execute();
+        return parent::batchUpdate($columns, $condition);
     }
 
     /**
