@@ -581,39 +581,17 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * ```
      *
      * @param array $columns
-     * @param array $condition
+     * @param string|array $condition
      * @return int
      * @throws
      */
     public static function batchUpdate(array $columns, $condition)
     {
+        static::saveToLogBatchUpdate($columns, $condition);
+
         $command = static::getDb()->createCommand();
         $command->batchUpdate(static::tableName(), $columns, $condition);
         return $command->execute();
-    }
-
-    /**
-     * Example
-     *
-     * ```php
-     * User::batchUpdate([
-     *      'name' => ['Alice', 'Bob'],
-     *      'age' => '18'
-     * ], [
-     *      'id' => [1, 2, 3],
-     *      'enabled' => '1'
-     * ]);
-     * ```
-     *
-     * @param array $columns
-     * @param string|array $condition
-     * @return int
-     * @throws
-     */
-    public static function logBatchUpdate(array $columns, $condition)
-    {
-        static::saveToLogBatchUpdate($columns, $condition);
-        return static::batchUpdate($columns, $condition);
     }
 
     /**
@@ -653,7 +631,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @return int|null
      * @throws \yii\base\InvalidConfigException
      */
-    public static function logUpdateAll($attributes, $condition = '', $params = [])
+    public static function updateAll($attributes, $condition = '', $params = [])
     {
         static::saveToLogUpdateAll($attributes, $condition, $params);
         return parent::updateAll($attributes, $condition, $params);
