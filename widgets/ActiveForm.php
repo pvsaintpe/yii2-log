@@ -50,7 +50,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                 )
             );
             if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
-                $afterCode = '<small class="label pull-right bg-red" style="margin-left:5px;">' .  $cnt . '</small>';
+                $afterCode = '&nbsp;&nbsp;<sup class="red">' .  $cnt . '</sup>';
                 $color = Configs::instance()->revisionActiveStyle;
             } else {
                 $afterCode = '';
@@ -59,7 +59,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
             $urlHelper = Configs::instance()->urlHelperClass;
             $label = join('', [
                 '<span>' . $model->getAttributeLabel($attribute) . '</span>',
-                '<span class="pull-right-container">' . $afterCode . '<span class="change-log-area pull-right" style="margin-left:5px;">',
+                '<span><span class="change-log-area" style="margin-left:5px;">',
                 Html::a(
                     '<span 
                         title="' . Yii::t('log', 'История изменений') . '" 
@@ -84,7 +84,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
                         'data-id' => strtolower($this->getId() . '-' . $attribute),
                     ]
                 ),
-                '</span></span>'
+                '</span>' . $afterCode . '</span>'
             ]);
             $field->label($label);
         } else {

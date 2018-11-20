@@ -134,7 +134,7 @@ class Configs extends BaseObject
     /**
      * @var string
      */
-    public $revisionStyle = 'color:ligthgray';
+    public $revisionStyle = 'color:lightgray';
 
     /**
      * @var array

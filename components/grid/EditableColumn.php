@@ -1,54 +1,87 @@
 <?php
 
-namespace pvsaintpe\log\widgets;
+namespace pvsaintpe\log\components\grid;
 
-use pvsaintpe\grid\widgets\DetailView as BaseDetailView;
-use pvsaintpe\log\components\Configs;
-use pvsaintpe\log\interfaces\ChangeLogInterface;
-use Yii;
+use pvsaintpe\grid\components\ColumnTrait;
 use pvsaintpe\helpers\Html;
+use pvsaintpe\log\components\ActiveRecord;
+use pvsaintpe\log\components\Configs;
+use yii\base\InvalidConfigException;
+use Yii;
+use Closure;
+use pvsaintpe\log\interfaces\ChangeLogInterface;
 
 /**
- * Class DetailView
- * @package pvsaintpe\log\widgets
+ * Class EditableColumn
+ * @package backend\components\grid
  */
-class DetailView extends BaseDetailView
+class EditableColumn extends \kartik\grid\EditableColumn
 {
+    use ColumnTrait;
+
     /**
-     * @param array $attribute
-     * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @var string
      */
-    protected function renderAttributeItem($attribute)
+    public $inputTemplate = 't[{index}][{attribute}]';
+
+    /**
+     * @var string
+     */
+    public $size = 'md';
+
+    /**
+     * @inheritdoc
+     * @throws InvalidConfigException
+     */
+    public function renderDataCellContent($model, $key, $index)
     {
-        if (isset($attribute['attribute'])) {
-            if ($this->model instanceof ChangeLogInterface
-                && $this->model->logEnabled()
-                && !in_array($attribute['attribute'], $this->model->securityLogAttributes())
-                && Yii::$app->user->can('changelog')
-            ) {
-                $attribute['label'] = $this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
-            }
-        }
-        return parent::renderAttributeItem($attribute);
+        $this->initEditableOptions($model, $key, $index);
+        return join('', [
+            parent::renderDataCellContent($model, $key, $index),
+            $this->renderRevisionContent($model, $this->attribute)
+        ]);
     }
 
     /**
-     * @param string $attribute
-     * @param string|null $label
-     * @return string
+     * @param ActiveRecord $model
+     * @param mixed $key
+     * @param int $index
      */
-    public function renderAttributeLabel($attribute, $label = null)
+    public function initEditableOptions($model, $key, $index)
     {
-        $model = $this->model;
+        $editableOptions = $this->editableOptions;
+        if (!empty($this->editableOptions) && $this->editableOptions instanceof Closure) {
+            $editableOptions = call_user_func($this->editableOptions, $model, $key, $index, $this);
+        }
+        $this->editableOptions = array_merge(
+            [
+                'header' => $model->getAttributeLabel($this->attribute),
+                'size' => $this->size,
+                'name' => $this->attribute
+            ],
+            $editableOptions
+        );
+    }
+
+    /**
+     * @param ActiveRecord $model
+     * @param string $attribute
+     * @return mixed
+     * @throws InvalidConfigException
+     */
+    public function renderRevisionContent(ActiveRecord $model, $attribute)
+    {
+        /**
+         * @var ActiveRecord|ChangeLogInterface $model
+         */
         if ($model instanceof ChangeLogInterface
-            && $model->logEnabled()
+            && $model->isLogEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
             && Yii::$app->user->can('changelog')
         ) {
             $keys = [];
-            foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
-                $keys[] = $index.'='.$key;
+            foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $val) {
+                $keys[] = $index.'='.$val;
             }
             $hash = md5($attribute . ':'.join('&', $keys));
             $where = array_intersect_key(
@@ -66,7 +99,6 @@ class DetailView extends BaseDetailView
             }
             $urlHelper = Configs::instance()->urlHelperClass;
             return join('', [
-                "<span>{$label}</span>",
                 '<span><span class="change-log-area" style="margin-left:5px;">',
                 Html::a(
                     '<span 
@@ -81,7 +113,7 @@ class DetailView extends BaseDetailView
                             Yii::$app->request
                         )[0],
                         't[hash]' => $hash,
-                        't[search_class_name]' => $model->getLogClassName(),
+                        't[search_class_name]' => $model::getLogClassName(),
                         't[where]' => serialize($where),
                         'readOnly' => 1,
                     ]),
@@ -95,6 +127,6 @@ class DetailView extends BaseDetailView
                 '</span>' . $afterCode . '</span>'
             ]);
         }
-        return "<span>{$label}</span>";
+        return '';
     }
 }
