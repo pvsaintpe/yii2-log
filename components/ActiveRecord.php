@@ -18,35 +18,68 @@ use pvsaintpe\search\components\ActiveRecord as ActiveRecordBase;
 class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 {
     /**
-     * @return Connection|object
+     * @return array
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getLogDb()
+    public function behaviors()
     {
-        return Configs::db();
-    }
-
-    /**
-     * @return Connection|object
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function getStorageDb()
-    {
-        return Configs::storageDb();
+        return array_merge(
+            parent::behaviors(),
+            static::customBehaviors()
+        );
     }
 
     /**
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
-    public function skipLogAttributes()
+    protected function customBehaviors()
     {
-        return [
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
-            'timestamp',
-        ];
+        $behaviors = [];
+        if (Yii::$app->id == 'app-backend') {
+            $behaviors['blameable'] = [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => Configs::instance()->adminColumn
+            ];
+        }
+        return $behaviors;
+    }
+
+    /**
+     * Example
+     *
+     * ```php
+     * User::batchUpdate([
+     *      'name' => ['Alice', 'Bob'],
+     *      'age' => '18'
+     * ], [
+     *      'id' => [1, 2, 3],
+     *      'enabled' => '1'
+     * ]);
+     * ```
+     *
+     * @param array $columns
+     * @param string|array $condition
+     * @return int
+     * @throws
+     */
+    public static function batchUpdate(array $columns, $condition)
+    {
+        static::saveToLogBatchUpdate($columns, $condition);
+        return parent::batchUpdate($columns, $condition);
+    }
+
+    /**
+     * @param array $attributes
+     * @param string|array $condition
+     * @param array $params
+     * @return int|null
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function updateAll($attributes, $condition = '', $params = [])
+    {
+        static::saveToLog($attributes, $condition, $params);
+        return parent::updateAll($attributes, $condition, $params);
     }
 
     /**
@@ -58,18 +91,73 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
+     * @return array
+     */
+    public static function securityLogAttributes()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function skipLogAttributes()
+    {
+        return array_merge(
+            static::primaryKey(),
+            static::dateAttributes(),
+            static::datetimeAttributes(),
+            [
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by',
+                'timestamp',
+            ]
+        );
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery|ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    final public function getReferenceBy()
+    {
+        return $this->hasOne(Configs::instance()->adminClass, ['id' => Configs::instance()->adminColumn]);
+    }
+
+    /**
      * @return bool
      */
-    public function isLogEnabled()
+    final public function isLogEnabled()
     {
         return static::logEnabled();
     }
 
     /**
+     * @return Connection|object
+     * @throws \yii\base\InvalidConfigException
+     */
+    final public static function getLogDb()
+    {
+        return Configs::db();
+    }
+
+    /**
+     * @return Connection|object
+     * @throws \yii\base\InvalidConfigException
+     */
+    final public static function getStorageDb()
+    {
+        return Configs::storageDb();
+    }
+
+    /**
      * @param array $attributes
      * @return int
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function getRevisionCountByAttr($attributes = [])
+    final public static function getRevisionCountByAttr($attributes = [])
     {
         if (static::logEnabled() && Yii::$app->user->can('changelog')) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
@@ -103,8 +191,9 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param null $attribute
      * @param array $where
      * @return int
+     * @throws \yii\base\InvalidConfigException
      */
-    public static function getLastRevisionCount($attribute = null, $where = [])
+    final public static function getLastRevisionCount($attribute = null, $where = [])
     {
         if (static::logEnabled() && Yii::$app->user->can('changelog')) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
@@ -122,47 +211,10 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getReferenceBy()
-    {
-        return $this->hasOne(Configs::instance()->adminClass, ['id' => Configs::instance()->adminColumn]);
-    }
-
-    /**
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            static::customBehaviors()
-        );
-    }
-
-    /**
-     * @return array
-     * @throws \yii\base\InvalidConfigException
-     */
-    protected function customBehaviors()
-    {
-        $behaviors = [];
-        if (Yii::$app->id == 'app-backend') {
-            $behaviors['blameable'] = [
-                'class' => BlameableBehavior::class,
-                'createdByAttribute' => Configs::instance()->adminColumn
-            ];
-        }
-        return $behaviors;
-    }
-
-    /**
      * @param array $conditions
      * @return array
      */
-    public static function getLastChanges($conditions = [])
+    final public static function getLastChanges($conditions = [])
     {
         $query = static::find();
         foreach ($conditions as $attribute => $condition) {
@@ -201,11 +253,12 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * Проверяет необходимость выхода при отсутствии ревизий (если они включены)
+     * Проверяет необходимость отсечки при отсутствии ревизий (если они доступны и разрешены)
      * @param $attribute
      * @return bool
+     * @throws \yii\base\InvalidConfigException
      */
-    public function isExitWithoutRevisions($attribute)
+    final public function isExitWithoutRevisions($attribute)
     {
         $revisionEnabled = (bool) Yii::$app->request->get('revisionEnabled', 0);
         if ($this->isLogEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
@@ -222,50 +275,20 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
         return $this->isLogEnabled() && $revisionEnabled && !$revisionCount;
     }
 
-//    /**
-//     * @param bool $insert
-//     * @return bool
-//     * @throws \yii\base\InvalidConfigException
-//     * @throws \yii\db\Exception
-//     */
-//    public function beforeSave($insert)
-//    {
-//        if (!$this->getIsNewRecord()) {
-//            $this->saveToLog();
-//        }
-//        return parent::beforeSave($insert);
-//    }
-
     /**
      * @return null|string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getLogTableName()
+    final public static function getLogTableName()
     {
         return Configs::instance()->tablePrefix . static::tableName() . Configs::instance()->tableSuffix;
-    }
-
-    /**
-     * @return array
-     */
-    public function securityLogAttributes()
-    {
-        return array_merge(
-            static::primaryKey(),
-            static::dateAttributes(),
-            static::datetimeAttributes(),
-            [
-                'created_by',
-                'updated_by',
-            ]
-        );
     }
 
     /**
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getLogClassName()
+    final public static function getLogClassName()
     {
         return join('\\', [
             Configs::instance()->classNamespace,
@@ -276,7 +299,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     /**
      * @return bool
      */
-    public static function existLogTable()
+    final public static function existLogTable()
     {
         try {
             return static::getLogDb()->existTable(static::getLogTableName());
@@ -290,7 +313,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    private static function getCreateParams()
+    final public static function getCreateParams()
     {
         $keys = [];
         if (($uniqueKeys = static::getStorageDb()->getUniqueKeys(static::tableName()))) {
@@ -317,7 +340,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    private function getUpdateParams()
+    final public static function getUpdateParams()
     {
         /**
          * Получить список колонок tableName (кроме created_at, updated_at, timestamp)
@@ -496,7 +519,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param $column
      * @return string
      */
-    private static function generateForeignKeyName($table, $column)
+    final public static function generateForeignKeyName($table, $column)
     {
         $foreignKey = join('-', [$table, $column]);
         if (strlen($foreignKey) >= 64) {
@@ -523,7 +546,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    public function createLogTable()
+    final public static function createLogTable()
     {
         if (!static::existLogTable()) {
             // create log table
@@ -535,103 +558,15 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * Returns the attribute values that have been modified since they are loaded or saved most recently.
-     *
-     * The comparison of new and old values is made for identical values using `===`.
-     *
-     * @param string[]|null $names the names of the attributes whose values may be returned if they are
-     * changed recently. If null, [[attributes()]] will be used.
-     * @return array the changed attribute values (name-value pairs)
-     */
-    public function getRealDirtyAttributes($names = null)
-    {
-        if ($names === null) {
-            $names = $this->attributes();
-        }
-        $names = array_flip($names);
-        $attributes = [];
-        if (parent::getOldAttributes() === null) {
-            foreach (parent::getAttributes() as $name => $value) {
-                if (isset($names[$name])) {
-                    $attributes[$name] = $value;
-                }
-            }
-        } else {
-            foreach (parent::getAttributes() as $name => $value) {
-                if (isset($names[$name]) && (!array_key_exists($name, parent::getOldAttributes()) || $value != parent::getOldAttribute($name))) {
-                    $attributes[$name] = $value;
-                }
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Example
-     *
-     * ```php
-     * User::batchUpdate([
-     *      'name' => ['Alice', 'Bob'],
-     *      'age' => '18'
-     * ], [
-     *      'id' => [1, 2, 3],
-     *      'enabled' => '1'
-     * ]);
-     * ```
-     *
-     * @param array $columns
-     * @param string|array $condition
-     * @return int
-     * @throws
-     */
-    public static function batchUpdate(array $columns, $condition)
-    {
-        static::saveToLogBatchUpdate($columns, $condition);
-        return parent::batchUpdate($columns, $condition);
-    }
-
-    /**
      * @param array $attributes
      * @param string|array $condition
      * @param int|null $updatedBy
      */
-    public static function saveToLogBatchUpdate($attributes, $condition = '',  $updatedBy = null)
+    final public static function saveToLogBatchUpdate($attributes, $condition = '',  $updatedBy = null)
     {
         if (static::logEnabled() && static::existLogTable()) {
-//            $affectedRows = static::find()->where(null)->andWhere($condition, $params)->all();
-//            /** @var ActiveRecord $affectedRow */
-//            foreach ($affectedRows as $affectedRow) {
-//                $logAttributes = array_merge(
-//                    array_intersect_key(
-//                        $affectedRow->getAttributes(),
-//                        array_flip(static::primaryKey())
-//                    ),
-//                    $attributes
-//                );
-//                $logClassName = static::getLogClassName();
-//                /** @var ActiveRecord $log */
-//                $log = new $logClassName();
-//                $log->setAttributes($logAttributes);
-//                if ($updatedBy) {
-//                    $log->setAttribute(Configs::instance()->adminColumn, $updatedBy);
-//                }
-//                $log->save(false);
-//            }
+            // @todo доделать реализацию convert BatchUpdate -> BatchInsert to Log
         }
-    }
-
-    /**
-     * @param array $attributes
-     * @param string|array $condition
-     * @param array $params
-     * @return int|null
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function updateAll($attributes, $condition = '', $params = [])
-    {
-        static::saveToLog($attributes, $condition, $params);
-        return parent::updateAll($attributes, $condition, $params);
     }
 
     /**
@@ -641,7 +576,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      * @param int|null $updatedBy
      * @throws \yii\base\InvalidConfigException
      */
-    public static function saveToLog($attributes, $condition = '', $params = [], $updatedBy = null)
+    final public static function saveToLog($attributes, $condition = '', $params = [], $updatedBy = null)
     {
         if (static::logEnabled() && static::existLogTable()) {
             $affectedRows = static::find()->where(null)->andWhere($condition, $params)->all();
@@ -653,7 +588,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                         $affectedAttributes[$attribute] = $affectedRow->getAttribute($attribute);
                     }
                 }
-
+                $affectedAttributes = array_diff_key($affectedAttributes, array_flip(static::skipLogAttributes()));
                 if (count($affectedAttributes) > 0) {
                     $affectedAttributes = array_merge(
                         $affectedAttributes,
@@ -676,41 +611,4 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
             }
         }
     }
-
-//    /**
-//     * @return bool|ActiveRecord
-//     * @throws \yii\base\InvalidConfigException
-//     * @throws \yii\db\Exception
-//     */
-//    public function saveToLog()
-//    {
-//        if (static::existLogTable()) {
-//            $dirtyAttributes = array_intersect_key(
-//                parent::getOldAttributes(),
-//                array_diff_key(
-//                    static::getRealDirtyAttributes(),
-//                    array_flip(static::skipLogAttributes())
-//                )
-//            );
-//
-//            if (count($dirtyAttributes) > 0) {
-//                $logAttributes = array_merge(
-//                    array_intersect_key(
-//                        $this->getAttributes(),
-//                        array_flip(static::primaryKey())
-//                    ),
-//                    $dirtyAttributes
-//                );
-//
-//                $logClassName = static::getLogClassName();
-//                /** @var ActiveRecord $log */
-//                $log = new $logClassName();
-//                $log->setAttributes($logAttributes);
-//                $log->save(false);
-//                return $log;
-//            }
-//        }
-//
-//        return false;
-//    }
 }

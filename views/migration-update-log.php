@@ -29,7 +29,7 @@ use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel
- * @since 3.1.*
+ * @since 3.5.*
  */
 class <?= $className ?> extends Migration
 {

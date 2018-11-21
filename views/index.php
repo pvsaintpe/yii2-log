@@ -1,6 +1,5 @@
 <?php
 
-use pvsaintpe\search\helpers\Html;
 use pvsaintpe\grid\widgets\GridView;
 
 /* @var $this yii\web\View */
@@ -42,7 +41,7 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
         var dataVal = $(this).attr('data-value');
-        $('#' + labelId).parent().parent().parent().parent().find('input').each(function(index, element) {
+        $('#' + labelId).closest('label').parent().find('input').each(function(index, element) {
             if ($(element).attr('type') === 'checkbox') {
                 if (dataVal == 0) {
                     $(element).removeAttr('checked');
@@ -53,7 +52,7 @@ if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
                 } 
             }
         });
-        $('#' + labelId).parent().parent().parent().parent().find('select').val($(this).attr('data-value'));
+        $('#' + labelId).closest('label').parent().find('select').val($(this).attr('data-value'));
         $('#main-modal').modal('hide');
     })
 })(jQuery);
@@ -65,18 +64,16 @@ JS
     $('.rollback-button').click(function (e) {
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
-        $('#' + labelId).parent().parent().parent().parent().find('input').val($(this).attr('data-value'));
-        $('#' + labelId).parent().parent().parent().parent().find('select').val($(this).attr('data-value')).trigger('change');
-        
+        $('#' + labelId).closest('label').parent().find('input').val($(this).attr('data-value'));
+        $('#' + labelId).closest('label').parent().find('select').val($(this).attr('data-value')).trigger('change');
         var pattern = /^\d+(,\d+)*$/;
         if (pattern.test($(this).attr('data-value'))) {
-            var select2 = $('#' + labelId).parent().parent().parent().parent().find('.select2');
+            var select2 = $('#' + labelId).closest('label').parent().find('.select2');
             if (select2) {
                 var selectedValues = $(this).attr('data-value').split(',');
                 select2.select2('val', selectedValues);
             }
         }
-        
         $('#main-modal').modal('hide');
     })
 })(jQuery);

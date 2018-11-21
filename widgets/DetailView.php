@@ -3,10 +3,8 @@
 namespace pvsaintpe\log\widgets;
 
 use pvsaintpe\grid\widgets\DetailView as BaseDetailView;
-use pvsaintpe\log\components\Configs;
-use pvsaintpe\log\interfaces\ChangeLogInterface;
-use Yii;
-use pvsaintpe\helpers\Html;
+use pvsaintpe\log\components\ActiveRecord;
+use pvsaintpe\log\traits\RevisionTrait;
 
 /**
  * Class DetailView
@@ -14,87 +12,20 @@ use pvsaintpe\helpers\Html;
  */
 class DetailView extends BaseDetailView
 {
+    use RevisionTrait;
+
     /**
-     * @param array $attribute
+     * @param array $options
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    protected function renderAttributeItem($attribute)
+    protected function renderAttributeItem($options)
     {
-        if (isset($attribute['attribute'])) {
-            if ($this->model instanceof ChangeLogInterface
-                && $this->model->logEnabled()
-                && !in_array($attribute['attribute'], $this->model->securityLogAttributes())
-                && Yii::$app->user->can('changelog')
-            ) {
-                $attribute['label'] = $this->renderAttributeLabel($attribute['attribute'], $attribute['label']);
-            }
-        }
-        return parent::renderAttributeItem($attribute);
-    }
-
-    /**
-     * @param string $attribute
-     * @param string|null $label
-     * @return string
-     */
-    public function renderAttributeLabel($attribute, $label = null)
-    {
+        /** @var ActiveRecord $model */
         $model = $this->model;
-        if ($model instanceof ChangeLogInterface
-            && $model->logEnabled()
-            && !in_array($attribute, $model->securityLogAttributes())
-            && Yii::$app->user->can('changelog')
-        ) {
-            $keys = [];
-            foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
-                $keys[] = $index.'='.$key;
-            }
-            $hash = md5($attribute . ':'.join('&', $keys));
-            $where = array_intersect_key(
-                $model->getAttributes(),
-                array_flip(
-                    $model::primaryKey()
-                )
-            );
-            if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
-                $afterCode = '&nbsp;&nbsp;<sup class="red">' .  $cnt . '</sup>';
-                $color = Configs::instance()->revisionActiveStyle;
-            } else {
-                $afterCode = '';
-                $color = Configs::instance()->revisionStyle;
-            }
-            $urlHelper = Configs::instance()->urlHelperClass;
-            return join('', [
-                "<span>{$label}</span>",
-                '<span><span class="change-log-area" style="margin-left:5px;">',
-                Html::a(
-                    '<span 
-                        title="' . Yii::t('log', 'История изменений') . '" 
-                        alt="' . Yii::t('log', 'История изменений') . '" 
-                        class="glyphicon glyphicon-eye-open" style="' . $color . '"
-                    />',
-                    $urlHelper::toRoute([
-                        Configs::instance()->pathToRoute,
-                        't[attribute]' => $attribute,
-                        't[route]' => Yii::$app->urlManager->parseRequest(
-                            Yii::$app->request
-                        )[0],
-                        't[hash]' => $hash,
-                        't[search_class_name]' => $model->getLogClassName(),
-                        't[where]' => serialize($where),
-                        'readOnly' => 1,
-                    ]),
-                    [
-                        'class' => 'change-log-link btn-main-modal',
-                        'id' => 'label-' . $hash,
-                        'data-pjax' => 0,
-                        'data-dismiss' => 'modal',
-                    ]
-                ),
-                '</span>' . $afterCode . '</span>'
-            ]);
+        if (($attribute = $options['attribute'] ?? false) && $this->isRevisionEnabled($model, $attribute)) {
+            $options['label'] .= $this->renderRevisionContent($model, $attribute, true);
         }
-        return "<span>{$label}</span>";
+        return parent::renderAttributeItem($options);
     }
 }

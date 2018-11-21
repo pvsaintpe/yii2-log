@@ -2,14 +2,10 @@
 
 namespace pvsaintpe\log\widgets;
 
-use pvsaintpe\log\components\Configs;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use pvsaintpe\log\traits\RevisionTrait;
 use pvsaintpe\search\components\ActiveRecord;
-use pvsaintpe\log\models\ChangeLogSearch;
-use pvsaintpe\search\helpers\Html;
 use kartik\form\ActiveField;
-use yii\helpers\Url;
-use Yii;
 
 /**
  * Class ActiveForm
@@ -17,14 +13,19 @@ use Yii;
  */
 class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
 {
+    use RevisionTrait;
+
     /**
      * @var string
      */
     public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
 
     /**
-     * @inheritdoc
-     * @return ActiveField|\yii\widgets\ActiveField
+     * @param \pvsaintpe\log\components\ActiveRecord $model
+     * @param string $attribute
+     * @param array $options
+     * @return ActiveField|\pvsaintpe\log\widgets\ActiveField
+     * @throws \yii\base\InvalidConfigException
      */
     public function field($model, $attribute, $options = [])
     {
@@ -33,64 +34,11 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
          * @var \pvsaintpe\log\widgets\ActiveField $field
          */
         $field = parent::field($model, $attribute, $options);
-        if ($model instanceof ChangeLogInterface
-            && $model->isLogEnabled()
-            && !in_array($attribute, $model->securityLogAttributes())
-            && Yii::$app->user->can('changelog')
-        ) {
-            $keys = [];
-            foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $key) {
-                $keys[] = $index.'='.$key;
-            }
-            $hash = md5($attribute . ':'.join('&', $keys));
-            $where = array_intersect_key(
-                $model->getAttributes(),
-                array_flip(
-                    $model::primaryKey()
-                )
-            );
-            if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
-                $afterCode = '&nbsp;&nbsp;<sup class="red">' .  $cnt . '</sup>';
-                $color = Configs::instance()->revisionActiveStyle;
-            } else {
-                $afterCode = '';
-                $color = Configs::instance()->revisionStyle;
-            }
-            $urlHelper = Configs::instance()->urlHelperClass;
-            $label = join('', [
-                '<span>' . $model->getAttributeLabel($attribute) . '</span>',
-                '<span><span class="change-log-area" style="margin-left:5px;">',
-                Html::a(
-                    '<span 
-                        title="' . Yii::t('log', 'История изменений') . '" 
-                        alt="' . Yii::t('log', 'История изменений') . '" 
-                        class="glyphicon glyphicon-eye-open" style="' . $color . '"
-                    />',
-                    $urlHelper::toRoute([
-                        Configs::instance()->pathToRoute,
-                        't[attribute]' => $attribute,
-                        't[route]' => Yii::$app->urlManager->parseRequest(
-                            Yii::$app->request
-                        )[0],
-                        't[hash]' => $hash,
-                        't[search_class_name]' => $model::getLogClassName(),
-                        't[where]' => serialize($where),
-                    ]),
-                    [
-                        'class' => 'change-log-link btn-main-modal',
-                        'id' => 'label-' . $hash,
-                        'data-pjax' => 0,
-                        'data-dismiss' => 'modal',
-                        'data-id' => strtolower($this->getId() . '-' . $attribute),
-                    ]
-                ),
-                '</span>' . $afterCode . '</span>'
-            ]);
-            $field->label($label);
-        } else {
-            $label = '<span>' . $model->getAttributeLabel($attribute) . '</span>';
-            $field->label($label);
+        $label = '<span>' . $model->getAttributeLabel($attribute) . '</span>';
+        if ($this->isRevisionEnabled($model, $attribute)) {
+            $label = join('', [$label, $this->renderRevisionContent($model, $attribute, false)]);
         }
+        $field->label($label);
         return $field;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace pvsaintpe\log\interfaces;
 
+use pvsaintpe\log\components\ActiveQuery;
+
 /**
  * Interface ChangeLogInterface
  * @package pvsaintpe\log\interfaces
@@ -14,7 +16,7 @@ interface ChangeLogInterface
     public function isLogEnabled();
 
     /**
-     * @return array
+     * @return \yii\db\ActiveQuery|ActiveQuery
      */
-    public function skipLogAttributes();
+    public function getReferenceBy();
 }

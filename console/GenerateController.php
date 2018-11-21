@@ -71,6 +71,7 @@ class GenerateController extends Controller
         }
 
         // исключаем классы двойники (Васю наказать!!!)
+        // @todo переделать потом, когда Вася не будет использовать классы дубликаты
         foreach ($parents as $className => $parentClassName) {
             if (in_array($parentClassName, $this->classNames)) {
                 unset($this->classNames[$className]);

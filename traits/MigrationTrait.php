@@ -3,7 +3,6 @@
 namespace pvsaintpe\log\traits;
 
 use pvsaintpe\db\components\Connection;
-use Yii;
 use pvsaintpe\log\components\Configs;
 
 /**
