@@ -1,0 +1,12 @@
+.change-log-area {
+    opacity: 0.5;
+}
+
+.change-log-link {
+    font-weight: normal;
+    color: #c0c0c0;
+}
+
+.change-log-link::before {
+    content: " ";
+}
