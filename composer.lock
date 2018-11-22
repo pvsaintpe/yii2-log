@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a4eab24398cd5aaac5747ac43222a62",
+    "content-hash": "b967d24ba105ad61c8af87ddc78900ad",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -222,6 +222,11 @@
             },
             "require": {
                 "bower-asset/jquery": ">=1.7"
+            },
+            "require-dev": {
+                "bower-asset/jasmine-ajax": "~1.3.1",
+                "bower-asset/jasmine-jquery": "~1.5.2",
+                "bower-asset/jquery": "~1.7"
             },
             "type": "bower-asset-library",
             "extra": {
@@ -2856,16 +2861,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
             "require": {
@@ -2899,25 +2904,24 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2018-11-20T15:27:04+00:00"
         },
         {
             "name": "pvsaintpe/yii2-behaviors",
-            "version": "1.0.3",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-behaviors.git",
-                "reference": "60e32a0d95ae26a7527aaf5d26b785d41de09d0d"
+                "reference": "08e8ee99c17c8732e60c3412e7dda4337422298e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-behaviors/zipball/60e32a0d95ae26a7527aaf5d26b785d41de09d0d",
-                "reference": "60e32a0d95ae26a7527aaf5d26b785d41de09d0d",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-behaviors/zipball/08e8ee99c17c8732e60c3412e7dda4337422298e",
+                "reference": "08e8ee99c17c8732e60c3412e7dda4337422298e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
-                "pvsaintpe/yii2-search": "2.*",
                 "yiisoft/yii2": "2.0.15.1"
             },
             "type": "yii2-extension",
@@ -2947,7 +2951,7 @@
                 "Active Record",
                 "yii2"
             ],
-            "time": "2018-11-12T11:37:48+00:00"
+            "time": "2018-11-12T09:58:40+00:00"
         },
         {
             "name": "pvsaintpe/yii2-boost",
@@ -3354,21 +3358,22 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "2.3.0",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "c8ccf80e3181dc44481652ef20a140c7ac30ba0e"
+                "reference": "cc70bf59c0ff905934d3e9c4d235a657e094fabb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/c8ccf80e3181dc44481652ef20a140c7ac30ba0e",
-                "reference": "c8ccf80e3181dc44481652ef20a140c7ac30ba0e",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/cc70bf59c0ff905934d3e9c4d235a657e094fabb",
+                "reference": "cc70bf59c0ff905934d3e9c4d235a657e094fabb",
                 "shasum": ""
             },
             "require": {
                 "pvsaintpe/yii2-gii-plus": "*",
-                "pvsaintpe/yii2-grid": "*"
+                "pvsaintpe/yii2-grid": "*",
+                "pvsaintpe/yii2-helpers": "*"
             },
             "type": "yii2-extension",
             "extra": {
@@ -3399,7 +3404,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-12T19:09:07+00:00"
+            "time": "2018-11-22T20:18:15+00:00"
         },
         {
             "name": "setasign/fpdi",

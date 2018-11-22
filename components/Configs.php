@@ -114,6 +114,11 @@ class Configs extends BaseObject
     /**
      * @var string
      */
+    public $adminPageRoute = 'operator/operator/view';
+
+    /**
+     * @var string
+     */
     public $urlHelperClass = '\pvsaintpe\helpers\Url';
 
     /**

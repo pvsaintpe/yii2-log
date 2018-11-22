@@ -2,19 +2,23 @@
 
 namespace pvsaintpe\log\models;
 
+use pvsaintpe\helpers\Url;
 use pvsaintpe\log\components\Configs;
 use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\search\interfaces\SearchInterface;
+use pvsaintpe\search\traits\SearchTrait;
 use Yii;
 
 /**
  * Class ChangeLogSearch
  * @package pvsaintpe\logs\models
  */
-class ChangeLogSearch extends ActiveRecord
+class ChangeLogSearch extends ActiveRecord implements SearchInterface
 {
+    use SearchTrait;
+
     /** @var string */
     public $attribute;
 
@@ -59,22 +63,6 @@ class ChangeLogSearch extends ActiveRecord
     }
 
     /**
-     * @return string
-     */
-    public function formName()
-    {
-        return static::getFormName();
-    }
-
-    /**
-     * @return string
-     */
-    public static function getFormName()
-    {
-        return 't';
-    }
-
-    /**
      * @return array
      */
     public function getLogStatusAttributes()
@@ -83,6 +71,14 @@ class ChangeLogSearch extends ActiveRecord
         /** @var ActiveRecord $logModel */
         $logModel = new $searchClass();
         return $logModel::booleanAttributes();
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getDisableColumns()
+    {
+        return Yii::$app->request->get('readOnly', 0) ? ['actions'] : [];
     }
 
     /**
@@ -122,7 +118,18 @@ class ChangeLogSearch extends ActiveRecord
                 'attribute' => Configs::instance()->adminColumn,
                 'allowNotSet' => true,
                 'value' => function ($model) {
-                    return $model->referenceBy ? $model->referenceBy->getTitleText() : null;
+                    if (!$model->referenceBy) {
+                        return $this->{Configs::instance()->adminColumn};
+                    }
+                    if (Yii::$app->user->can(Configs::instance()->adminPageRoute, ['id' => $model->referenceBy->id])) {
+                        return Html::a(
+                            $model->referenceBy->getTitleText(),
+                            Url::to(['/' . Configs::instance()->adminPageRoute, 'id' => $model->referenceBy->id]),
+                            ['target' => '_blank', 'data-pjax' => 0]
+                        );
+                    } else {
+                        return $model->referenceBy->getTitleText();
+                    }
                 }
             ],
             'timestamp' => [
