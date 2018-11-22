@@ -116,7 +116,6 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
             Configs::instance()->adminColumn => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
                 'attribute' => Configs::instance()->adminColumn,
-                'allowNotSet' => true,
                 'value' => function ($model) {
                     if (!$model->referenceBy) {
                         return $this->{Configs::instance()->adminColumn};
