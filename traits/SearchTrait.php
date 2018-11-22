@@ -17,7 +17,7 @@ use yii\db\Expression;
  * Class SearchTrait
  * @package pvsaintpe\log\traits
  */
-class SearchTrait
+trait SearchTrait
 {
     use SearchTraitBase {
         getGridToolbarButtons as protected getGridToolbarButtonsBase;
