@@ -223,11 +223,6 @@
             "require": {
                 "bower-asset/jquery": ">=1.7"
             },
-            "require-dev": {
-                "bower-asset/jasmine-ajax": "~1.3.1",
-                "bower-asset/jasmine-jquery": "~1.5.2",
-                "bower-asset/jquery": "~1.7"
-            },
             "type": "bower-asset-library",
             "extra": {
                 "bower-asset-main": "dist/typeahead.bundle.js"
@@ -2765,22 +2760,26 @@
         },
         {
             "name": "phpoffice/phpexcel",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PHPExcel.git",
-                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+                "reference": "1441011fb7ecdd8cc689878f54f8b58a6805f870"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
-                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/1441011fb7ecdd8cc689878f54f8b58a6805f870",
+                "reference": "1441011fb7ecdd8cc689878f54f8b58a6805f870",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "php": ">=5.2.0"
+                "php": "^5.2|^7.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -2790,7 +2789,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL"
+                "LGPL-2.1"
             ],
             "authors": [
                 {
@@ -2798,18 +2797,19 @@
                     "homepage": "http://blog.maartenballiauw.be"
                 },
                 {
-                    "name": "Mark Baker"
+                    "name": "Erik Tilt"
                 },
                 {
                     "name": "Franck Lefevre",
-                    "homepage": "http://blog.rootslabs.net"
+                    "homepage": "http://rootslabs.net"
                 },
                 {
-                    "name": "Erik Tilt"
+                    "name": "Mark Baker",
+                    "homepage": "http://markbakeruk.net"
                 }
             ],
             "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
-            "homepage": "http://phpexcel.codeplex.com",
+            "homepage": "https://github.com/PHPOffice/PHPExcel",
             "keywords": [
                 "OpenXML",
                 "excel",
@@ -2819,7 +2819,7 @@
                 "xlsx"
             ],
             "abandoned": "phpoffice/phpspreadsheet",
-            "time": "2015-05-01T07:00:55+00:00"
+            "time": "2018-11-22T23:07:24+00:00"
         },
         {
             "name": "phpspec/php-diff",
@@ -2908,20 +2908,21 @@
         },
         {
             "name": "pvsaintpe/yii2-behaviors",
-            "version": "1.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-behaviors.git",
-                "reference": "08e8ee99c17c8732e60c3412e7dda4337422298e"
+                "reference": "8f377378baf0277bd97189e9d7608f1a0a9a27c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-behaviors/zipball/08e8ee99c17c8732e60c3412e7dda4337422298e",
-                "reference": "08e8ee99c17c8732e60c3412e7dda4337422298e",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-behaviors/zipball/8f377378baf0277bd97189e9d7608f1a0a9a27c8",
+                "reference": "8f377378baf0277bd97189e9d7608f1a0a9a27c8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0",
+                "pvsaintpe/yii2-search": "3.*",
                 "yiisoft/yii2": "2.0.15.1"
             },
             "type": "yii2-extension",
@@ -2951,7 +2952,7 @@
                 "Active Record",
                 "yii2"
             ],
-            "time": "2018-11-12T09:58:40+00:00"
+            "time": "2018-11-22T20:32:59+00:00"
         },
         {
             "name": "pvsaintpe/yii2-boost",
@@ -3358,16 +3359,16 @@
         },
         {
             "name": "pvsaintpe/yii2-search",
-            "version": "3.0.3",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-search.git",
-                "reference": "cc70bf59c0ff905934d3e9c4d235a657e094fabb"
+                "reference": "fdc699e4584d90ad7d9968f649342b11a30e9956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/cc70bf59c0ff905934d3e9c4d235a657e094fabb",
-                "reference": "cc70bf59c0ff905934d3e9c4d235a657e094fabb",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-search/zipball/fdc699e4584d90ad7d9968f649342b11a30e9956",
+                "reference": "fdc699e4584d90ad7d9968f649342b11a30e9956",
                 "shasum": ""
             },
             "require": {
@@ -3404,7 +3405,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-22T20:18:15+00:00"
+            "time": "2018-11-23T09:43:46+00:00"
         },
         {
             "name": "setasign/fpdi",
