@@ -47,7 +47,7 @@ trait SearchTrait
      */
     public function getDataProvider($options = [])
     {
-        if ($options['revisionFilters'] ?? false) {
+        if ($options['revisionFilters'] ?? true) {
             $this->initRevisionFilters();
         }
         return $this->getDataProviderBase($options);
