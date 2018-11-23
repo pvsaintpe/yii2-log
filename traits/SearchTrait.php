@@ -26,6 +26,7 @@ trait SearchTrait
 
     /**
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getGridToolbarButtons()
     {
@@ -92,7 +93,10 @@ trait SearchTrait
             if (in_array($logColumn['Field'], $model::primaryKey())) {
                 continue;
             }
-            if (!in_array($logColumn['Field'], $this->settingsAttributes())) {
+            if (!in_array($logColumn['Field'], array_merge(
+                $this->settingsAttributes(),
+                $this->getBaseModel()::booleanAttributes()
+            ))) {
                 continue;
             }
             if (in_array($logColumn['Field'], $model::skipLogAttributes())) {
