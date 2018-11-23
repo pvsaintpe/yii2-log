@@ -10,12 +10,14 @@ use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\traits\SearchTrait as SearchTraitBase;
 use yii\base\Exception;
 use yii\data\DataProviderInterface;
+use yii\base\InvalidConfigException;
 use Yii;
 use yii\db\Expression;
 
 /**
  * Class SearchTrait
  * @package pvsaintpe\log\traits
+ * @method DataProviderInterface search()
  */
 trait SearchTrait
 {
@@ -26,7 +28,7 @@ trait SearchTrait
 
     /**
      * @return array
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     protected function getGridToolbarButtons()
     {
@@ -42,7 +44,7 @@ trait SearchTrait
      * @param mixed $options
      * @return ActiveDataProvider|DataProviderInterface
      * @throws Exception
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      * @throws \yii\db\Exception
      */
     public function getDataProvider($options = [])
@@ -55,7 +57,7 @@ trait SearchTrait
 
     /**
      * @throws Exception
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      * @throws \yii\db\Exception
      */
     protected function initRevisionFilters()
@@ -127,7 +129,7 @@ trait SearchTrait
 
     /**
      * @return array
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getGridRevision()
     {

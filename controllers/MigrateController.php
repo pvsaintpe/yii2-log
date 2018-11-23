@@ -1,6 +1,6 @@
 <?php
 
-namespace pvsaintpe\log\console;
+namespace pvsaintpe\log\controllers;
 
 use pvsaintpe\db\components\Connection;
 use pvsaintpe\log\components\Configs;
@@ -9,7 +9,7 @@ use Yii;
 
 /**
  * Class MigrateController
- * @package pvsaintpe\log\console
+ * @package pvsaintpe\log\controllers
  */
 class MigrateController extends BaseMigrateController
 {
@@ -21,6 +21,7 @@ class MigrateController extends BaseMigrateController
     {
         parent::init();
         $this->db = Configs::db();
+        $this->migrationPath = Configs::instance()->migrationPath;
     }
 
     /**

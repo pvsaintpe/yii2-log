@@ -1,7 +1,8 @@
 <?php
 
-namespace pvsaintpe\log\console;
+namespace pvsaintpe\log\controllers;
 
+use Codeception\Command\Shared\FileSystem;
 use pvsaintpe\log\components\ActiveRecord;
 use pvsaintpe\log\components\Configs;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
@@ -17,6 +18,8 @@ use ReflectionClass;
  */
 class GenerateController extends Controller
 {
+    use FileSystem;
+
     /**
      * @var
      */
@@ -28,13 +31,27 @@ class GenerateController extends Controller
     protected $classNames = [];
 
     /**
+     * @inheritdoc
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function init()
+    {
+        parent::init();
+        $this->migrationPath = Configs::instance()->migrationPath;
+    }
+
+    /**
      * @param string $filename
      * @return string|false
      */
     public function parseClassFile($filename)
     {
         $data = file_get_contents($filename);
-        if ($data && preg_match('~class\s+(\w+)\s+extends\s+\w+\s*(implements\s+[A-Za-z_,\s\\\\]+)?\{~i', $data, $classMatch)) {
+        if ($data && preg_match(
+            '~class\s+(\w+)\s+extends\s+\w+\s*(implements\s+[A-Za-z_,\s\\\\]+)?\{~i',
+            $data,
+            $classMatch
+        )) {
             $namespace = '';
             if (preg_match('~namespace\s+([^\s;]+)\s*;~i', $data, $namespaceMatch)) {
                 $namespace = $namespaceMatch[1] . '\\';
@@ -88,7 +105,16 @@ class GenerateController extends Controller
             }
 
             if ($params = $class->createLogTable()) {
-                $fileName = 'm' . date('ymd_His', time()) . '_'. $params['migration_prefix'] . '_' . $params['logTableName'];
+                if (!file_exists($this->migrationPath)) {
+                    $this->createDirectoryFor($this->migrationPath);
+                }
+
+                $fileName = join('', [
+                    'm' . date('ymd_His', time()),
+                    '_'. $params['migration_prefix'],
+                    '_' . $params['logTableName']
+                ]);
+
                 if (@file_put_contents(
                     Yii::getAlias($this->migrationPath . '/' . $fileName . '.php'),
                     $view->render(

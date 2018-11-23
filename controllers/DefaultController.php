@@ -20,7 +20,7 @@ class DefaultController extends Controller
     {
         $searchModel = $this->getSearchModel();
 
-        return $this->renderWithAjax('@vendor/pvsaintpe/yii2-log/views/index.php', [
+        return $this->renderWithAjax('index.php', [
             'searchModel' => $searchModel,
             'dataProvider' => $searchModel->search(),
         ]);

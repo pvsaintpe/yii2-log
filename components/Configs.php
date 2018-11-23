@@ -74,6 +74,11 @@ class Configs extends BaseObject
     /**
      * @var string
      */
+    public $migrationPath = '@console/migrations-log';
+
+    /**
+     * @var string
+     */
     public $pathToRoute = '/changelog/default/index';
 
     /**
