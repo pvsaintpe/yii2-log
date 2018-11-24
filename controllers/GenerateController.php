@@ -98,13 +98,12 @@ class GenerateController extends Controller
         $view = $this->getView();
         $migrations = 0;
         foreach ($this->classNames as $className) {
-            /* @var $class ActiveRecord|ChangeLogInterface */
-            $class = new $className;
-            if (!$class->logEnabled()) {
+            /* @var $className ActiveRecord|ChangeLogInterface */
+            if (!$className::logEnabled()) {
                 continue;
             }
 
-            if ($params = $class->createLogTable()) {
+            if ($params = $className::createLogTable()) {
                 if (!file_exists(Yii::getAlias($this->migrationPath))) {
                     $this->createDirectoryFor(Yii::getAlias($this->migrationPath));
                 }

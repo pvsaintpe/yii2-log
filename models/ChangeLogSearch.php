@@ -4,35 +4,42 @@ namespace pvsaintpe\log\models;
 
 use pvsaintpe\helpers\Url;
 use pvsaintpe\log\components\Configs;
+use pvsaintpe\log\models\base\ChangeLogSearchBase;
 use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\components\ActiveQuery;
-use pvsaintpe\search\components\ActiveRecord;
 use pvsaintpe\search\interfaces\SearchInterface;
-use pvsaintpe\search\traits\SearchTrait;
 use Yii;
 
 /**
  * Class ChangeLogSearch
  * @package pvsaintpe\logs\models
  */
-class ChangeLogSearch extends ActiveRecord implements SearchInterface
+class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
 {
-    use SearchTrait;
-
-    /** @var string */
+    /**
+     * @var string
+     */
     public $attribute;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $route;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $hash;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $where;
 
-    /** @var string */
-    public $search_class_name;
+    /**
+     * @var string
+     */
+    public $table;
 
     /**
      * @return array
@@ -44,7 +51,7 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
             'route',
             'hash',
             'where',
-            'search_class_name'
+            'table'
         ];
     }
 
@@ -58,19 +65,8 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
             'route',
             'hash',
             'where',
-            'search_class_name'
+            'table'
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getLogStatusAttributes()
-    {
-        $searchClass = $this->search_class_name;
-        /** @var ActiveRecord $logModel */
-        $logModel = new $searchClass();
-        return $logModel::booleanAttributes();
     }
 
     /**
@@ -97,29 +93,27 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
     public function getGridColumns()
     {
         return [
-            'log_id' => [
+            'id' => [
                 'class' => 'pvsaintpe\log\components\grid\IdColumn',
-                'attribute' => 'log_id',
-                'label' => 'ID',
+                'attribute' => 'id',
             ],
             'value' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
-                'attribute' => $this->attribute,
-                'label' => $this->getAttributeLabel('value'),
-                'value' => function (ActiveRecord $model) {
-                    if (in_array($this->attribute, $model::booleanAttributes())) {
-                        return Yii::$app->formatter->asBoolean($model->{$this->attribute});
+                'attribute' => 'value',
+                'value' => function (ChangeLogSearchBase $model) {
+                    if (in_array($this->attribute, $model::getBooleanAttributes())) {
+                        return Yii::$app->formatter->asBoolean($model->value);
                     }
-                    return '<span class="ellipses">' . $model->{$this->attribute} . '</span>';
+                    return '<span class="ellipses">' . $model->value . '</span>';
                 },
                 'width' => '150px'
             ],
-            Configs::instance()->adminColumn => [
+            'updatedBy' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
-                'attribute' => Configs::instance()->adminColumn,
-                'value' => function ($model) {
+                'attribute' => 'updatedBy',
+                'value' => function (ChangeLogSearchBase $model) {
                     if (!$model->referenceBy) {
-                        return $this->{Configs::instance()->adminColumn};
+                        return $model->updatedBy;
                     }
                     if (Yii::$app->user->can(Configs::instance()->adminPageRoute, ['id' => $model->referenceBy->id])) {
                         return Html::a(
@@ -141,13 +135,13 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
                 'vAlign' => 'middle',
                 'format' => 'raw',
                 'width' => '100px',
-                'value' => function (ActiveRecord $model) {
+                'value' => function (ChangeLogSearchBase $model) {
                     $buttons[] = Html::button(
                         Yii::t('models', 'Вернуть значение'),
                         [
                             'class' => 'btn btn-success btn-xs rollback-button',
                             'data-pjax' => 0,
-                            'data-value' => $model->{$this->attribute},
+                            'data-value' => $model->value,
                             'id' => $this->hash,
                         ]
                     );
@@ -159,52 +153,29 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
     }
 
     /**
-     * @inheritdoc
+     * @return array
      */
     public function rules()
     {
         return array_merge(
             [
-                [['attribute', 'route', 'search_class_name', 'where', 'hash'], 'required'],
+                [['attribute', 'route', 'table', 'where', 'hash'], 'required'],
             ],
             parent::rules()
         );
     }
 
     /**
-     * @inheritdoc
+     * @return \pvsaintpe\search\components\ActiveDataProvider|\yii\data\DataProviderInterface
      */
-    public function attributeLabels()
+    public function search()
     {
-        return array_merge(
-            parent::attributeLabels(),
-            [
-                'attribute' => Yii::t('log', 'Настройка'),
-                'value' => Yii::t('log', 'Значение'),
-                'timestamp' => Yii::t('log', 'Метка времени'),
-                Configs::instance()->adminColumn => Yii::t('log', 'Кем обновлено'),
-            ]
-        );
-    }
-
-    /**
-     * @param null $params
-     * @return mixed
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function search($params = null)
-    {
-        if (!empty($params)) {
-            $this->load($params);
-        }
-
-        /** @var ActiveRecord|SearchInterface $searchClass */
-        $searchClass = $this->search_class_name;
+        ChangeLogSearchBase::setTableName($this->table);
 
         $alias = uniqid('admin');
 
         /** @var ActiveQuery query */
-        $this->query = $searchClass::find();
+        $this->query = ChangeLogSearchBase::find();
         $this->query->join(
             'left join',
             Configs::instance()->adminTable . ' ' . $alias,
@@ -212,10 +183,10 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
         );
 
         $this->query->select([
-            $this->query->a('log_id'),
-            $this->query->a(Configs::instance()->adminColumn),
+            $this->query->a('log_id') . ' AS `id`',
+            $this->query->a(Configs::instance()->adminColumn) . ' AS `updatedBy`',
             $this->query->a('timestamp'),
-            $this->query->a($this->attribute),
+            $this->query->a($this->attribute) . ' AS `value`',
         ]);
 
         $this->query->andWhere(['NOT', [$this->query->a($this->attribute) => null]]);

@@ -4,11 +4,8 @@ namespace pvsaintpe\log\components;
 
 use Yii;
 use yii\base\BaseObject;
-use yii\caching\Cache;
 use yii\db\Connection;
-use yii\di\Instance;
 use yii\helpers\ArrayHelper;
-use yii\rbac\ManagerInterface;
 
 /**
  * Configs
@@ -16,14 +13,9 @@ use yii\rbac\ManagerInterface;
  *
  * ```
  * return [
- *
  *     'changelog.configs' => [
  *         'db' => 'customDb',
  *         'storageDb' => 'customDb',
- *         'cache' => [
- *             'class' => 'yii\caching\DbCache',
- *             'db' => ['dsn' => 'sqlite:@runtime/admin-cache.db'],
- *         ],
  *     ]
  * ];
  * ```
@@ -41,11 +33,8 @@ use yii\rbac\ManagerInterface;
  * @author Pavel Veselov <pvsaintpe@icloud.com>
  * @since 3.0
  */
-
 class Configs extends BaseObject
 {
-    const CACHE_TAG = 'changelog';
-
     /**
      * @var Connection Database connection for Log Storage.
      */
@@ -67,11 +56,7 @@ class Configs extends BaseObject
     public $tablePrefix = '';
 
     /**
-     * @var string
-     */
-    public $classNamespace = '\common\models\log';
-
-    /**
+     * @todo addOption with tables
      * @var string
      */
     public $modelsPath = '@common/models';
@@ -92,11 +77,6 @@ class Configs extends BaseObject
     public $storageDb = 'db';
 
     /**
-     * @var Cache Cache component.
-     */
-    public $cache = 'cache';
-
-    /**
      * @var string
      */
     public $createTemplatePath = '/../views/migration-create-log.php';
@@ -107,11 +87,7 @@ class Configs extends BaseObject
     public $updateTemplatePath = '/../views/migration-update-log.php';
 
     /**
-     * @var integer Cache duration. Default to a hour.
-     */
-    public $cacheDuration = 3600;
-
-    /**
+     * @todo addOption for createTable in first migration
      * @var string Admin table name.
      */
     public $adminTable = 'admin';
@@ -122,9 +98,15 @@ class Configs extends BaseObject
     public $adminClass = '\pvsaintpe\log\models\Admin';
 
     /**
+     * @todo addOption for create OperatorController
      * @var string
      */
     public $adminPageRoute = 'operator/operator/view';
+
+    /**
+     * @var int
+     */
+    public $revisionPeriod = 1;
 
     /**
      * @var string
@@ -142,50 +124,29 @@ class Configs extends BaseObject
     public $adminColumnType = "INT(10) UNSIGNED NULL DEFAULT NULL COMMENT 'Оператор'";
 
     /**
-     * @var string
-     */
-    public $revisionActiveStyle = 'color:black';
-
-    /**
-     * @var string
-     */
-    public $revisionStyle = 'color:lightgray';
-
-    /**
      * @var array
      */
-    public $options;
-
-    /**
-     * @var array|false
-     */
-    public $advanced;
+    public $cssOptions = [
+        'revisionOptions' => [
+            'style' => 'color:lightgray',
+            'class' => 'glyphicon glyphicon-eye'
+        ],
+        'revisionActiveOptions' => [
+            'style' => 'color:black',
+            'class' => 'glyphicon glyphicon-eye-open'
+        ]
+    ];
 
     /**
      * @var self Instance of self
      */
-    private static $_instance;
-
-    /**
-     * @var array
-     */
-    private static $_classes = [
-        'cache' => 'yii\caching\Cache',
-    ];
+    private static $instance;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        foreach (self::$_classes as $key => $class) {
-            try {
-                $this->{$key} = empty($this->{$key}) ? null : Instance::ensure($this->{$key}, $class);
-            } catch (\Exception $exc) {
-                $this->{$key} = null;
-                Yii::error($exc->getMessage());
-            }
-        }
     }
 
     /**
@@ -194,36 +155,16 @@ class Configs extends BaseObject
      */
     public static function instance()
     {
-        if (self::$_instance === null) {
+        if (self::$instance === null) {
             $type = ArrayHelper::getValue(Yii::$app->params, 'changelog.configs', []);
             if (is_array($type) && !isset($type['class'])) {
                 $type['class'] = static::class;
             }
 
-            return self::$_instance = Yii::createObject($type);
+            return self::$instance = Yii::createObject($type);
         }
 
-        return self::$_instance;
-    }
-
-    /**
-     * @param $name
-     * @param $arguments
-     * @return mixed|null
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function __callStatic($name, $arguments)
-    {
-        $instance = static::instance();
-        if ($instance->hasProperty($name)) {
-            return $instance->$name;
-        } else {
-            if (count($arguments)) {
-                $instance->options[$name] = reset($arguments);
-            } else {
-                return array_key_exists($name, $instance->options) ? $instance->options[$name] : null;
-            }
-        }
+        return self::$instance;
     }
 
     /**
@@ -242,14 +183,5 @@ class Configs extends BaseObject
     public static function storageDb()
     {
         return Yii::$app->get(static::instance()->storageDb);
-    }
-
-    /**
-     * @return Cache
-     * @throws \yii\base\InvalidConfigException
-     */
-    public static function cache()
-    {
-        return static::instance()->cache;
     }
 }

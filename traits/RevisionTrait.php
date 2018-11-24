@@ -31,6 +31,7 @@ trait RevisionTrait
             && !in_array($attribute, $model->securityLogAttributes())
             && !in_array($attribute, $model->skipLogAttributes())
             && Yii::$app->user->can(Configs::instance()->id)
+            && $model::existLogTable()
         ) {
             return true;
         }
@@ -40,11 +41,11 @@ trait RevisionTrait
     /**
      * @param ActiveRecord $model
      * @param string $attribute
-     * @param bool $readOnly
+     * @param boolean $isReadOnly
      * @return mixed
      * @throws InvalidConfigException
      */
-    final public function renderRevisionContent(ActiveRecord $model, $attribute, $readOnly = false)
+    final public function renderRevisionContent(ActiveRecord $model, $attribute, $isReadOnly = false)
     {
         $keys = [];
         foreach (array_intersect_key($model->getAttributes(), array_flip($model::primaryKey())) as $index => $val) {
@@ -54,10 +55,12 @@ trait RevisionTrait
         $where = array_intersect_key($model->getAttributes(), array_flip($model::primaryKey()));
 
         $afterCode = '';
-        $color = Configs::instance()->revisionStyle;
+        $classes = Configs::instance()->cssOptions['revisionOptions']['class'] ?? [];
+        $styles = Configs::instance()->cssOptions['revisionOptions']['style'] ?? [];
         if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
             $afterCode = '&nbsp;&nbsp;<sup class="red">' .  $cnt . '</sup>';
-            $color = Configs::instance()->revisionActiveStyle;
+            $classes = Configs::instance()->cssOptions['revisionActiveOptions']['class'] ?? [];
+            $styles = Configs::instance()->cssOptions['revisionActiveOptions']['style'] ?? [];
         }
 
         /** @var Url $urlHelper */
@@ -69,7 +72,8 @@ trait RevisionTrait
                 '<span 
                     title="' . Yii::t('log', 'История изменений') . '" 
                     alt="' . Yii::t('log', 'История изменений') . '" 
-                    class="glyphicon glyphicon-eye-open" style="' . $color . '"
+                    class="' . join(' ', array_merge($classes)) . '"
+                    style="' . join('; ', array_merge($styles)) . '"
                 />',
                 $urlHelper::toRoute([
                     Configs::instance()->pathToRoute,
@@ -78,9 +82,9 @@ trait RevisionTrait
                         Yii::$app->request
                     )[0],
                     't[hash]' => $hash,
-                    't[search_class_name]' => $model::getLogClassName(),
+                    't[table]' => $model::getLogTableName(),
                     't[where]' => serialize($where),
-                    'readOnly' => $readOnly,
+                    'readOnly' => $isReadOnly,
                 ]),
                 [
                     'class' => 'change-log-link btn-main-modal',

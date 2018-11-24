@@ -74,9 +74,7 @@ trait SearchTrait
         $model = $this->getBaseModel();
         $alias = 'log';
 
-        /** @var ActiveRecord $logClassName */
-        $logClassName = $model::getLogClassName();
-        $logTable = $logClassName::tableName() . " {$alias}";
+        $logTable = $model::getLogTableName() . " {$alias}";
         $onConditions = [];
         $groupBy = [];
 
@@ -176,6 +174,6 @@ trait SearchTrait
      */
     public function getRevisionPeriod()
     {
-        return Yii::$app->request->get('revisionPeriod', 1);
+        return Yii::$app->request->get('revisionPeriod', Configs::instance()->revisionPeriod);
     }
 }

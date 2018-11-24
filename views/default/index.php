@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-if (in_array($searchModel->attribute, $searchModel->getLogStatusAttributes())) {
+if (in_array($searchModel->attribute, $searchModel::getBooleanAttributes())) {
     $jsCode = <<<JS
 (function ($) {
     $('.rollback-button').click(function (e) {
