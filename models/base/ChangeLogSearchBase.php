@@ -24,7 +24,7 @@ class ChangeLogSearchBase extends ActiveRecord
     /**
      * @var int
      */
-    public $id;
+    public $log_id;
 
     /**
      * @var mixed
@@ -65,7 +65,7 @@ class ChangeLogSearchBase extends ActiveRecord
         return array_merge(
             parent::attributeLabels(),
             [
-                'id' => Yii::t('log', 'ID'),
+                'log_id' => Yii::t('log', 'ID'),
                 'value' => Yii::t('log', 'Значение'),
                 'updatedBy' => Yii::t('log', 'Кем обновлено'),
                 'timestamp' => Yii::t('log', 'Метка времени'),
@@ -79,11 +79,28 @@ class ChangeLogSearchBase extends ActiveRecord
     public function attributes()
     {
         return [
-            'id',
+            'log_id',
             'value',
             'updatedBy',
             'timestamp'
         ];
+    }
+
+    /**
+     * @param array $row
+     * @return static
+     */
+    public static function instantiate($row)
+    {
+        return new static($row);
+    }
+
+    /**
+     * @return \pvsaintpe\db\components\Connection
+     */
+    public static function getDb()
+    {
+        return Configs::db();
     }
 
     /**

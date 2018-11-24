@@ -93,9 +93,9 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
     public function getGridColumns()
     {
         return [
-            'id' => [
+            'log_id' => [
                 'class' => 'pvsaintpe\log\components\grid\IdColumn',
-                'attribute' => 'id',
+                'attribute' => 'log_id',
             ],
             'value' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
@@ -183,7 +183,7 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
         );
 
         $this->query->select([
-            $this->query->a('log_id') . ' AS `id`',
+            $this->query->a('log_id'),
             $this->query->a(Configs::instance()->adminColumn) . ' AS `updatedBy`',
             $this->query->a('timestamp'),
             $this->query->a($this->attribute) . ' AS `value`',
