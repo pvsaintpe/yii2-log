@@ -55,6 +55,12 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
         ];
     }
 
+    public function init()
+    {
+        parent::init();
+        $this->defaultPageSize = Configs::instance()->defaultPageSize;
+    }
+
     /**
      * @return array
      */

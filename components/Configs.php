@@ -109,6 +109,11 @@ class Configs extends BaseObject
     public $revisionPeriod = 1;
 
     /**
+     * @var int
+     */
+    public $defaultPageSize = 10;
+
+    /**
      * @var string
      */
     public $urlHelperClass = '\pvsaintpe\helpers\Url';

@@ -1,6 +1,9 @@
 <?php
 
 use pvsaintpe\grid\widgets\GridView;
+use pvsaintpe\log\components\Configs;
+use yii\helpers\Url;
+use yii\data\Sort;
 
 /* @var $this yii\web\View */
 /* @var $searchModel \pvsaintpe\search\interfaces\SearchInterface|\pvsaintpe\log\models\ChangeLogSearch */
@@ -13,11 +16,27 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="box box-danger log-index">
     <div class="box-body">
         <?= GridView::widget([
-            'id' => 'wlog',
             'bordered' => false,
             'clickable' => false,
-            'pager' => [
-                'class' => '\yii\widgets\LinkPager',
+            'pager' => ['class' => '\yii\widgets\LinkPager'],
+            'id' => uniqid('wlog'),
+            'pjax' => true,
+            'pjaxSettings' => [
+                'options' => [
+                    'enablePushState' => false,
+                    'enableReplaceState' => false,
+                ],
+            ],
+            'filterUrl' => Url::to([Configs::instance()->pathToRoute]),
+            'sorter' =>  [
+                'class' => 'yii\widgets\LinkSorter',
+                'sort'  => new Sort([
+                    'route' =>  Url::to([Configs::instance()->pathToRoute])
+                ]),
+                'options' => [
+                    'data-method' => 'POST',
+                    'data-pjax' => 1,
+                ]
             ],
             'dataProvider' => $dataProvider,
             'filterModel' => null, //$searchModel,
