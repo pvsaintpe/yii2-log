@@ -62,7 +62,7 @@ trait SearchTrait
      */
     protected function initRevisionFilters()
     {
-        if (!Yii::$app->user->can('changelog')) {
+        if (!Yii::$app->user->can(Configs::instance()->id)) {
             return;
         }
 
@@ -133,7 +133,7 @@ trait SearchTrait
      */
     public function getGridRevision()
     {
-        if (!($this instanceof ActiveRecord) || !$this->logEnabled() || !Yii::$app->user->can('changelog')) {
+        if (!($this instanceof ActiveRecord) || !$this->logEnabled() || !Yii::$app->user->can(Configs::instance()->id)) {
             return [];
         }
 

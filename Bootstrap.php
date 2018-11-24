@@ -2,7 +2,9 @@
 
 namespace pvsaintpe\log;
 
+use pvsaintpe\log\components\Configs;
 use yii\base\BootstrapInterface;
+use yii\base\Application;
 
 /**
  * Class Bootstrap
@@ -11,15 +13,10 @@ use yii\base\BootstrapInterface;
 class Bootstrap implements BootstrapInterface
 {
     /**
-     * @param \yii\base\Application $app
+     * @param Application $app
      */
     public function bootstrap($app)
     {
-        //Правила маршрутизации
-        $app->getUrlManager()->addRules([
-            'changelog' => 'changelog\default\index',
-        ], true);
-
-        $app->setModule('changelog', ['class' => 'pvsaintpe\log\Module']);
+        $app->setModule(Configs::instance()->id, ['class' => 'pvsaintpe\log\Module']);
     }
 }

@@ -159,7 +159,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     final public static function getRevisionCountByAttr($attributes = [])
     {
-        if (static::logEnabled() && Yii::$app->user->can('changelog')) {
+        if (static::logEnabled() && Yii::$app->user->can(Configs::instance()->id)) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
             /** @var ActiveRecord $logClassName */
             $logClassName = static::getLogClassName();
@@ -195,7 +195,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     final public static function getLastRevisionCount($attribute = null, $where = [])
     {
-        if (static::logEnabled() && Yii::$app->user->can('changelog')) {
+        if (static::logEnabled() && Yii::$app->user->can(Configs::instance()->id)) {
             $period = Yii::$app->request->get('revisionPeriod', 1);
             /** @var ActiveRecord $logClassName */
             $logClassName = static::getLogClassName();

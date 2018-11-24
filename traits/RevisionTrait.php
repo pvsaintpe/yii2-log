@@ -30,7 +30,7 @@ trait RevisionTrait
             && $model->isLogEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
             && !in_array($attribute, $model->skipLogAttributes())
-            && Yii::$app->user->can('changelog')
+            && Yii::$app->user->can(Configs::instance()->id)
         ) {
             return true;
         }

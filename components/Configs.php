@@ -49,7 +49,12 @@ class Configs extends BaseObject
     /**
      * @var Connection Database connection for Log Storage.
      */
-    public $db = 'dbLog';
+    public $db = 'db';
+
+    /**
+     * @var string
+     */
+    public $id = 'changelog';
 
     /**
      * @var string

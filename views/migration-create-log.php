@@ -9,6 +9,8 @@
  * @var $uniqueKeys array the new migration class namespace
  * @var $logTableName string code for the migration
  * @var $tableName string code for the migration
+ * @var $storageDb \pvsaintpe\db\components\Connection code for the migration
+ * @var $tableName string code for the migration
  */
 
 echo "<?php\n";
@@ -20,7 +22,7 @@ use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel
- * @since 3.5.*
+ * @since 4.*
  */
 class <?= $className ?> extends Migration
 {
@@ -38,27 +40,27 @@ class <?= $className ?> extends Migration
         ");
 
 <?php
-    foreach ($columns as $column) {
-        if (!in_array($column['Field'], $primaryKeys)) {
-            $nullExp = 'NULL default null';
-        } else {
-            $nullExp = 'NOT NULL';
-        }
-        echo "        \$this->alterColumn(";
-        echo "\n            '{$logTableName}',";
-        echo "\n            '{$column['Field']}',";
-        echo "\n            \"{$column['Type']} {$nullExp} COMMENT '{$column['Comment']}'\"";
-        echo "\n        );\n\n";
+foreach ($columns as $column) {
+    if (!in_array($column['Field'], $primaryKeys)) {
+        $nullExp = 'NULL default null';
+    } else {
+        $nullExp = 'NOT NULL';
     }
+    echo "        \$this->alterColumn(";
+    echo "\n            '{$logTableName}',";
+    echo "\n            '{$column['Field']}',";
+    echo "\n            \"{$column['Type']} {$nullExp} COMMENT '{$column['Comment']}'\"";
+    echo "\n        );\n\n";
+}
 ?>
         if ($this->existKey('<?= $logTableName?>', 'PRIMARY')) {
             $this->execute("ALTER TABLE `<?= $logTableName?>` DROP PRIMARY KEY");
         }
 
 <?php
-    foreach ($uniqueKeys as $uniqueKey) {
-        echo "        \$this->dropIndex('{$uniqueKey}', '{$logTableName}');\n\n";
-    }
+foreach ($uniqueKeys as $uniqueKey) {
+    echo "        \$this->dropIndex('{$uniqueKey}', '{$logTableName}');\n\n";
+}
 ?>
         $this->db->createCommand("
             ALTER TABLE `<?= $logTableName?>`
