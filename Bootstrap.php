@@ -16,6 +16,5 @@ class Bootstrap implements BootstrapInterface
     public function bootstrap($app)
     {
         $app->setModule('changelog', ['class' => 'pvsaintpe\log\Module']);
-        $app->setViewPath(__DIR__ . '/views');
     }
 }
