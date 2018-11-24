@@ -15,6 +15,11 @@ class Bootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        //Правила маршрутизации
+        $app->getUrlManager()->addRules([
+            'changelog' => 'changelog\default\index',
+        ], true);
+
         $app->setModule('changelog', ['class' => 'pvsaintpe\log\Module']);
     }
 }
