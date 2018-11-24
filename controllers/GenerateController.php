@@ -105,8 +105,8 @@ class GenerateController extends Controller
             }
 
             if ($params = $class->createLogTable()) {
-                if (!file_exists($this->migrationPath)) {
-                    $this->createDirectoryFor($this->migrationPath);
+                if (!file_exists(Yii::getAlias($this->migrationPath))) {
+                    $this->createDirectoryFor(Yii::getAlias($this->migrationPath));
                 }
 
                 $fileName = join('', [
