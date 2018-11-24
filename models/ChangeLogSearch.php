@@ -110,8 +110,9 @@ class ChangeLogSearch extends ActiveRecord implements SearchInterface
                     if (in_array($this->attribute, $model::booleanAttributes())) {
                         return Yii::$app->formatter->asBoolean($model->{$this->attribute});
                     }
-                    return $model->{$this->attribute};
-                }
+                    return '<span class="ellipses">' . $model->{$this->attribute} . '</span>';
+                },
+                'width' => '150px'
             ],
             Configs::instance()->adminColumn => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
