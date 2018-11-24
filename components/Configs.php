@@ -168,7 +168,7 @@ class Configs extends BaseObject
     }
 
     /**
-     * @return Connection
+     * @return \pvsaintpe\db\components\Connection
      * @throws \yii\base\InvalidConfigException
      */
     public static function db()
@@ -177,7 +177,7 @@ class Configs extends BaseObject
     }
 
     /**
-     * @return Connection
+     * @return \pvsaintpe\db\components\Connection
      * @throws \yii\base\InvalidConfigException
      */
     public static function storageDb()

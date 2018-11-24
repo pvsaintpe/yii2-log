@@ -72,8 +72,8 @@ trait RevisionTrait
                 '<span 
                     title="' . Yii::t('log', 'История изменений') . '" 
                     alt="' . Yii::t('log', 'История изменений') . '" 
-                    class="' . join(' ', array_merge($classes)) . '"
-                    style="' . join('; ', array_merge($styles)) . '"
+                    class="' . join(' ', array_merge([$classes])) . '"
+                    style="' . join('; ', array_merge([$styles])) . '"
                 />',
                 $urlHelper::toRoute([
                     Configs::instance()->pathToRoute,

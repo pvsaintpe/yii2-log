@@ -201,7 +201,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     {
         $query = new Query();
         $alias = uniqid('t');
-        $query->from(static::getLogTableName() . " {$alias}");
+        $query->from(static::getLogDb()->getName() . '.' . static::getLogTableName() . " {$alias}");
         foreach ($conditions as $attribute => $condition) {
             if (is_array($condition)) {
                 if ($condition[0] == 'NOT') {

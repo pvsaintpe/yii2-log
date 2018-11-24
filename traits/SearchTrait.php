@@ -74,7 +74,7 @@ trait SearchTrait
         $model = $this->getBaseModel();
         $alias = 'log';
 
-        $logTable = $model::getLogTableName() . " {$alias}";
+        $logTable = $model::getLogDb()->getName() . '.' . $model::getLogTableName() . " {$alias}";
         $onConditions = [];
         $groupBy = [];
 
@@ -95,7 +95,7 @@ trait SearchTrait
             }
             if (!in_array($logColumn['Field'], array_merge(
                 $this->settingsAttributes(),
-                $this->getBaseModel()::booleanAttributes()
+                $model::booleanAttributes()
             ))) {
                 continue;
             }

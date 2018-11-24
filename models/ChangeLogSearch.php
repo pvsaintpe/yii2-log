@@ -178,7 +178,7 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
         $this->query = ChangeLogSearchBase::find();
         $this->query->join(
             'left join',
-            Configs::instance()->adminTable . ' ' . $alias,
+            Configs::storageDb()->getName() . '.' . Configs::instance()->adminTable . ' ' . $alias,
             $alias . '.id = ' . $this->query->a(Configs::instance()->adminColumn)
         );
 
