@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-if (in_array($searchModel->attribute, $searchModel::getBooleanAttributes())) {
+if (in_array($searchModel->attribute, $searchModel->getBooleanAttributes())) {
     $jsCode = <<<JS
 (function ($) {
     $('.rollback-button').click(function (e) {
@@ -71,27 +71,20 @@ if (in_array($searchModel->attribute, $searchModel::getBooleanAttributes())) {
                 } 
             }
         });
-        $('#' + labelId).closest('label').parent().find('select').val($(this).attr('data-value'));
+        $('#' + labelId).closest('label').parent().find('select').val(dataVal);
         $('#main-modal').modal('hide');
     })
 })(jQuery);
 JS
     ;
-} elseif (in_array($searchModel->attribute, $searchModel::getRelationAttributes())) {
+} elseif (array_key_exists($searchModel->attribute, $searchModel->getRelationAttributes())) {
     $jsCode = <<<JS
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
-        var labelId = 'label-' + $(this).attr('id');
-        $('#' + labelId).closest('label').parent().find('select').val($(this).attr('data-value')).trigger('change');
-        var pattern = /^\d+(,\d+)*$/;
-        if (pattern.test($(this).attr('data-value'))) {
-            var select2 = $('#' + labelId).closest('label').parent().find('.select2');
-            if (select2) {
-                var selectedValues = $(this).attr('data-value').split(',');
-                select2.select2('val', selectedValues);
-            }
-        }
+        $('#label-' + $(this).attr('id')).closest('label').parent().find('select').val(
+            $(this).attr('data-value')
+        ).trigger('change');
         $('#main-modal').modal('hide');
     })
 })(jQuery);
@@ -102,8 +95,9 @@ JS
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
-        var labelId = 'label-' + $(this).attr('id');
-        $('#' + labelId).closest('label').parent().find('input').val($(this).attr('data-value'));
+        $('#label-' + $(this).attr('id')).closest('label').parent().find('input').val(
+            $(this).attr('data-value')
+        );
         $('#main-modal').modal('hide');
     })
 })(jQuery);
