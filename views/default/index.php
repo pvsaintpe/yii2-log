@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
             'dataProvider' => $dataProvider,
-            'filterModel' => null, //$searchModel,
+            'filterModel' => null,
             'disableColumns' => $searchModel->getDisableColumns(),
             'columns' => $searchModel->getGridColumns(),
             'toolbar' => $searchModel->getGridToolbar(),
@@ -77,13 +77,12 @@ if (in_array($searchModel->attribute, $searchModel::getBooleanAttributes())) {
 })(jQuery);
 JS
     ;
-} else {
+} elseif (in_array($searchModel->attribute, $searchModel::getRelationAttributes())) {
     $jsCode = <<<JS
 (function ($) {
     $('.rollback-button').click(function (e) {
         e.preventDefault();
         var labelId = 'label-' + $(this).attr('id');
-        $('#' + labelId).closest('label').parent().find('input').val($(this).attr('data-value'));
         $('#' + labelId).closest('label').parent().find('select').val($(this).attr('data-value')).trigger('change');
         var pattern = /^\d+(,\d+)*$/;
         if (pattern.test($(this).attr('data-value'))) {
@@ -93,6 +92,18 @@ JS
                 select2.select2('val', selectedValues);
             }
         }
+        $('#main-modal').modal('hide');
+    })
+})(jQuery);
+JS
+    ;
+} else {
+    $jsCode = <<<JS
+(function ($) {
+    $('.rollback-button').click(function (e) {
+        e.preventDefault();
+        var labelId = 'label-' + $(this).attr('id');
+        $('#' + labelId).closest('label').parent().find('input').val($(this).attr('data-value'));
         $('#main-modal').modal('hide');
     })
 })(jQuery);

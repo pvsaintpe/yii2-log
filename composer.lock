@@ -5458,16 +5458,16 @@
         },
         {
             "name": "pvsaintpe/yii2-db-plus",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-db-plus.git",
-                "reference": "ac670a1aa0975254db7944155b267a699ccdb260"
+                "reference": "a3011c70eef3ec4bb0de2c9788e9734441d1cd76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/ac670a1aa0975254db7944155b267a699ccdb260",
-                "reference": "ac670a1aa0975254db7944155b267a699ccdb260",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-db-plus/zipball/a3011c70eef3ec4bb0de2c9788e9734441d1cd76",
+                "reference": "a3011c70eef3ec4bb0de2c9788e9734441d1cd76",
                 "shasum": ""
             },
             "require": {
@@ -5503,7 +5503,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-25T11:56:47+00:00"
+            "time": "2018-11-25T14:57:13+00:00"
         },
         {
             "name": "pvsaintpe/yii2-freeze-column",

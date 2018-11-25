@@ -9,6 +9,7 @@ use pvsaintpe\search\helpers\Html;
 use pvsaintpe\search\components\ActiveQuery;
 use pvsaintpe\search\interfaces\SearchInterface;
 use Yii;
+use yii\db\Query;
 
 /**
  * Class ChangeLogSearch
@@ -107,10 +108,18 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
                 'attribute' => 'value',
                 'value' => function (ChangeLogSearchBase $model) {
-                    if (in_array($this->attribute, $model::getBooleanAttributes())) {
+                    if (in_array($this->attribute, $model->getBooleanAttributes())) {
                         return Yii::$app->formatter->asBoolean($model->value);
+                    } elseif (array_key_exists($this->attribute, $model->getRelationAttributes())) {
+                        $relation = $model->getRelationAttributes()[$this->attribute];
+                        return (new Query())
+                            ->from($relation['table'])
+                            ->where([$relation['key'] => $model->value])
+                            ->select($relation['label'])
+                            ->scalar();
+                    } else {
+                        return '<span class="ellipses">' . $model->value . '</span>';
                     }
-                    return '<span class="ellipses">' . $model->value . '</span>';
                 },
                 'width' => '150px'
             ],

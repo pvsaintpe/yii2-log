@@ -124,6 +124,14 @@ class ChangeLogSearchBase extends ActiveRecord
      */
     public static function getBooleanAttributes()
     {
-        return [];
+        return static::getDb()->getTableSchema(static::tableName())->getBooleanAttributes();
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRelationAttributes()
+    {
+        return static::getDb()->getTableSchema(static::tableName())->getRelationAttributes();
     }
 }
