@@ -32,12 +32,7 @@ trait SearchTrait
      */
     protected function getGridToolbarButtons()
     {
-        return array_merge(
-            $this->getGridToolbarButtonsBase(),
-            [
-                $this->getGridRevision(),
-            ]
-        );
+        return array_merge([$this->getGridRevision()], $this->getGridToolbarButtonsBase());
     }
 
     /**
@@ -109,11 +104,14 @@ trait SearchTrait
         }
 
         $this->query->innerJoin($logTable, join(' AND ', $onConditions));
-        $this->query->andWhere([
-            '>=',
-            "{$alias}.timestamp",
-            new Expression('NOW() - INTERVAL ' . $this->getRevisionPeriod() . ' DAY')
-        ]);
+
+        if ($this->getRevisionPeriod() == -1) {
+            $this->query->andWhere([
+                '>=',
+                "{$alias}.timestamp",
+                new Expression('NOW() - INTERVAL ' . $this->getRevisionPeriod() . ' DAY')
+            ]);
+        }
 
         if (count($whereConditions) > 0) {
             $whereCondition = join(' OR ', $whereConditions);
@@ -131,32 +129,100 @@ trait SearchTrait
      */
     public function getGridRevision()
     {
-        if (!($this instanceof ActiveRecord) || !$this->logEnabled() || !Yii::$app->user->can(Configs::instance()->id)) {
+        if (!($this instanceof ActiveRecord)
+            || !$this->logEnabled()
+            || !Yii::$app->user->can(Configs::instance()->id)
+        ) {
             return [];
         }
 
         if (!$this->isRevisionEnabled()) {
-            $revisionIcon = 'glyphicon-eye-open';
-            $revisionLabel = Yii::t('changelog', 'Показать историю изменений за сутки');
+            $options = [
+                'data-pjax' => 0,
+                'title' => Yii::t('changelog', 'Показать историю изменений')
+            ];
+            return [
+                'content' => Html::tag(
+                    'div',
+                    join('', [
+                        Html::tag(
+                            'button',
+                            join('', [
+                                Html::tag('span', null, ['class' => 'glyphicon glyphicon-eye-open']),
+                                '&nbsp;&nbsp;',
+                                Html::tag('span', null, ['class' => 'fa fa-caret-down']),
+                            ]),
+                            [
+                                'class' => 'btn btn-default dropdown-toggle',
+                                'type' => 'button',
+                                'data-toggle' => 'dropdown',
+                                'aria-expanded' => false,
+                            ]
+                        ),
+                        Html::tag(
+                            'ul',
+                            join('', [
+                                Html::tag('li', Html::a(
+                                    Yii::t('changelog', 'за сутки'),
+                                    Url::modify(
+                                        Yii::$app->getRequest()->getUrl(),
+                                        ['page', 'per-page', 'revisionEnabled', 'revisionPeriod'],
+                                        ['revisionEnabled' => !$this->isRevisionEnabled(), 'revisionPeriod' => 1]
+                                    ),
+                                    $options
+                                )),
+                                Html::tag('li', Html::a(
+                                    Yii::t('changelog', 'за 3 дня'),
+                                    Url::modify(
+                                        Yii::$app->getRequest()->getUrl(),
+                                        ['page', 'per-page', 'revisionEnabled', 'revisionPeriod'],
+                                        ['revisionEnabled' => !$this->isRevisionEnabled(), 'revisionPeriod' => 3]
+                                    ),
+                                    $options
+                                )),
+                                Html::tag('li', Html::a(
+                                    Yii::t('changelog', 'за неделю'),
+                                    Url::modify(
+                                        Yii::$app->getRequest()->getUrl(),
+                                        ['page', 'per-page', 'revisionEnabled', 'revisionPeriod'],
+                                        ['revisionEnabled' => !$this->isRevisionEnabled(), 'revisionPeriod' => 7]
+                                    ),
+                                    $options
+                                )),
+                                Html::tag('li', '', ['class' => 'divider']),
+                                Html::tag('li', Html::a(
+                                    Yii::t('changelog', 'за все время'),
+                                    Url::modify(
+                                        Yii::$app->getRequest()->getUrl(),
+                                        ['page', 'per-page', 'revisionEnabled', 'revisionPeriod'],
+                                        ['revisionEnabled' => !$this->isRevisionEnabled(), 'revisionPeriod' => -1]
+                                    ),
+                                    $options
+                                )),
+                            ]),
+                            ['class' => 'dropdown-menu']
+                        )
+                    ]),
+                    ['class' => 'btn-group']
+                )
+            ];
         } else {
-            $revisionIcon = 'glyphicon-eye-close';
-            $revisionLabel = Yii::t('changelog', 'Скрыть историю изменений');
-        }
-        return [
-            'content' => Html::a(
-                '<i class="glyphicon ' . $revisionIcon . '"></i>',
-                Url::modify(
-                    Yii::$app->getRequest()->getUrl(),
-                    ['page', 'per-page', 'revisionEnabled'],
-                    ['revisionEnabled' => !$this->isRevisionEnabled()]
+            return [
+                'content' => Html::a(
+                    '<i class="glyphicon glyphicon-eye-close"></i>',
+                    Url::modify(
+                        Yii::$app->getRequest()->getUrl(),
+                        ['page', 'per-page', 'revisionEnabled'],
+                        ['revisionEnabled' => !$this->isRevisionEnabled()]
+                    ),
+                    [
+                        'data-pjax' => 0,
+                        'class' => 'btn btn-default btn-md',
+                        'title' => Yii::t('changelog', 'Скрыть историю изменений')
+                    ]
                 ),
-                [
-                    'data-pjax' => 0,
-                    'class' => 'btn btn-default btn-md',
-                    'title' => $revisionLabel
-                ]
-            ),
-        ];
+            ];
+        }
     }
 
     /**

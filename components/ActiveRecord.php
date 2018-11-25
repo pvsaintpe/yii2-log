@@ -158,16 +158,17 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
                     $whereConditions[] = '{alias}.' . $attribute . ' IS NOT NULL';
                 }
             }
-
             $whereCondition = [];
             if (count($whereConditions) > 0) {
                 $whereCondition[] = join(' OR ', $whereConditions);
             }
-
-            return static::getLastChanges(array_merge(
-                [['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")]],
-                $whereCondition
-            ));
+            if ($period != -1) {
+                $whereCondition = array_merge(
+                    [['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")]],
+                    $whereCondition
+                );
+            }
+            return static::getLastChanges($whereCondition);
         }
         return 0;
     }
@@ -182,13 +183,14 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     {
         if (static::logEnabled() && Yii::$app->user->can(Configs::instance()->id) && static::existLogTable()) {
             $period = Yii::$app->request->get('revisionPeriod', Configs::instance()->revisionPeriod);
-            return static::getLastChanges(array_merge(
-                [
-                    ['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")],
-                ],
-                $where,
-                !$attribute ? [] : [['NOT', [$attribute => null]]]
-            ));
+            $conditions = array_merge($where, !$attribute ? [] : [['NOT', [$attribute => null]]]);
+            if ($period != -1) {
+                $conditions = array_merge(
+                    $conditions,
+                    [['>=', 'timestamp', new Expression("NOW() - INTERVAL {$period} DAY")]]
+                );
+            }
+            return static::getLastChanges($conditions);
         }
         return 0;
     }
