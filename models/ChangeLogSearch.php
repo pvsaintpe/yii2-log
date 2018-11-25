@@ -112,10 +112,11 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                         return Yii::$app->formatter->asBoolean($model->value);
                     } elseif (array_key_exists($this->attribute, $model->getRelationAttributes())) {
                         $relation = $model->getRelationAttributes()[$this->attribute];
+                        $uniqueKeys = Configs::storageDb()->getUniqueKeys($relation['table']);
                         return (new Query())
                             ->from($relation['table'])
                             ->where([$relation['key'] => $model->value])
-                            ->select($relation['label'])
+                            ->select($uniqueKeys[0]['Key_name'])
                             ->scalar();
                     } else {
                         return '<span class="ellipses">' . $model->value . '</span>';
