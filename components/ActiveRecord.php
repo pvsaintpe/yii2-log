@@ -3,7 +3,7 @@
 namespace pvsaintpe\log\components;
 
 use pvsaintpe\db\components\Connection;
-use pvsaintpe\gii\plus\db\TableSchema;
+use pvsaintpe\db\components\TableSchema;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
 use yii\db\Expression;
 use yii\db\Query;
