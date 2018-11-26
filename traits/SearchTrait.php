@@ -105,7 +105,7 @@ trait SearchTrait
 
         $this->query->innerJoin($logTable, join(' AND ', $onConditions));
 
-        if ($this->getRevisionPeriod() == -1) {
+        if ($this->getRevisionPeriod() != -1) {
             $this->query->andWhere([
                 '>=',
                 "{$alias}.timestamp",
