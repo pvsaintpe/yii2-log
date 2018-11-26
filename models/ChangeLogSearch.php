@@ -182,6 +182,21 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
     }
 
     /**
+     * @return array
+     */
+    public function getSort()
+    {
+        return array_merge(
+            parent::getSort(),
+            [
+                'defaultOrder' => [
+                    'timestamp' => SORT_DESC
+                ]
+            ]
+        );
+    }
+
+    /**
      * @return \pvsaintpe\search\components\ActiveDataProvider|\yii\data\DataProviderInterface
      */
     public function search()

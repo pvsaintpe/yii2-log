@@ -176,13 +176,14 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     /**
      * @param null $attribute
      * @param array $where
+     * @param int $revisionPeriod
      * @return int
      * @throws \yii\base\InvalidConfigException
      */
-    final public static function getLastRevisionCount($attribute = null, $where = [])
+    final public static function getLastRevisionCount($attribute = null, $where = [], $revisionPeriod = null)
     {
         if (static::logEnabled() && Yii::$app->user->can(Configs::instance()->id) && static::existLogTable()) {
-            $period = Yii::$app->request->get('revisionPeriod', Configs::instance()->revisionPeriod);
+            $period = $revisionPeriod ?: Yii::$app->request->get('revisionPeriod', Configs::instance()->revisionPeriod);
             $conditions = array_merge($where, !$attribute ? [] : [['NOT', [$attribute => null]]]);
             if ($period != -1) {
                 $conditions = array_merge(
@@ -247,6 +248,9 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     {
         $revisionEnabled = (bool) Yii::$app->request->get('revisionEnabled', 0);
         if ($this->isLogEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
+            return true;
+        }
+        if (!$this->hasAttribute($attribute) && $this->isLogEnabled() && $revisionEnabled) {
             return true;
         }
         if (!$this->hasAttribute($attribute)) {

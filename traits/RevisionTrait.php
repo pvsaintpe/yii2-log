@@ -54,13 +54,16 @@ trait RevisionTrait
         $hash = md5($attribute . ':'.join('&', $keys));
         $where = array_intersect_key($model->getAttributes(), array_flip($model::primaryKey()));
 
-        $afterCode = '';
-        $classes = Configs::instance()->cssOptions['revisionOptions']['class'] ?? [];
-        $styles = Configs::instance()->cssOptions['revisionOptions']['style'] ?? [];
         if ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where)) > 0) {
             $afterCode = '&nbsp;&nbsp;<sup class="red">' .  $cnt . '</sup>';
             $classes = Configs::instance()->cssOptions['revisionActiveOptions']['class'] ?? [];
             $styles = Configs::instance()->cssOptions['revisionActiveOptions']['style'] ?? [];
+        } elseif ($model->hasAttribute($attribute) && ($cnt = $model::getLastRevisionCount($attribute, $where, -1)) > 0) {
+            $afterCode = '&nbsp;&nbsp;<sup class="lightgray">' .  $cnt . '</sup>';
+            $classes = Configs::instance()->cssOptions['revisionActiveOptions']['class'] ?? [];
+            $styles = Configs::instance()->cssOptions['revisionActiveOptions']['style'] ?? [];
+        } else {
+            return '';
         }
 
         /** @var Url $urlHelper */
