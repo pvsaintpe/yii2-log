@@ -36,6 +36,12 @@ trait SearchTrait
     }
 
     /**
+     * Флаг инициализации фильтров ревизиций
+     * @var bool
+     */
+    private $initRevisionFilters;
+
+    /**
      * @param mixed $options
      * @return ActiveDataProvider|DataProviderInterface
      * @throws Exception
@@ -44,7 +50,12 @@ trait SearchTrait
      */
     public function getDataProvider($options = [])
     {
-        if ($options['revisionFilters'] ?? true) {
+        /**
+         * @message Фильтры применять лишь раз (ранее вызывала ошибки)
+         * @example SQLSTATE[42000]: Syntax error or access violation: 1066 Not unique table/alias: 'log'
+         * @todo Разобраться почему и что вызывает задвоение join-ов.
+         */
+        if ($options['revisionFilters'] ?? true && !$this->initRevisionFilters) {
             $this->initRevisionFilters();
         }
         return $this->getDataProviderBase($options);
@@ -121,6 +132,8 @@ trait SearchTrait
         }
 
         $this->query->groupBy($groupBy);
+
+        $this->initRevisionFilters = true;
     }
 
     /**
