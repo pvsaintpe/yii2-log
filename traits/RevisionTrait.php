@@ -18,18 +18,20 @@ trait RevisionTrait
 {
     /**
      * @param $model
-     * @param $attribute
+     * @param string $attribute
      * @return bool
+     * @throws InvalidConfigException
      */
     final public function isRevisionEnabled($model, $attribute)
     {
         /**
          * @var ActiveRecord|ChangeLogInterface $model
          */
-        if ($model instanceof ChangeLogInterface
+        if ($model instanceof ActiveRecord
             && $model->isLogEnabled()
             && !in_array($attribute, $model->securityLogAttributes())
             && !in_array($attribute, $model->skipLogAttributes())
+            && $model->hasAttribute($attribute)
             && Yii::$app->user->can(Configs::instance()->id)
             && $model::existLogTable()
         ) {

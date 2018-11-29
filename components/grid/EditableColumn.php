@@ -3,10 +3,10 @@
 namespace pvsaintpe\log\components\grid;
 
 use pvsaintpe\grid\components\ColumnTrait;
-use pvsaintpe\log\components\ActiveRecord;
 use pvsaintpe\log\traits\RevisionTrait;
 use yii\base\InvalidConfigException;
 use Closure;
+use pvsaintpe\log\interfaces\ActiveRecordInterface;
 
 /**
  * Class EditableColumn
@@ -23,7 +23,10 @@ class EditableColumn extends \kartik\grid\EditableColumn
     public $size = 'md';
 
     /**
-     * @inheritdoc
+     * @param $model
+     * @param $key
+     * @param $index
+     * @return string
      * @throws InvalidConfigException
      */
     public function renderDataCellContent($model, $key, $index)
@@ -37,11 +40,11 @@ class EditableColumn extends \kartik\grid\EditableColumn
     }
 
     /**
-     * @param ActiveRecord $model
+     * @param ActiveRecordInterface $model
      * @param mixed $key
      * @param int $index
      */
-    public function initEditableOptions($model, $key, $index)
+    public function initEditableOptions(ActiveRecordInterface $model, $key, $index)
     {
         $editableOptions = $this->editableOptions;
         if (!empty($this->editableOptions) && $this->editableOptions instanceof Closure) {

@@ -46,6 +46,12 @@ class Configs extends BaseObject
     public $id = 'changelog';
 
     /**
+     * Application Id for Backend
+     * @var string
+     */
+    public $appId = 'app-backend';
+
+    /**
      * @var string
      */
     public $tableSuffix = '_log';
@@ -56,7 +62,6 @@ class Configs extends BaseObject
     public $tablePrefix = '';
 
     /**
-     * @todo addOption with tables
      * @var string
      */
     public $modelsPath = '@common/models';
@@ -98,7 +103,6 @@ class Configs extends BaseObject
     public $adminClass = '\pvsaintpe\log\models\Admin';
 
     /**
-     * @todo addOption for create OperatorController
      * @var string
      */
     public $adminPageRoute = 'operator/operator/view';
@@ -173,7 +177,7 @@ class Configs extends BaseObject
     }
 
     /**
-     * @return \pvsaintpe\db\components\Connection
+     * @return \pvsaintpe\db\components\Connection|Connection|object
      * @throws \yii\base\InvalidConfigException
      */
     public static function db()
@@ -182,7 +186,7 @@ class Configs extends BaseObject
     }
 
     /**
-     * @return \pvsaintpe\db\components\Connection
+     * @return \pvsaintpe\db\components\Connection|Connection|object
      * @throws \yii\base\InvalidConfigException
      */
     public static function storageDb()

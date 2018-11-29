@@ -3,8 +3,9 @@
 namespace pvsaintpe\log\widgets;
 
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use pvsaintpe\log\interfaces\ActiveRecordInterface;
 use pvsaintpe\log\traits\RevisionTrait;
-use pvsaintpe\search\components\ActiveRecord;
+use pvsaintpe\log\components\ActiveRecord;
 use kartik\form\ActiveField;
 
 /**
@@ -21,7 +22,7 @@ class ActiveForm extends \pvsaintpe\search\widgets\ActiveForm
     public $fieldClass = 'pvsaintpe\log\widgets\ActiveField';
 
     /**
-     * @param \pvsaintpe\log\components\ActiveRecord $model
+     * @param ActiveRecordInterface|ActiveRecord $model
      * @param string $attribute
      * @param array $options
      * @return ActiveField|\pvsaintpe\log\widgets\ActiveField

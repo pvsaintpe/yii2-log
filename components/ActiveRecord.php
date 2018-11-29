@@ -5,6 +5,7 @@ namespace pvsaintpe\log\components;
 use pvsaintpe\db\components\Connection;
 use pvsaintpe\db\components\TableSchema;
 use pvsaintpe\log\interfaces\ChangeLogInterface;
+use pvsaintpe\log\interfaces\ActiveRecordInterface;
 use yii\db\Expression;
 use yii\db\Query;
 use Yii;
@@ -14,7 +15,7 @@ use pvsaintpe\search\components\ActiveRecord as ActiveRecordBase;
  * Class ActiveRecord
  * @package pvsaintpe\log\components
  */
-class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
+class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface, ActiveRecordInterface
 {
     /**
      * Example
@@ -40,10 +41,11 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 
     /**
      * @param array $attributes
-     * @param string|array $condition
+     * @param string $condition
      * @param array $params
-     * @return int|null
+     * @return int
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public static function updateAll($attributes, $condition = '', $params = [])
     {
@@ -68,7 +70,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * @todo implement via TableSchema
      * @return string[]
      */
     private static function getPrimaryKeys()
@@ -77,7 +78,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * @todo implement via TableSchema
      * @return string[]
      */
     private static function getDateAttributes()
@@ -90,7 +90,6 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 
     /**
      * @maybe
-     * @todo implement via Configs::systemAttributes
      * @return string[]
      */
     private static function getReservedAttributes()
@@ -198,7 +197,8 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 
     /**
      * @param array $conditions
-     * @return int
+     * @return int|string
+     * @throws \yii\base\InvalidConfigException
      */
     final public static function getLastChanges($conditions = [])
     {
@@ -246,6 +246,9 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
      */
     final public function isExitWithoutRevisions($attribute)
     {
+        if (!($this instanceof ActiveRecord)) {
+            return false;
+        }
         $revisionEnabled = (bool) Yii::$app->request->get('revisionEnabled', 0);
         if ($this->isLogEnabled() && $revisionEnabled && in_array($attribute, $this->skipLogAttributes())) {
             return true;
@@ -274,7 +277,8 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * @return bool
+     * @return bool|false|null|string
+     * @throws \yii\base\InvalidConfigException
      */
     final public static function existLogTable()
     {
@@ -505,11 +509,12 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
     }
 
     /**
-     * @param array $attributes
-     * @param string|array $condition
+     * @param $attributes
+     * @param string $condition
      * @param array $params
-     * @param int|null $updatedBy
+     * @param null $updatedBy
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     final public static function saveToLog($attributes, $condition = '', $params = [], $updatedBy = null)
     {
@@ -535,7 +540,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface
 
                     if ($updatedBy) {
                         $affectedAttributes[Configs::instance()->adminColumn] = $updatedBy;
-                    } else {
+                    } elseif (Yii::$app->id == Configs::instance()->appId) {
                         $affectedAttributes[Configs::instance()->adminColumn] = Yii::$app->user->getId();
                     }
 

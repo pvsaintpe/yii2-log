@@ -3,6 +3,7 @@
 namespace pvsaintpe\log\components\grid;
 
 use pvsaintpe\grid\components\DataColumn as DataColumnBase;
+use pvsaintpe\log\traits\RevisionTrait;
 
 /**
  * Class DataColumn
@@ -10,6 +11,8 @@ use pvsaintpe\grid\components\DataColumn as DataColumnBase;
  */
 class DataColumn extends DataColumnBase
 {
+    use RevisionTrait;
+
     /**
      * @var string
      */
