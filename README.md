@@ -79,5 +79,4 @@ return [
 **Usage**
 
 To activate all features of the component, use pvsaintpe\log\traits\SearchTrait in your Search-models.
-
 It is recommended to keep the log data in a separate database, although you are not limited in this.
