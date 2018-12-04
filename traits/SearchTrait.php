@@ -68,7 +68,7 @@ trait SearchTrait
      */
     protected function initRevisionFilters()
     {
-        if (!Yii::$app->user->can(Configs::instance()->id)) {
+        if (!(Yii::$app->id == Configs::instance()->appId) || !Yii::$app->user->can(Configs::instance()->id)) {
             return;
         }
 
@@ -145,6 +145,7 @@ trait SearchTrait
         if (!($this instanceof ActiveRecord)
             || !$this->logEnabled()
             || !Yii::$app->user->can(Configs::instance()->id)
+            || !(Yii::$app->id == Configs::instance()->appId)
         ) {
             return [];
         }
