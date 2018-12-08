@@ -544,7 +544,12 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface, Activ
                         $affectedAttributes[Configs::instance()->adminColumn] = Yii::$app->user->getId();
                     }
 
-                    static::getLogDb()->insert(static::getLogTableName(), $affectedAttributes);
+                    $logAttributes = static::getLogDb()->getTableSchema(static::getLogTableName())->getColumnNames();
+
+                    static::getLogDb()->insert(
+                        static::getLogTableName(),
+                        array_intersect_key($affectedAttributes, array_flip($logAttributes))
+                    );
                 }
             }
         }

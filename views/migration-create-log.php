@@ -1,17 +1,4 @@
 <?php
-/**
- * @author Veselov Pavel
- *
- * The following variables are available in this view:
- * @var $className string the new migration class name without namespace
- * @var $columns array the new migration class namespace
- * @var $primaryKeys array the new migration class namespace
- * @var $uniqueKeys array the new migration class namespace
- * @var $logTableName string code for the migration
- * @var $tableName string code for the migration
- * @var $storageDb \pvsaintpe\db\components\Connection code for the migration
- * @var $tableName string code for the migration
- */
 
 echo "<?php\n";
 ?>

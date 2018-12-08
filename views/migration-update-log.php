@@ -1,24 +1,4 @@
 <?php
-/**
- * @author Veselov Pavel
- *
- * The following variables are available in this view:
- *
- * @var $className string the new migration class name without namespace
- * @var $logTableName string code for the migration
- * @var $tableName string code for the migration
- *
- * @var array $addColumns Список полей, которые нужно добавить
- * @var array $removeColumns Список полей, которые нужно удалить
- * @var array $updateColumns Список полей, которые необходимо обновить
- *
- * @var array $dropIndexes Список индексов, которые нужно удалить
- * @var array $dropForeignKeys Список внешних ключей, которые нужно удалить
- * @var array $createIndexes Список индексов, которые нужно добавить
- * @var array $addForeignKeys Список внешних ключей, которые нужно добавить
- * @var array $primaryKeys
- * @var array $keyNames
- */
 
 echo "<?php\n";
 ?>
