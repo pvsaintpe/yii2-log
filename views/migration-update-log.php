@@ -9,7 +9,7 @@ use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel
- * @since 4.*
+ * @since 6.*
  */
 class <?= $className ?> extends Migration
 {

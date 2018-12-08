@@ -42,6 +42,11 @@ class ChangeLogSearchBase extends ActiveRecord
     public $timestamp;
 
     /**
+     * @var string
+     */
+    public $log_reason;
+
+    /**
      * @var
      */
     protected static $tableName;
@@ -69,6 +74,7 @@ class ChangeLogSearchBase extends ActiveRecord
                 'value' => Yii::t('log', 'Значение'),
                 'updatedBy' => Yii::t('log', 'Кем обновлено'),
                 'timestamp' => Yii::t('log', 'Метка времени'),
+                'log_reason' => Yii::t('log', 'Комментарий'),
             ]
         );
     }
@@ -82,6 +88,7 @@ class ChangeLogSearchBase extends ActiveRecord
             'log_id',
             'value',
             'updatedBy',
+            'log_reason',
             'timestamp'
         ];
     }

@@ -4,6 +4,7 @@ namespace pvsaintpe\log\components;
 
 use pvsaintpe\db\components\Connection;
 use yii\base\Exception;
+use yii\db\Transaction;
 
 /**
  * Class Migration
@@ -16,10 +17,11 @@ class Migration extends \pvsaintpe\db\components\Migration
      * @param array $columns
      * @param string $condition
      * @param array $params
+     * @param null|string $reason
      */
-    public function update($table, $columns, $condition = '', $params = [])
+    public function safeUpdate($table, $columns, $condition = '', $params = [], $reason = null)
     {
-        $this->saveToLog($table, $columns, $condition, $params);
+        $this->saveToLog($table, $columns, $condition, $params, $reason);
         parent::update($table, $columns, $condition, $params);
     }
 
@@ -28,9 +30,10 @@ class Migration extends \pvsaintpe\db\components\Migration
      * @param array $attributes
      * @param string|array $condition
      * @param array $params
+     * @param null|string $reason
      * @throws
      */
-    private function saveToLog($tableName, $attributes, $condition = '', $params = [])
+    private function saveToLog($tableName, $attributes, $condition = '', $params = [], $reason = null)
     {
         if ($this->existLogTable($tableName)) {
             if (is_string($condition)) {
@@ -46,10 +49,9 @@ class Migration extends \pvsaintpe\db\components\Migration
                         $conditions[] = "{$key} = '{$value}'";
                     }
                 }
-                $sql = join('', $conditions);
+                $sql = join(' AND ', $conditions);
             }
-
-            $affectedRows = $this->getStorageDb()->selectAll($sql, $params);
+            $affectedRows = $this->getStorageDb()->selectAll("SELECT * FROM `{$tableName}` WHERE {$sql}", $params);
             foreach ($affectedRows as $affectedRow) {
                 $affectedAttributes = [];
                 foreach ($attributes as $attribute => $value) {
@@ -60,10 +62,11 @@ class Migration extends \pvsaintpe\db\components\Migration
                 if (count($affectedAttributes) > 0) {
                     $affectedAttributes = array_merge(
                         $affectedAttributes,
-                        array_intersect_key($affectedRow, array_flip($this->getLogPrimaryKeys($tableName)))
+                        array_intersect_key($affectedRow, array_flip($this->getStoragePrimaryKeys($tableName)))
                     );
 
                     $affectedAttributes[Configs::instance()->adminColumn] = $this->getUpdatedBy();
+                    $affectedAttributes['log_reason'] = $this->getLogReason($reason);
                     $logAttributes = $this->getLogAttributes($tableName);
 
                     $this->getLogDb()->insert(
@@ -134,8 +137,20 @@ class Migration extends \pvsaintpe\db\components\Migration
      * @param string $tableName
      * @return array
      */
-    private function getLogPrimaryKeys($tableName)
+    private function getStoragePrimaryKeys($tableName)
     {
-        return $this->getLogDb()->getTableSchema($this->getLogTableName($tableName))->primaryKey;
+        return $this->getStorageDb()->getTableSchema($tableName)->primaryKey;
+    }
+
+    /**
+     * @param null $reason
+     * @return null|string
+     */
+    private function getLogReason($reason = null)
+    {
+        if (!$reason) {
+            $reason = (new \ReflectionClass($this))->getShortName();
+        }
+        return $reason;
     }
 }

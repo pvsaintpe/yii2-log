@@ -118,10 +118,13 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                             ->select(Configs::storageDb()->getFirstUniqueKey($relation['table']))
                             ->scalar();
                     } else {
-                        return '<span class="ellipses">' . $model->value . '</span>';
+                        return $model->value;
                     }
                 },
-                'width' => '150px'
+                'width' => '150px',
+                'contentOptions' => [
+                    'classs' => 'ellipses'
+                ]
             ],
             'updatedBy' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
@@ -140,6 +143,13 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                         return $model->referenceBy->getTitleText();
                     }
                 }
+            ],
+            'log_reason' => [
+                'class' => 'pvsaintpe\log\components\grid\DataColumn',
+                'attribute' => 'log_reason',
+                'contentOptions' => [
+                    'classs' => 'ellipses'
+                ]
             ],
             'timestamp' => [
                 'class' => 'pvsaintpe\log\components\grid\TimestampColumn',
@@ -216,6 +226,7 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
             $this->query->a('log_id'),
             $this->query->a(Configs::instance()->adminColumn) . ' AS `updatedBy`',
             $this->query->a('timestamp'),
+            $this->query->a('log_reason'),
             $this->query->a($this->attribute) . ' AS `value`',
         ]);
 

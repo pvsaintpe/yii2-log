@@ -370,6 +370,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface, Activ
         foreach (static::getLogDb()->getColumns(static::getLogTableName(), [
             'log_id',
             'timestamp',
+            'log_reason',
             Configs::instance()->adminColumn
         ]) as $logTableColumn) {
             $logTableColumns[$logTableColumn['Field']] = $logTableColumn['Type'];
@@ -380,6 +381,15 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface, Activ
         $removeColumns = array_keys(array_diff_key($logTableColumns, $tableColumns));
 
         $addColumns = [];
+
+        if (!in_array('log_reason', static::getLogDb()->getTableSchema(static::getLogTableName())->getColumnNames())) {
+            $addColumns[] = [
+                'name' => 'log_reason',
+                'type' => "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL",
+                'comment' => 'Комментарий'
+            ];
+        }
+
         foreach (array_diff_key($tableColumns, $logTableColumns) as $column => $type) {
             $addColumns[] = [
                 'name' => $column,

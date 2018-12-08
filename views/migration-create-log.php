@@ -9,7 +9,7 @@ use pvsaintpe\log\components\Configs;
 
 /**
  * @author Veselov Pavel
- * @since 4.*
+ * @since 6.*
  */
 class <?= $className ?> extends Migration
 {
@@ -76,6 +76,12 @@ foreach ($uniqueKeys as $uniqueKey) {
             '<?= $logTableName?>',
             Configs::instance()->adminColumn,
             Configs::instance()->adminColumnType
+        );
+
+        $this->addColumn(
+            '<?= $logTableName?>',
+            'log_reason',
+            "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT 'Комментарий'"
         );
 
         $this->addForeignKey(
