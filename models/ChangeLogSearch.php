@@ -120,12 +120,16 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                     } else {
                         return Html::tag(
                             'div',
-                            Html::tag('span', $model->value, ['title' => $model->value, 'alt' => $model->value]),
-                            ['class' => 'ellipses']
+                            $model->value,
+                            [
+                                'class' => 'ellipses',
+                                'title' => $model->value,
+                                'alt' => $model->value,
+                                'style' => 'width:100px'
+                            ]
                         );
                     }
                 },
-                'width' => '150px',
             ],
             'updatedBy' => [
                 'class' => 'pvsaintpe\log\components\grid\DataColumn',
@@ -151,11 +155,15 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                 'value' => function (ChangeLogSearchBase $model) {
                     return Html::tag(
                         'div',
-                        Html::tag('span', $model->value, ['title' => $model->value, 'alt' => $model->value]),
-                        ['class' => 'ellipses']
+                        $model->log_reason,
+                        [
+                            'class' => 'ellipses',
+                            'title' => $model->log_reason,
+                            'alt' => $model->log_reason,
+                            'style' => 'width:100px'
+                        ]
                     );
                 },
-                'width' => '100px',
             ],
             'timestamp' => [
                 'class' => 'pvsaintpe\log\components\grid\TimestampColumn',
