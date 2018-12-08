@@ -385,7 +385,7 @@ class ActiveRecord extends ActiveRecordBase implements ChangeLogInterface, Activ
         if (!in_array('log_reason', static::getLogDb()->getTableSchema(static::getLogTableName())->getColumnNames())) {
             $addColumns[] = [
                 'name' => 'log_reason',
-                'type' => "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL",
+                'type' => "VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci",
                 'comment' => 'Комментарий'
             ];
         }
