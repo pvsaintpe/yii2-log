@@ -2,7 +2,10 @@
 
 namespace pvsaintpe\log\controllers;
 
+use pvsaintpe\log\components\Configs;
 use pvsaintpe\search\components\Controller;
+use yii\helpers\Json;
+use Yii;
 
 /**
  * Class DefaultController
@@ -18,6 +21,19 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
+        $request = Yii::$app->request;
+        if ($request->post('hasEditable')) {
+            $index = Json::decode($request->post('editableIndex'), false);
+            $attribute = $request->post('editableAttribute');
+            $key = $request->post('editableKey');
+            $value = $request->post('t')[$index][$attribute];
+            $table = $request->get('table');
+            $timestamp = Configs::db()->selectScalar("SELECT `timestamp` FROM `{$table}` WHERE `log_id` = {$key}");
+            Configs::db()->update($table, [$attribute => $value, 'timestamp' => $timestamp], ['log_id' => $key]);
+            echo Json::encode(['output' => $value, 'message' => '']);
+            exit;
+        }
+
         $searchModel = $this->getSearchModel();
 
         return $this->renderWithAjax('index.php', [

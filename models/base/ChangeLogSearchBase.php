@@ -3,6 +3,7 @@
 namespace pvsaintpe\log\models\base;
 
 use pvsaintpe\log\components\Configs;
+use pvsaintpe\log\interfaces\ActiveRecordInterface;
 use pvsaintpe\log\models\Admin;
 use pvsaintpe\log\models\query\AdminQuery;
 use pvsaintpe\log\traits\SearchTrait;
@@ -17,7 +18,7 @@ use Yii;
  *
  * @package pvsaintpe\log\models\base
  */
-class ChangeLogSearchBase extends ActiveRecord
+class ChangeLogSearchBase extends ActiveRecord implements ActiveRecordInterface
 {
     use SearchTrait;
 
@@ -72,8 +73,8 @@ class ChangeLogSearchBase extends ActiveRecord
             [
                 'log_id' => Yii::t('log', 'ID'),
                 'value' => Yii::t('log', 'Значение'),
-                'updatedBy' => Yii::t('log', 'Кем обновлено'),
-                'timestamp' => Yii::t('log', 'Метка времени'),
+                'updatedBy' => Yii::t('log', 'Автор'),
+                'timestamp' => Yii::t('log', 'Дата'),
                 'log_reason' => Yii::t('log', 'Комментарий'),
             ]
         );

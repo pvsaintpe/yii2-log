@@ -150,20 +150,39 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                 }
             ],
             'log_reason' => [
-                'class' => 'pvsaintpe\log\components\grid\DataColumn',
+                'class' => 'pvsaintpe\log\components\grid\EditableColumn',
                 'attribute' => 'log_reason',
                 'value' => function (ChangeLogSearchBase $model) {
-                    return Html::tag(
-                        'div',
-                        $model->log_reason,
-                        [
-                            'class' => 'ellipses',
-                            'title' => $model->log_reason,
-                            'alt' => $model->log_reason,
-                            'style' => 'width:100px'
-                        ]
-                    );
+                    return $model->log_reason;
                 },
+                'editableOptions' => function (ChangeLogSearchBase $model, $key, $index) {
+                    return [
+                        'asPopover' => false,
+                        'buttonsTemplate' => '{submit}',
+                        'formOptions' => [
+                            'action' => array_merge(
+                                [Configs::instance()->pathToRoute],
+                                $this->getAttributes([
+                                    'attribute',
+                                    'route',
+                                    'hash',
+                                    'table',
+                                    'where'
+                                ])
+                            ),
+                        ],
+                        'editableButtonOptions' => [
+                            'autoGuessInput' => true,
+                        ]
+                    ];
+                },
+                'contentOptions' => [
+                    'style' => "text-overflow: ellipsis; white-space: nowrap; overflow:hidden; max-width:84px; padding-left:10px;"
+                ],
+                'readonly' => function ($model, $key, $index) {
+                    return $model->referenceBy->id != Yii::$app->user->getId();
+                },
+                'refreshGrid' => false,
             ],
             'timestamp' => [
                 'class' => 'pvsaintpe\log\components\grid\TimestampColumn',
@@ -176,7 +195,7 @@ class ChangeLogSearch extends ChangeLogSearchBase implements SearchInterface
                 'width' => '100px',
                 'value' => function (ChangeLogSearchBase $model) {
                     $buttons[] = Html::button(
-                        Yii::t('models', 'Вернуть значение'),
+                        Yii::t('models', 'Восстановить'),
                         [
                             'class' => 'btn btn-success btn-xs rollback-button',
                             'data-pjax' => 0,
