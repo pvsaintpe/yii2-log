@@ -11,9 +11,14 @@ use yii\db\ActiveRecordInterface as ActiveRecordInterfaceBase;
 interface ActiveRecordInterface extends ActiveRecordInterfaceBase
 {
     /**
-     * @return array
+     * Returns attribute values.
+     * @param array $names list of attributes whose value needs to be returned.
+     * Defaults to null, meaning all attributes listed in [[attributes()]] will be returned.
+     * If it is an array, only the attributes in the array will be returned.
+     * @param array $except list of attributes whose value should NOT be returned.
+     * @return array attribute values (name => value).
      */
-    public function getAttributes();
+    public function getAttributes($names = null, $except = []);
 
     /**
      * Returns the text label for the specified attribute.
