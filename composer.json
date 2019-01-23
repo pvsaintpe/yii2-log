@@ -22,7 +22,7 @@
     "yiisoft/yii2-imagine": "2.*",
     "yiisoft/yii2-authclient": "2.*",
     "pvsaintpe/yii2-db-plus": "*",
-    "pvsaintpe/yii2-search": "3.*",
+    "pvsaintpe/yii2-search": "4.*",
     "pvsaintpe/yii2-behaviors": "*",
     "yiisoft/yii2-debug": "2.*",
     "kartik-v/yii2-editable": "1.*",
