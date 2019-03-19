@@ -64,6 +64,15 @@ class ChangeLogSearchBase extends ActiveRecord implements ActiveRecordInterface
     }
 
     /**
+     * @inheritdoc
+     * @return ActiveQuery
+     */
+    public static function find()
+    {
+        return new ActiveQuery(get_called_class());
+    }
+
+    /**
      * @return array
      */
     public function attributeLabels()
