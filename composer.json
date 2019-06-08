@@ -17,7 +17,7 @@
   "require": {
     "php": "^7.1.3",
     "yiisoft/yii2": "2.0.*",
-    "yiisoft/yii2-bootstrap": "2.*"
+    "yiisoft/yii2-bootstrap": "2.*",
     "yiisoft/yii2-imagine": "2.*",
     "yiisoft/yii2-authclient": "2.*",
     "pvsaintpe/yii2-db-plus": "*",
