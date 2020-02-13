@@ -7,13 +7,13 @@ Check the composer.json for this extension's requirements and dependencies. Read
 Either run
 
 ```BASH
-$ php composer.phar require pvsaintpe/yii2-log "5.*"
+$ php composer.phar require pvsaintpe/yii2-log "8.*"
 ```
 
 or add
 
 ```JS
-"pvsaintpe/yii2-log": "5.*"
+"pvsaintpe/yii2-log": "8.*"
 ```
 to the require section of your composer.json file.
 
